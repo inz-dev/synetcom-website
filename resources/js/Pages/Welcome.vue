@@ -1,7 +1,11 @@
 <script setup>
+import ProjectsHomeVue from "@/Components/Welcome/Sections/Projects.home.vue";
 import Footer from "../Components/Welcome/Footer.vue";
 import Header from "../Components/Welcome/Header.vue";
+import NewsletterHome from "../Components/Welcome/Sections/Newsletter.home.vue";
+import PartenersHome from "../Components/Welcome/Sections/Parteners.home.vue";
 import ServicesHome from "../Components/Welcome/Sections/Services.home.vue";
+import TeamHome from "../Components/Welcome/Sections/Team.home.vue";
 import WhyChooseUsHome from "../Components/Welcome/Sections/WhyChooseUs.home.vue";
 defineProps({
   canLogin: {
@@ -25,6 +29,10 @@ defineProps({
   <Header />
   <ServicesHome />
   <WhyChooseUsHome />
+  <ProjectsHomeVue />
+  <TeamHome />
+  <NewsletterHome />
+  <PartenersHome />
   <Footer />
 </template>
 

@@ -3,7 +3,7 @@
   <section class="py-3 py-md-5 py-xl-8">
     <div
       class="container"
-      style="border-radius: 64px; border: 10px solid var(--primaryColor, #1b449c)"
+      style="border-radius: 60px; border: 8px solid var(--primaryColor, #1b449c)"
     >
       <div class="row gy-3 gy-md-4 gy-lg-0 align-items-lg-center">
         <div class="col-12 col-lg-6 col-xl-5">

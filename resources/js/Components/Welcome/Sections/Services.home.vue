@@ -7,7 +7,7 @@ export default {
       listServices: [
         {
           id: 1,
-          title: " Développement  et Intégration de solution digitale",
+          title: "Développement  et Intégration de solution digitale",
           message:
             "Vestibulum bibendum, lorem a blandit lacinia, nisi velit posuere nisl, velplacerat magna mauris mollis maximus est.",
           icon: {
