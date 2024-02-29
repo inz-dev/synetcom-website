@@ -17,6 +17,11 @@ import vuetify from "./vuetify";
 
 // import "./assets/main.css";
 
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+import AosVue from "aos-vue";
+
 library.add(faUser, faClock);
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -28,10 +33,16 @@ createInertiaApp({
             import.meta.glob("./Pages/**/*.vue")
         ),
     setup({ el, App, props, plugin }) {
-        return createApp({ render: () => h(App, props) })
+        return createApp({
+            mounted() {
+                AOS.init();
+            },
+            render: () => h(App, props),
+        })
             .use(plugin)
             .use(vuetify)
             .use(ZiggyVue)
+            .use(AosVue)
             .component("PrimaryButton", PrimaryButton)
             .component("SecondaryButton", SecondaryButton)
             .component("font-awesome-icon", FontAwesomeIcon)

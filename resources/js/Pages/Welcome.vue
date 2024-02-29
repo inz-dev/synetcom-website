@@ -1,5 +1,5 @@
 <script setup>
-import ProjectsHomeVue from "@/Components/Welcome/Sections/Projects.home.vue";
+import Portfolio from "@/Components/Welcome/Sections/Portfolio.vue";
 import Footer from "../Components/Welcome/Footer.vue";
 import Header from "../Components/Welcome/Header.vue";
 import NewsletterHome from "../Components/Welcome/Sections/Newsletter.home.vue";
@@ -28,8 +28,9 @@ defineProps({
 <template>
   <Header />
   <ServicesHome />
+  <Portfolio />
   <WhyChooseUsHome />
-  <ProjectsHomeVue />
+  <!-- <ProjectsHomeVue /> -->
   <TeamHome />
   <NewsletterHome />
   <PartenersHome />
