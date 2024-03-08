@@ -20,7 +20,7 @@ export default {
           {
             imageFile: "/images/portfolio/portfolio-4.jpg",
             title: "App3",
-            text: "Gestion de ocations",
+            text: "Gestion de locations",
           },
           {
             imageFile: "/images/portfolio/portfolio-8.jpg",
@@ -46,7 +46,7 @@ export default {
           {
             imageFile: "/images/portfolio/portfolio-4.jpg",
             title: "Panneau3",
-            text: "Gestion de ocations",
+            text: "Gestion de locations",
           },
           {
             imageFile: "/images/portfolio/portfolio-8.jpg",

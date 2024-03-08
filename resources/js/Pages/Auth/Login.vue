@@ -1,94 +1,111 @@
 <script setup>
-import Checkbox from '@/Components/Checkbox.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-
+import GuestLayout from "@/Layouts/GuestLayout.vue";
+import { useForm } from "@inertiajs/vue3";
+import { ref } from "vue";
 defineProps({
-    canResetPassword: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
+  canResetPassword: {
+    type: Boolean,
+  },
+  status: {
+    type: String,
+  },
 });
 
+let isRegister = ref(false);
+let errorMessage = ref("");
+
+let login = {
+  name: "Login",
+  message: "Register",
+};
 const form = useForm({
-    email: '',
-    password: '',
-    remember: false,
+  email: "",
+  password: "",
+  remember: false,
 });
+const register = () => {
+  console.log("register");
+};
 
 const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => form.reset('password'),
-    });
+  form.post(route("login"), {
+    onError: (e) => {
+      console.log("Error:", e);
+    },
+    onFinish: (f) => {
+      console.log("Finish:", f);
+    },
+    onSuccess: (s) => {
+      console.log("success:", s);
+    },
+  });
 };
+// const toggleMessage = computed(() => {
+//   isRegister ? this.stateObj.register.message : this.stateObj.login.message;
+// });
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Log in" />
-
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
+  <GuestLayout>
+    <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+      {{ status }}
+    </div>
+    <div class="container" style="height: 100vh">
+      <div class="row gy-3 gy-md-4 gy-lg-0 align-items-lg-center" style="height: 100vh">
+        <div class="col-12 col-lg-6 col-xl-5">
+          <!-- <div class="section-left" @click="route('')"> -->
+          <v-img src="/images/logo.png" cover />
+          <!-- </div> -->
         </div>
+        <div class="mx-1 col-12 col-lg-6 col-xl-5">
+          <v-card style="height: 80vh">
+            <v-card-text>
+              <v-toolbar dark color="primary">
+                <v-toolbar-title> Page de connexion </v-toolbar-title>
+              </v-toolbar>
+              <form @submit.prevent="submit" class="mt-8 mx-1">
+                <v-text-field
+                  v-model="form.email"
+                  name="Identifiant"
+                  label="Identifiant"
+                  type="text"
+                  required
+                ></v-text-field>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
+                <v-text-field
+                  v-model="form.password"
+                  name="Mot de passe"
+                  label="Mot de passe"
+                  type="password"
+                ></v-text-field>
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="current-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="block mt-4">
-                <label class="flex items-center">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600">Remember me</span>
-                </label>
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                    Forgot your password?
-                </Link>
-
-                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
-                </PrimaryButton>
-            </div>
-        </form>
-    </GuestLayout>
+                <div class="red--text">{{ errorMessage }}</div>
+                <PrimaryButton
+                  class="mt-4"
+                  @click="submit"
+                  :disabled="form.processing"
+                  label="Connexion"
+                ></PrimaryButton>
+              </form>
+            </v-card-text>
+          </v-card>
+        </div>
+      </div>
+    </div>
+  </GuestLayout>
 </template>
+<style scoped>
+.section-left {
+  width: 100%;
+  height: 100%;
+  /* background-color: #0a0a23; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.section-left img {
+  width: 300px;
+  height: 180px;
+}
+</style>
