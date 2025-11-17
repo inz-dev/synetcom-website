@@ -44,10 +44,11 @@
                 Services
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
+                <a class="dropdown-item" href="#">Solutions Entreprise</a>
+                <a class="dropdown-item" href="#">Développement apps/sites</a>
+                <a class="dropdown-item" href="#">Hébergement sites web</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Something else here</a>
+                <a class="dropdown-item" href="#">Autres</a>
               </div>
             </li>
             <li class="nav-item">
