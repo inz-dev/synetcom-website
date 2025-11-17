@@ -127,7 +127,7 @@ export default {
 </script>
 <template>
   <!-- Service 4 - Bootstrap Brain Component -->
-  <section class="bg-light py-5 py-xl-8">
+  <section class="bg-light py-5 py-xl-8" id="services">
     <div class="container">
       <div class="row justify-content-md-center">
         <div class="col-12 col-md-10 col-lg-8 col-xl-7">

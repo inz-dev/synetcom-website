@@ -1,4 +1,29 @@
-<script setup></script>
+<script setup>
+function goToTeam() {
+      const section = document.getElementById("team");
+      if (section) {
+        section.scrollIntoView({behavior:'smooth'});
+      }
+}
+function goToPartners() {
+      const section = document.getElementById("partners");
+      if (section) {
+        section.scrollIntoView({behavior:'smooth'});
+      }
+}
+function goToContact() {
+      const section = document.getElementById("contact");
+      if (section) {
+        section.scrollIntoView({behavior:'smooth'});
+      }
+}
+function goToServices() {
+      const section = document.getElementById("services");
+      if (section) {
+        section.scrollIntoView({behavior:'smooth'});
+      }
+}
+</script>
 
 <template>
   <header>
@@ -25,13 +50,13 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
+        <div class="collapse navbar-collapse" id="navbarResponsive" >
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
               <a class="active nav-link" href="#">Accueil</a>
             </li>
 
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown"  @click.prevent="goToServices">
               <a
                 class="nav-link dropdown-toggle"
                 href="#"
@@ -51,17 +76,20 @@
                 <a class="dropdown-item" href="#">Autres</a>
               </div>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Équipe & Partenaires</a>
+            <li class="nav-item"  @click.prevent="goToTeam">
+              <a class="nav-link">Équipe</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Nous contacter</a>
+            <li class="nav-item"  @click.prevent="goToPartners">
+              <a class="nav-link">Partenaires</a>
+            </li>
+            <li class="nav-item"  @click.prevent="goToContact">
+              <a class="nav-link">Nous contacter</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Recrutement</a>
             </li>
           </ul>
-          <div style="display: flex; justify-content: flex-end">
+          <div style="display: flex; justify-content: flex-end; margin:0 20px 0">
             <div><PrimaryButton label="Obtenir un dévis" /></div>
           </div>
         </div>
@@ -112,12 +140,28 @@
 </template>
 
 <style>
-.navbar-default .navbar-nav > .active > a,
+/* .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
   color: #333333;
-  /* <----- change your color here*/
-  background-color: transparent;
+
+  background-color: red;
+} */
+ .nav-link.active:hover{
+  border: 1px solid  #f15a2d;
+  border-radius: 10px;
+  color:#1b449c;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(167, 45, 45, 0.1); /* ombre douce */
+
+}
+.navbar-collapse ul li a:hover{
+      border: 1px solid  #f15a2d;
+  border-radius: 10px;
+  color:#1b449c;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(167, 45, 45, 0.1); /* ombre douce */
+
 }
 #component {
   margin-top: 100px;

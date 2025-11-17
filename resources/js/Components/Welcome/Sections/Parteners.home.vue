@@ -55,7 +55,7 @@ export default {
 </script>
 <template>
   <section class="bg-light py-5 py-xl-8">
-    <div class="container">
+    <div class="container" id="partners">
       <header>
         <div>
           <span class="spacer"></span>
@@ -84,7 +84,7 @@ export default {
         >
           <div
             class="card border-0 border-bottom border-primary shadow-sm"
-            style="height: 345px"
+            style="height: 235px"
           >
             <img
               :src="item.imagefile"
@@ -92,7 +92,8 @@ export default {
               :alt="item.title"
               cover
               @click="openlink(item)"
-              height="300"
+              :height="220"
+
             />
           </div>
         </div>

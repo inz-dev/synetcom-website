@@ -72,7 +72,7 @@ export default {
 };
 </script>
 <template>
-  <section class="bg-light py-5 py-xl-8">
+  <section class="bg-light py-5 py-xl-8" id="team">
     <div class="container">
       <header>
         <div>
@@ -256,7 +256,7 @@ h1 div:first-child {
 .our-team {
   padding: 0 0 40px;
   background: #f9f9f9;
-  height: 340px;
+  height: 240px;
   text-align: center;
   overflow: hidden;
   position: relative;
