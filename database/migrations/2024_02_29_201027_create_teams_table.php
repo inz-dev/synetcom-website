@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
+            $table->string('name_team');
+            $table->string('image_team')->nullable();
             $table->timestamps();
         });
     }

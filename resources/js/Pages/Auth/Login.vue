@@ -1,6 +1,6 @@
 <script setup>
 import GuestLayout from "@/Layouts/GuestLayout.vue";
-import { useForm } from "@inertiajs/vue3";
+import { useForm, router } from "@inertiajs/vue3";
 import { ref } from "vue";
 defineProps({
   canResetPassword: {
@@ -50,16 +50,16 @@ const submit = () => {
     <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
       {{ status }}
     </div>
-    <div class="container" style="height: 100vh">
+    <div class="container" style="height: 100vh;   background-color: #fff;">
       <div class="row gy-3 gy-md-4 gy-lg-0 align-items-lg-center" style="height: 100vh">
         <div class="col-12 col-lg-6 col-xl-5">
           <!-- <div class="section-left" @click="route('')"> -->
-          <v-img src="/images/logo.png" cover />
+          <v-img src="/images/logo.png" :width="300" cover />
           <!-- </div> -->
         </div>
-        <div class="mx-1 col-12 col-lg-6 col-xl-5">
-          <v-card style="height: 80vh">
-            <v-card-text>
+
+          <v-card class="mx-1 col-12 col-lg-6 col-xl-5"  id="form-login">
+
               <v-toolbar dark color="primary">
                 <v-toolbar-title> Page de connexion </v-toolbar-title>
               </v-toolbar>
@@ -87,14 +87,27 @@ const submit = () => {
                   label="Connexion"
                 ></PrimaryButton>
               </form>
-            </v-card-text>
+
           </v-card>
-        </div>
+
       </div>
     </div>
   </GuestLayout>
 </template>
 <style scoped>
+ #form-login{
+    background-color: rgba(255,255,255,0.13);
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    padding: 50px 35px;
+}
+
 .section-left {
   width: 100%;
   height: 100%;

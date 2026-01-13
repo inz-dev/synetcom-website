@@ -1,9 +1,7 @@
 <template>
   <v-btn v-bind="$props" id="btn">
     <span id="label-style"> {{ label }}</span>
-    <!-- <template #label>
-        <span id="label-style">{{ label }}</span>
-      </template> -->
+
   </v-btn>
 </template>
 

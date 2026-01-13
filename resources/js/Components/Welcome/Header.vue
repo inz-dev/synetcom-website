@@ -1,28 +1,25 @@
 <script setup>
-function goToTeam() {
-      const section = document.getElementById("team");
-      if (section) {
-        section.scrollIntoView({behavior:'smooth'});
-      }
+    import { router } from '@inertiajs/vue3';
+import SecondaryButton from '../MyComponents/SecondaryButton.vue';
+
+    function goToSection(typePage){
+       const section=document.getElementById(typePage)
+       if(section){
+        section.scrollIntoView({behavior:'smooth'})
+       }
+    }
+
+const navigateTo=(routeName)=>{
+    router.visit(route(routeName))
+
 }
-function goToPartners() {
-      const section = document.getElementById("partners");
-      if (section) {
-        section.scrollIntoView({behavior:'smooth'});
-      }
-}
-function goToContact() {
-      const section = document.getElementById("contact");
-      if (section) {
-        section.scrollIntoView({behavior:'smooth'});
-      }
-}
-function goToServices() {
-      const section = document.getElementById("services");
-      if (section) {
-        section.scrollIntoView({behavior:'smooth'});
-      }
-}
+const listServices=[
+    {
+        nameLink:'Equipe',
+        action:goToSection('team')
+    }
+]
+
 </script>
 
 <template>
@@ -56,7 +53,7 @@ function goToServices() {
               <a class="active nav-link" href="#">Accueil</a>
             </li>
 
-            <li class="nav-item dropdown"  @click.prevent="goToServices">
+            <li class="nav-item dropdown"  @click.prevent="goToSection('services')">
               <a
                 class="nav-link dropdown-toggle"
                 href="#"
@@ -76,21 +73,25 @@ function goToServices() {
                 <a class="dropdown-item" href="#">Autres</a>
               </div>
             </li>
-            <li class="nav-item"  @click.prevent="goToTeam">
+            <li class="nav-item"  @click.prevent="goToSection('team')">
               <a class="nav-link">Équipe</a>
             </li>
-            <li class="nav-item"  @click.prevent="goToPartners">
+            <li class="nav-item"  @click.prevent="goToSection('partners')">
               <a class="nav-link">Partenaires</a>
             </li>
-            <li class="nav-item"  @click.prevent="goToContact">
+            <li class="nav-item"  @click.prevent="goToSection('contact')">
               <a class="nav-link">Nous contacter</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Recrutement</a>
             </li>
           </ul>
-          <div style="display: flex; justify-content: flex-end; margin:0 20px 0">
+          <div style="display: flex; justify-content: flex-end; margin:10px">
             <div><PrimaryButton label="Obtenir un dévis" /></div>
+          </div>
+
+           <div style="display: flex; justify-content: flex-end;">
+            <div><SecondaryButton label="Connexion" @click.prevent.stop="navigateTo('login')"/></div>
           </div>
         </div>
       </div>
@@ -129,10 +130,7 @@ function goToServices() {
             >Nous contacter</a
           >
         </p>
-        <!-- <v-row class="text-center"
-          ><v-col> <SecondaryButton label="Obtenir un devis" /></v-col>
-          <v-col> <SecondaryButton label="Obtenir un devis" /></v-col>
-        </v-row> -->
+
       </div>
     </div>
     <!-- Background image -->
