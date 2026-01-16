@@ -1,21 +1,42 @@
-<script setup></script>
-
 <template>
-  <div>
-    <!-- <div
-    class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100"
-  > -->
+  <div class="d-flex flex-column min-vh-100" style="background: linear-gradient(135deg, #1b449c 0%, #f15a2d 100%);">
+    <!-- Header -->
+    <header class="bg-light text-bold py-1 mb-2">
+      <div class="container">
+        <h1 class="h4 text-wrap fw-bold mb-0">Synetcom</h1>
+      </div>
+    </header>
 
-    <!-- <div>
-      <Link href="/">
-                <ApplicationLogo class="w-20 h-20 fill-current text-gray-500" />
-            </Link>
-    </div> -->
+    <!-- Contenu principal -->
+    <main class="flex-grow-1 d-flex">
+      <div class="container">
 
-    <!-- <div
-      class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg"
-    > -->
-    <slot />
+                <slot />
+
+          </div>
+
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center py-3 mt-auto">
+
+      <small>&copy;{{ new Date().getFullYear() }}&nbsp; Copyright:
+                                                    <a
+                                                        class="text-bold"
+                                                        href="http://127.0.0.1:8000/"
+                                                        >Synetcom-niger</a
+                                                    > - Tous droits réservés</small>
+    </footer>
   </div>
-  <!-- </div> -->
 </template>
+
+<script setup>
+// Pas de logique complexe ici, c’est un layout statique
+</script>
+
+<style scoped>
+.card {
+  border-radius: 0.75rem;
+}
+</style>

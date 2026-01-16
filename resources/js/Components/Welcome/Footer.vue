@@ -3,22 +3,18 @@ export default {};
 </script>
 
 <template>
-    <!-- Remove the container if you want to extend the Footer to full width. -->
-    <!-- <div class="container"> -->
-    <!-- Footer -->
+
     <footer
         class="text-center text-lg-start text-white"
         style="background-color: #1b449c"
     >
-        <!-- Grid container -->
+
         <div class="container p-4 pb-0">
-            <!-- Section: Links -->
+
             <section class="">
-                <!--Grid row-->
+
                 <div class="row">
-                    <!-- Grid column -->
-                  <!--   <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3"> -->
-                <!--<div id="box1">  -->
+
                  <div class="col-md-3 col-lg-3 mx-auto mt-3">
 
                         <h6 class="text-uppercase mb-4 font-weight-bold">
@@ -31,14 +27,14 @@ export default {};
                             transformation numérique.
                         </p>
                     </div>
-                    <!-- Grid column -->
+
 
                     <hr class="w-100 clearfix d-md-none" />
 
                     <!-- Grid column -->
                     <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
                         <h6 class="text-center mb-4 font-weight-bold">Liens</h6>
-                        <p>
+ <p>
                             <a class="text-white">Accueil</a>
                         </p>
                         <p>
@@ -50,6 +46,8 @@ export default {};
                         <p>
                             <a class="text-white">A propos de nous</a>
                         </p>
+
+
                     </div>
                     <!-- Grid column -->
 

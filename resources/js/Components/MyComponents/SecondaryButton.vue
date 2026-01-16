@@ -1,7 +1,7 @@
 <template>
   <v-btn v-bind="$props" id="btn-secon">
     <span id="label-style"> {{ label }}</span>
-  <v-slot/>
+
   </v-btn>
 </template>
 
@@ -18,9 +18,9 @@ defineProps({
   color: var(--4, #fff);
   text-align: center;
   font-family: Montserrat;
-  font-size: 12px;
+  font-size: 15px;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 700;
   line-height: normal;
   text-transform: none;
 }

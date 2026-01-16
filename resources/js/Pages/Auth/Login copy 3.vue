@@ -40,12 +40,71 @@ const submit = () => {
     },
   });
 };
+// const toggleMessage = computed(() => {
+//   isRegister ? this.stateObj.register.message : this.stateObj.login.message;
+// });
 
+// Show/hide password onClick of button using Javascript only
+
+// https://stackoverflow.com/questions/31224651/show-hide-password-onclick-of-button-using-javascript-only
 
 
 
 onMounted(() => {
   console.log(`the component is now mounted.`)
+ const themes = [
+    {
+        background: "#1A1A2E",
+        color: "#FFFFFF",
+        primaryColor: "#0F3460"
+    },
+    {
+        background: "#461220",
+        color: "#FFFFFF",
+        primaryColor: "#E94560"
+    },
+    {
+        background: "#1b449c",
+        color: "#FFFFFF",
+        primaryColor: "#f15a2d"
+    },
+    {
+        background: "#F7B267",
+        color: "#000000",
+        primaryColor: "#F4845F"
+    },
+    {
+        background: "#F25F5C",
+        color: "#000000",
+        primaryColor: "#642B36"
+    },
+    {
+        background: "#231F20",
+        color: "#FFF",
+        primaryColor: "#BB4430"
+    }
+];
+
+const setTheme = (theme) => {
+    const root = document.querySelector(":root");
+    root.style.setProperty("--background", theme.background);
+    root.style.setProperty("--color", theme.color);
+    root.style.setProperty("--primary-color", theme.primaryColor);
+    root.style.setProperty("--glass-color", theme.glassColor);
+};
+
+const displayThemeButtons = () => {
+    const btnContainer = document.querySelector(".theme-btn-container");
+    themes.forEach((theme) => {
+        const div = document.createElement("div");
+        div.className = "theme-btn";
+        div.style.cssText = `background: ${theme.background}; width: 25px; height: 25px`;
+        btnContainer.appendChild(div);
+        div.addEventListener("click", () => setTheme(theme));
+    });
+};
+
+displayThemeButtons();
 
 })
 
@@ -57,32 +116,25 @@ onMounted(() => {
     <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
       {{ status }}
     </div>
-  <div>
-    <!-- <div class="background">
+<div class="body">
+    <div class="background">
         <div class="shape"></div>
         <div class="shape"></div>
-    </div> -->
+    </div>
+    <form>
+        <h3>Login Here</h3>
 
-    <form @submit.prevent="submit" class="w-80 col-12 col-lg-6 col-xl-5"   >
-        <h3>Page de connexion</h3>
+        <label for="username">Username</label>
+        <input type="text" placeholder="Email or Phone" id="username">
 
-        <label for="username">Identifiant</label>
-        <input type="text" placeholder="Identifiant" id="username"   v-model="form.email">
+        <label for="password">Password</label>
+        <input type="password" placeholder="Password" id="password">
 
-        <label for="password">Mot de passe</label>
-        <input type="password" placeholder="Password" autocomplete="true" id="password" v-model="form.password">
-  <div class="red--text">{{ errorMessage }}</div>
-                <PrimaryButton
-                  class="button-submit"
-                  @click="submit"
-                  :disabled="form.processing"
-                  label="Connexion"
-                ></PrimaryButton>
-    <!-- <button  class="button-submit">Log In</button> -->
-     <!--    <div class="social">
+        <button>Log In</button>
+        <div class="social">
           <div class="go"><i class="fab fa-google"></i>  Google</div>
           <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div>
-        </div>-->
+        </div>
     </form>
 
 
@@ -121,7 +173,7 @@ onMounted(() => {
 }
 .shape:first-child{
     background: linear-gradient(
-        #1b449c ,
+        #1845ad,
         #23a2f6
     );
     left: -80px;
@@ -130,15 +182,15 @@ onMounted(() => {
 .shape:last-child{
     background: linear-gradient(
         to right,
-        #f15a2d,
+        #ff512f,
         #f09819
     );
     right: -30px;
     bottom: -80px;
 }
 form{
-    height: 70%;
-    width: 70%;
+    height: 520px;
+    width: 400px;
     background-color: rgba(255,255,255,0.13);
     position: absolute;
     transform: translate(-50%,-50%);
@@ -148,7 +200,7 @@ form{
     backdrop-filter: blur(10px);
     border: 2px solid rgba(255,255,255,0.1);
     box-shadow: 0 0 40px rgba(8,7,16,0.6);
-    padding: 10px 5px;
+    padding: 50px 35px;
 }
 form *{
     font-family: 'Poppins',sans-serif;
@@ -159,8 +211,8 @@ form *{
 }
 form h3{
     font-size: 32px;
-    font-weight: 400;
-    line-height: 35px;
+    font-weight: 500;
+    line-height: 42px;
     text-align: center;
 }
 
@@ -172,24 +224,27 @@ label{
 }
 input{
     display: block;
-    height: 40px;
+    height: 50px;
     width: 100%;
     background-color: rgba(255,255,255,0.07);
     border-radius: 3px;
     padding: 0 10px;
-    margin-top: 5px;
+    margin-top: 8px;
     font-size: 14px;
     font-weight: 300;
 }
 ::placeholder{
     color: #e5e5e5;
 }
-.button-submit{
+button{
     margin-top: 50px;
     width: 100%;
+    background-color: #ffffff;
+    color: #080710;
+    padding: 15px 0;
     font-size: 18px;
-    font-weight: 700;
-
+    font-weight: 600;
+    border-radius: 5px;
     cursor: pointer;
 }
 .social{
