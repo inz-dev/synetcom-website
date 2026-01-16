@@ -138,13 +138,7 @@ const listServices=[
 </template>
 
 <style>
-/* .navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-  color: #333333;
 
-  background-color: red;
-} */
  .nav-link.active:hover{
   border: 1px solid  #f15a2d;
   border-radius: 10px;
