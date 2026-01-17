@@ -8,7 +8,11 @@ const showingNavigationDropdown = ref(false);
 </script>
 
 <template>
-<v-main>
-<v-slot/>
-</v-main>
+
+
+ <div class="container">
+
+                <slot />
+
+          </div>
 </template>

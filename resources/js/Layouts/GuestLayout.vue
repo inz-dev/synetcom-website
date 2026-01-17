@@ -1,11 +1,11 @@
 <template>
   <div class="d-flex flex-column min-vh-100" style="background: linear-gradient(135deg, #1b449c 0%, #f15a2d 100%);">
     <!-- Header -->
-    <header class="bg-light text-bold py-1 mb-2">
+    <!-- <header class="bg-light text-bold py-1 mb-2">
       <div class="container">
         <h1 class="h4 text-wrap fw-bold mb-0">Synetcom</h1>
       </div>
-    </header>
+    </header> -->
 
     <!-- Contenu principal -->
     <main class="flex-grow-1 d-flex">
@@ -19,7 +19,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-light text-center py-3 mt-auto">
+    <footer class="bg-light text-center py-1 mt-auto">
 
       <small>&copy;{{ new Date().getFullYear() }}&nbsp; Copyright:
                                                     <a

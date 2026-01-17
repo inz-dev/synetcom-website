@@ -33,7 +33,7 @@ const      listPartners= [
           imagefile: "/images/unicef-logo.jpeg",
         },
       ];
-function  openlink(item) {
+      function  openlink(item) {
       if (item) {
         if (item.link) return window.open(item.link);
         else {
@@ -42,6 +42,7 @@ function  openlink(item) {
         }
       }
     }
+
 </script>
 <template>
   <section class="bg-light py-5 py-xl-8">

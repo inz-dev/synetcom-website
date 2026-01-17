@@ -58,3 +58,12 @@ export default {
   }),
 };
 </script>
+
+<style>
+    *{
+        font-family: 'Poppins',sans-serif;
+        margin:0;
+    }
+
+
+</style>

@@ -57,15 +57,21 @@ onMounted(() => {
     <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
       {{ status }}
     </div>
-  <div>
-    <!-- <div class="background">
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div> -->
+  <div style="height:100vh">
 
-    <form @submit.prevent="submit" class="w-80 col-12 col-lg-6 col-xl-5"   >
-        <h3>Page de connexion</h3>
 
+    <form @submit.prevent="submit" class="w-90 col-10 col-lg-4 col-xl-3">
+    <div class="row text-center" style="height:50; ">
+                <h3>Page de connexion</h3>
+<a class="navbar-brand" href="http://127.0.0.1:8000/">
+          <img
+            src="/images/logo.png"
+            width="150"
+            height="70"
+            class="d-inline-block align-top"
+          />
+        </a>
+    </div>
         <label for="username">Identifiant</label>
         <input type="text" placeholder="Identifiant" id="username"   v-model="form.email">
 
@@ -78,6 +84,7 @@ onMounted(() => {
                   :disabled="form.processing"
                   label="Connexion"
                 ></PrimaryButton>
+
     <!-- <button  class="button-submit">Log In</button> -->
      <!--    <div class="social">
           <div class="go"><i class="fab fa-google"></i>  Google</div>
@@ -85,7 +92,7 @@ onMounted(() => {
         </div>-->
     </form>
 
-
+ <br> <br> <br>
 
 </div>
   </GuestLayout>
@@ -105,40 +112,11 @@ onMounted(() => {
 :root{
     background-color: #080710;
 }
-.background{
-    width: 430px;
-    height: 520px;
-    position: absolute;
-    transform: translate(-50%,-50%);
-    left: 50%;
-    top: 50%;
-}
-.background .shape{
-    height: 200px;
-    width: 200px;
-    position: absolute;
-    border-radius: 50%;
-}
-.shape:first-child{
-    background: linear-gradient(
-        #1b449c ,
-        #23a2f6
-    );
-    left: -80px;
-    top: -80px;
-}
-.shape:last-child{
-    background: linear-gradient(
-        to right,
-        #f15a2d,
-        #f09819
-    );
-    right: -30px;
-    bottom: -80px;
-}
+
+
 form{
-    height: 70%;
-    width: 70%;
+       height: max-content;
+
     background-color: rgba(255,255,255,0.13);
     position: absolute;
     transform: translate(-50%,-50%);
@@ -148,7 +126,8 @@ form{
     backdrop-filter: blur(10px);
     border: 2px solid rgba(255,255,255,0.1);
     box-shadow: 0 0 40px rgba(8,7,16,0.6);
-    padding: 10px 5px;
+    padding: 15px;
+
 }
 form *{
     font-family: 'Poppins',sans-serif;
@@ -158,15 +137,15 @@ form *{
     border: none;
 }
 form h3{
-    font-size: 32px;
-    font-weight: 400;
+    font-size: 22px;
+    font-weight: 300;
     line-height: 35px;
     text-align: center;
 }
 
 label{
     display: block;
-    margin-top: 30px;
+    margin-top: 15px;
     font-size: 16px;
     font-weight: 500;
 }

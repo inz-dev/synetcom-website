@@ -9,7 +9,7 @@ export default {
           id: 1,
           title: "Développement  et Intégration de solution digitale",
           message:
-            "Vestibulum bibendum, lorem a blandit lacinia, nisi velit posuere nisl, velplacerat magna mauris mollis maximus est.",
+            "Vestibulum bibendum.",
           icon: {
             class: "bi bi-cpu",
             path1:
@@ -149,22 +149,23 @@ export default {
         >
           <div
             class="card border-0 border-bottom border-primary shadow-sm"
-            style="height: 345px"
+            style="height: 200px"
+
           >
-            <div class="card-body text-center p-4 p-xxl-5">
+            <div class="card-body text-center p-2 p-xxl-5">
               <BootstrapIcon
                 :class="item.icon.class"
                 :path1="item.icon.path1"
                 :path2="item.icon.path2"
                 :path3="item.icon.path3"
               />
-              <h4 class="mt-3 mb-4">{{ item.title }}</h4>
-              <p class="mb-4 text-secondary">
+              <h4 class="mt-1 mb-2" id="texte-limite" >{{ item.title }}</h4>
+              <!-- <p class="mb-2 text-secondary">
                 {{ item.message }}
-              </p>
+              </p> -->
               <a
                 href="#!"
-                class="fw-bold text-decoration-none link"
+                class="fw-bold text-decoration-none link mb-2"
                 style="color: #1b449c"
               >
                 Lire plus
@@ -200,6 +201,20 @@ export default {
   </section>
 </template>
 <style scoped>
+    *{
+        font-family: 'Poppins',sans-serif;
+    }
+    #texte-limite {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;     /* nombre de lignes max */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+    font-size: 20px;
+    font-weight: 250;
+    line-height: 25px;
+}
+
+
 hr {
   background-color: #1b449c;
   height: 2px;
