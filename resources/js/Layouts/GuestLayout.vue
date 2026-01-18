@@ -1,5 +1,6 @@
 <template>
-  <div class="d-flex flex-column min-vh-100" style="background: linear-gradient(135deg, #1b449c 0%, #f15a2d 100%);">
+  <!-- <div class="d-flex flex-column min-vh-100" style="background: linear-gradient(135deg, #1b449c 0%, #f15a2d 100%);"> -->
+   <div class="d-flex flex-column min-vh-100" style="background:black;">
     <!-- Header -->
     <!-- <header class="bg-light text-bold py-1 mb-2">
       <div class="container">

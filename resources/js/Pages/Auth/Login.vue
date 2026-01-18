@@ -53,14 +53,14 @@ onMounted(() => {
 </script>
 
 <template>
+
   <GuestLayout>
+   <div class="container mb-3">
     <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
       {{ status }}
     </div>
-  <div style="height:100vh">
 
-
-    <form @submit.prevent="submit" class="w-90 col-10 col-lg-4 col-xl-3">
+    <form @submit.prevent="submit" class="col-10 col-lg-4 col-xl-3">
     <div class="row text-center" style="height:50; ">
                 <h3>Page de connexion</h3>
 <a class="navbar-brand" href="http://127.0.0.1:8000/">
@@ -77,7 +77,7 @@ onMounted(() => {
 
         <label for="password">Mot de passe</label>
         <input type="password" placeholder="Password" autocomplete="true" id="password" v-model="form.password">
-  <div class="red--text">{{ errorMessage }}</div>
+
                 <PrimaryButton
                   class="button-submit"
                   @click="submit"
@@ -85,14 +85,13 @@ onMounted(() => {
                   label="Connexion"
                 ></PrimaryButton>
 
-    <!-- <button  class="button-submit">Log In</button> -->
-     <!--    <div class="social">
-          <div class="go"><i class="fab fa-google"></i>  Google</div>
-          <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div>
-        </div>-->
+   <div class="d-flex mt-2" style="font-size:11px">
+  <div class="p-1  flex-fill m-1 border rounded border-white">Mot de passe oublié</div>
+  <div class="p-1  flex-fill m-1 border  rounded border-white"> Créer un compte</div>
+
+</div>
     </form>
 
- <br> <br> <br>
 
 </div>
   </GuestLayout>
@@ -109,14 +108,8 @@ onMounted(() => {
     margin: 0;
     box-sizing: border-box;
 }
-:root{
-    background-color: #080710;
-}
-
 
 form{
-       height: max-content;
-
     background-color: rgba(255,255,255,0.13);
     position: absolute;
     transform: translate(-50%,-50%);
@@ -171,27 +164,9 @@ input{
 
     cursor: pointer;
 }
-.social{
-  margin-top: 30px;
-  display: flex;
-}
-.social div{
-  background: red;
-  width: 150px;
-  border-radius: 3px;
-  padding: 5px 10px 10px 5px;
-  background-color: rgba(255,255,255,0.27);
-  color: #eaf0fb;
-  text-align: center;
-}
+
 .social div:hover{
   background-color: rgba(255,255,255,0.47);
-}
-.social .fb{
-  margin-left: 25px;
-}
-.social i{
-  margin-right: 4px;
 }
 
     </style>
