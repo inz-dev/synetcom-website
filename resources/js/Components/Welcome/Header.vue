@@ -86,7 +86,7 @@ const listServices=[
               <a class="nav-link" href="#">Recrutement</a>
             </li>
           </ul>
-          <div style="display: flex; justify-content: flex-end; gap:10px">
+          <div style="display: flex; justify-content: flex-end;margin:5px; gap:10px">
             <PrimaryButton label="Obtenir un dévis" />
             <SecondaryButton  label="Connexion" @click.prevent.stop="navigateTo('login')"/>
           </div>
@@ -99,8 +99,8 @@ const listServices=[
     <!-- Background image -->
 
     <div class="bg-image">
-      <!-- <div id="component"  class="container my-5"> -->
-      <div class="container my-4 py-4">
+
+      <div class="container my-3 py-4">
         <p
           class="mt-5 text-center text-white fs-1 fw-semibold font-family-Montserrat text-capitalize"
         >
@@ -135,23 +135,20 @@ const listServices=[
 </template>
 
 <style>
-.login-btn:hover{
-    background-color: #1b449c;
 
-}
  .nav-link.active:hover{
   border: 1px solid  #f15a2d;
   border-radius: 10px;
   color:#1b449c;
-  padding: 10px;
+  padding: 5px;
   box-shadow: 0 2px 4px rgba(167, 45, 45, 0.1); /* ombre douce */
 
 }
 .navbar-collapse ul li a:hover{
-      border: 1px solid  #f15a2d;
+      border: 1px dotted  #f15a2d;
   border-radius: 10px;
   color:#1b449c;
-  padding: 10px;
+  padding: 5px;
   box-shadow: 0 2px 4px rgba(167, 45, 45, 0.1); /* ombre douce */
 
 }
@@ -162,7 +159,7 @@ const listServices=[
 }
 .bg-image {
   /* Workaround for some mobile browsers */
-  margin-top: 65px;
+  margin-top: 45px;
   background: url("/images/background1.png") no-repeat center center;
   background-size: cover;
   min-height: 80vh;

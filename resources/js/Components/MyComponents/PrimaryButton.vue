@@ -28,4 +28,9 @@ defineProps({
   border-radius: 99px;
   background: linear-gradient(135deg, #1b449c 0%, #f15a2d 100%);
 }
+#btn.v-btn[data-v-076875a5]:hover {
+
+    background-color: #1b449c;
+
+}
 </style>
