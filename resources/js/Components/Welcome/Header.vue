@@ -86,12 +86,9 @@ const listServices=[
               <a class="nav-link" href="#">Recrutement</a>
             </li>
           </ul>
-          <div style="display: flex; justify-content: flex-end; margin:10px">
-            <div><PrimaryButton label="Obtenir un dévis" /></div>
-          </div>
-
-           <div style="display: flex; justify-content: flex-end;">
-            <div><SecondaryButton label="Connexion" @click.prevent.stop="navigateTo('login')"/></div>
+          <div style="display: flex; justify-content: flex-end; gap:10px">
+            <PrimaryButton label="Obtenir un dévis" />
+            <SecondaryButton  label="Connexion" @click.prevent.stop="navigateTo('login')"/>
           </div>
         </div>
       </div>
@@ -138,7 +135,10 @@ const listServices=[
 </template>
 
 <style>
+.login-btn:hover{
+    background-color: #1b449c;
 
+}
  .nav-link.active:hover{
   border: 1px solid  #f15a2d;
   border-radius: 10px;

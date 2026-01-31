@@ -2,6 +2,7 @@
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import { onMounted, ref } from "vue";
+
 defineProps({
   canResetPassword: {
     type: Boolean,
