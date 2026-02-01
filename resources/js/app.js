@@ -21,6 +21,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 import AosVue from "aos-vue";
+import FooterComponent from "./Components/MyComponents/Footer.component.vue";
 
 library.add(faUser, faClock);
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
@@ -45,6 +46,7 @@ createInertiaApp({
             .use(AosVue)
             .component("PrimaryButton", PrimaryButton)
             .component("SecondaryButton", SecondaryButton)
+            .component("FooterComponent", FooterComponent)
             .component("font-awesome-icon", FontAwesomeIcon)
             .component("BootstrapIcon", BootstrapIcon)
             .mount(el);

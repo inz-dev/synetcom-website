@@ -11,7 +11,7 @@ export default {};
 
         <div class="container p-4 pb-0">
 
-            <section class="">
+            <section>
 
                 <div class="row">
 

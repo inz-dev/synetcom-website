@@ -30,7 +30,7 @@ const listServices=[
       <div class="container">
         <a class="navbar-brand" href="#">
           <img
-            src="/images/logo.png"
+            src="/images/logo-synetcom.png"
             width="150"
             height="70"
             class="d-inline-block align-top"

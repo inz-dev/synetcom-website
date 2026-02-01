@@ -111,7 +111,9 @@ onMounted(() => {
 }
 
 form{
-    background-color: rgba(255,255,255,0.13);
+    /*background-color: rgba(255,255,255,0.13);*/
+    background-color: rgb(51,51,51);
+
     position: absolute;
     transform: translate(-50%,-50%);
     top: 50%;
