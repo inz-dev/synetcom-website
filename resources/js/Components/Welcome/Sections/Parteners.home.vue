@@ -1,5 +1,7 @@
 <script setup>
 import BootstrapIcon from "@/Components/MyComponents/BootstrapIcon.vue";
+import 'vue3-carousel/carousel.css'
+import { Carousel, Slide, Navigation } from 'vue3-carousel'
 const      listPartners= [
         {
           id: 1,
@@ -33,6 +35,15 @@ const      listPartners= [
           imagefile: "/images/unicef-logo.jpeg",
         },
       ];
+      const config = {
+  height: 200,
+  itemsToShow: 2,
+
+  gap:10,
+  autoplay: 2000,
+  wrapAround: true,
+  pauseAutoplayOnHover: true,
+}
 function  openlink(item) {
       if (item) {
         if (item.link) return window.open(item.link);
@@ -54,40 +65,25 @@ function  openlink(item) {
         </div>
       </header>
       <p id="message">Ils nous font confiance</p>
-      <!-- <div class="row gy-3 gy-md-4 gy-lg-0 align-items-lg-center">
-        <div class="col-12 col-lg-6 col-xl-7">
-          <div class="row justify-content-xl-center">
-            <div class="col-12 col-xl-11">
 
-            </div>
-          </div>
-        </div>
-      </div> -->
     </div>
 
     <div class="container overflow-hidden mt-5">
-      <div class="row gy-4 gy-xl-0 mt-5">
-        <div
-          class="mb-4 col-12 col-sm-7 col-xl-4 col-md-6"
-          v-for="item in listPartners"
-          :key="item.id"
-        >
-          <div
-            class="card border-0 border-bottom border-primary shadow-sm"
-            style="height: 200px"
-          >
-            <img
-              :src="item.imagefile"
+     <Carousel v-bind="config" >
+    <Slide v-for="item in listPartners" :key="item.id">
+      <img :src="item.imagefile"
               class="card-img-top"
               :alt="item.title"
-              cover
               @click="openlink(item)"
-              :height="200"
+             />
+    </Slide>
 
-            />
-          </div>
-        </div>
-      </div>
+    <template #addons>
+      <Navigation />
+    </template>
+  </Carousel>
+
+
     </div>
 
     <div class="card-footer text-center" style="margin: 15px">
@@ -96,6 +92,13 @@ function  openlink(item) {
   </section>
 </template>
 <style scoped>
+.card-img-top{
+    cursor:pointer;
+    background-size: cover;
+}
+.card-img-top:hover {
+  background-color: #f15a2d;
+}
 header {
   display: table;
   width: 100%;

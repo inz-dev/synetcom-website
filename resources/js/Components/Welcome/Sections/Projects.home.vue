@@ -74,7 +74,7 @@ export default {
     </div>
 
     <div class="container overflow-hidden mt-5">
-      <div class="row gy-4 gy-xl-0 mt-5">
+      <div class="row gy-4 gy-xl-0 ">
         <div
           class="mb-4 col-12 col-sm-7 col-xl-4 col-md-6"
           v-for="item in listPartners"
@@ -82,7 +82,7 @@ export default {
         >
           <div
             class="card border-0 border-bottom border-primary shadow-sm"
-            style="height: 345px"
+            style="height: 300px"
           >
             <img
               :src="item.imagefile"
@@ -90,7 +90,7 @@ export default {
               :alt="item.title"
               cover
               @click="openlink(item)"
-              height="300"
+
             />
           </div>
         </div>
