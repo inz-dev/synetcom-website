@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NousContacterController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -24,7 +25,8 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-
+Route::resource('nous-contacter', NousContacterController::class);
+Route::get('nous-contacter', [NousContacterController::class, 'index'])->name('nous-contacter');
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

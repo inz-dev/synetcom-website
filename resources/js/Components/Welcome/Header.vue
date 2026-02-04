@@ -10,7 +10,9 @@ import SecondaryButton from '../MyComponents/SecondaryButton.vue';
     }
 
 const navigateTo=(routeName)=>{
+    console.log('routeName:',routeName)
     router.visit(route(routeName))
+    console.log('routeName2:',route(routeName))
 
 }
 const listServices=[
@@ -78,7 +80,7 @@ const listServices=[
             <li class="nav-item"  @click.prevent="goToSection('partners')">
               <a class="nav-link">Partenaires</a>
             </li>
-            <li class="nav-item"  @click.prevent="goToSection('contact')">
+            <li class="nav-item"  @click.prevent="navigateTo('nous-contacter')">
               <a class="nav-link">Nous contacter</a>
             </li>
             <li class="nav-item">
@@ -97,43 +99,12 @@ const listServices=[
 
     <!-- Background image -->
 
-    <div class="bg-image">
-
-      <div class="container my-3 py-4">
-        <p
-          class="mt-5 text-center text-white fs-1 fw-semibold font-family-Montserrat text-capitalize"
-        >
-          Synetcom
-        </p>
-        <p class="text-center text-white fs-5 fw-medium font-family-Montserrat">
-          Développer votre entreprise chaque jour avec la transformation numérique.
-          <br />
-          Nous vous permettons de générer de la croissance grâce aux outils de la
-          transformation numérique.
-        </p>
-        <p class="text-center">
-          <a
-            class="btn btn-default btn-lg text-white"
-            style="border-radius: 10px 100px / 120px; background-color: #1b449c"
-            role="button"
-            >Obtenir un devis</a
-          >
-          <!-- &nbsp;&nbsp; -->
-          <a
-            class="btn btn-action text-white btn-lg mx-3 mt-2"
-            style="border-radius: 10px 100px / 120px; background-color: #f15a2d"
-            role="button"
-            >Nous contacter</a
-          >
-        </p>
-
-      </div>
-    </div>
+   <slot/>
     <!-- Background image -->
   </header>
 </template>
 
-<style>
+<style scope>
 
  .nav-link.active:hover{
   border: 1px solid  #f15a2d;
@@ -156,13 +127,5 @@ const listServices=[
   width: 1108px;
   height: 300px;
 }
-.bg-image {
-  /* Workaround for some mobile browsers */
-  margin-top: 45px;
-  background: url("/images/background1.png") no-repeat center center;
-  background-size: cover;
-  min-height: 80vh;
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
+
 </style>

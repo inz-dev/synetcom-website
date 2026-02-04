@@ -22,6 +22,8 @@ import "aos/dist/aos.css";
 
 import AosVue from "aos-vue";
 import FooterComponent from "./Components/MyComponents/Footer.component.vue";
+import Header from "./Components/Welcome/Header.vue";
+import Footer from "./Components/Welcome/Footer.vue";
 
 library.add(faUser, faClock);
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
@@ -44,6 +46,8 @@ createInertiaApp({
             .use(vuetify)
             .use(ZiggyVue)
             .use(AosVue)
+            .component("Header", Header)
+            .component("Footer",Footer)
             .component("PrimaryButton", PrimaryButton)
             .component("SecondaryButton", SecondaryButton)
             .component("FooterComponent", FooterComponent)

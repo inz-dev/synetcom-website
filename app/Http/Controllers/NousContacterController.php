@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\NousContacter;
-use App\Models\Welcome;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class WelcomeController extends Controller
+class NousContacterController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +15,9 @@ class WelcomeController extends Controller
     {
         //
 
+           return Inertia::render('NousContacter/Index', [
 
+        ]);
     }
 
     /**
@@ -38,7 +39,7 @@ class WelcomeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Welcome $welcome)
+    public function show(NousContacter $nousContacter)
     {
         //
     }
@@ -46,7 +47,7 @@ class WelcomeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Welcome $welcome)
+    public function edit(NousContacter $nousContacter)
     {
         //
     }
@@ -54,7 +55,7 @@ class WelcomeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Welcome $welcome)
+    public function update(Request $request, NousContacter $nousContacter)
     {
         //
     }
@@ -62,7 +63,7 @@ class WelcomeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Welcome $welcome)
+    public function destroy(NousContacter $nousContacter)
     {
         //
     }

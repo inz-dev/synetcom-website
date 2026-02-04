@@ -7,20 +7,22 @@ import Portfolio from "@/Components/Welcome/Sections/Portfolio.vue";
 import ServicesHome from "@/Components/Welcome/Sections/Services.home.vue";
 import TeamHome from "@/Components/Welcome/Sections/Team.home.vue";
 import WhyChooseUsHome from "@/Components/Welcome/Sections/WhyChooseUs.home.vue";
-import BackgroundHome from "./Background.home.vue";
 </script>
 
 <template>
-  <Header />
-    <BackgroundHome />
-  <ServicesHome />
-  <Portfolio />
-  <WhyChooseUsHome />
-  <!-- <ProjectsHomeVue /> -->
-  <TeamHome />
-  <NewsletterHome />
-  <PartenersHome />
-  <Footer />
+
+   <div class="bg-image">
+
+      <div class="container my-3 py-4 mt-10">
+
+        <h1 class="mt-10 text-center text-white fw-medium font-family-Montserrat">
+         Nous Contacter
+        </h1>
+
+
+      </div>
+    </div>
+
 </template>
 
 <style>
