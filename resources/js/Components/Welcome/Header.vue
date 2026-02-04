@@ -27,12 +27,11 @@ const listServices=[
     <!-- Navbar -->
 
     <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
-      <div class="container">
+      <div class="container-fluid">
         <a class="navbar-brand" href="#">
           <img
-            src="/images/logo-synetcom.png"
-            width="150"
-            height="70"
+            src="/images/logo.png"
+            style="background-size: cover; height:50px"
             class="d-inline-block align-top"
           />
         </a>
@@ -48,7 +47,7 @@ const listServices=[
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive" >
-          <ul class="navbar-nav ml-auto">
+          <ul class="navbar-nav" style="display:flex; gap:12px">
             <li class="nav-item active">
               <a class="active nav-link" href="#">Accueil</a>
             </li>
@@ -86,7 +85,7 @@ const listServices=[
               <a class="nav-link" href="#">Recrutement</a>
             </li>
           </ul>
-          <div style="display: flex; justify-content: flex-end;margin:5px; gap:10px">
+          <div style="display: flex; justify-content: flex-end;margin-left:auto; gap:8px">
             <PrimaryButton label="Obtenir un dévis" />
             <SecondaryButton  label="Connexion" @click.prevent.stop="navigateTo('login')"/>
           </div>

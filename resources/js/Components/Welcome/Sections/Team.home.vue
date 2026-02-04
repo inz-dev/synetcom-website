@@ -264,7 +264,7 @@ h1 div:first-child {
   margin: 20px;
 }
 .our-team:hover {
-  border-bottom: 5px solid #ff5252;
+  border-bottom: 5px solid #f15a2d;
 }
 
 .our-team .pic {
@@ -291,7 +291,7 @@ h1 div:first-child {
 }
 .our-team:hover .pic:before {
   height: 100%;
-  background: #ff5252;
+  background: #f15a2d;
 }
 .our-team .pic:after {
   content: "";

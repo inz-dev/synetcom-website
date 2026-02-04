@@ -37,7 +37,7 @@ const      listPartners= [
       ];
       const config = {
   height: 200,
-  itemsToShow: 2,
+  itemsToShow: 5,
 
   gap:10,
   autoplay: 2000,
@@ -55,7 +55,7 @@ function  openlink(item) {
     }
 </script>
 <template>
-  <section class="bg-light py-5 py-xl-8">
+  <section  id="partner-section" class="bg-light py-5 py-xl-8">
     <div class="container" id="partners">
       <header>
         <div>
@@ -69,7 +69,8 @@ function  openlink(item) {
     </div>
 
     <div class="container overflow-hidden mt-5">
-     <Carousel v-bind="config" >
+    <div class="img-card">
+     <Carousel v-bind="config" id="carousel">
     <Slide v-for="item in listPartners" :key="item.id">
       <img :src="item.imagefile"
               class="card-img-top"
@@ -82,7 +83,7 @@ function  openlink(item) {
       <Navigation />
     </template>
   </Carousel>
-
+</div>
 
     </div>
 
@@ -92,12 +93,26 @@ function  openlink(item) {
   </section>
 </template>
 <style scoped>
+
+.card-img-top::before {
+  content: "";
+  background: #1b449c;
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  top: 30px;
+  bottom: 30px;
+  transition: all ease-in-out 0.3s;
+  z-index: 2;
+  opacity: 0;
+}
 .card-img-top{
     cursor:pointer;
     background-size: cover;
+    height: 200px;
 }
-.card-img-top:hover {
-  background-color: #f15a2d;
+.img-card:hover {
+  background-image: #f15a2d;
 }
 header {
   display: table;

@@ -109,7 +109,7 @@ export default {
       <v-card>
         <v-tabs v-model="tab" color="primary" align-tabs="center">
           <v-tab :value="1">Apps</v-tab>
-          <v-tab :value="2">Impressions Gadgets&Supports</v-tab>
+          <v-tab :value="2">Impressions Gadgets &nbsp;&&nbsp;Supports</v-tab>
           <v-tab :value="3">Panneaux publicitaires</v-tab>
         </v-tabs>
         <v-window v-model="tab">
@@ -243,7 +243,7 @@ header span.spacer:after {
 
 .portfolio .portfolio-wrap::before {
   content: "";
-  background: rgba(88, 70, 249, 0.8);
+  background: #1b449c;
   position: absolute;
   left: 30px;
   right: 30px;
