@@ -70,7 +70,7 @@ function  openlink(item) {
 
     <div class="container overflow-hidden mt-5">
     <div class="img-card">
-     <Carousel v-bind="config" id="carousel">
+     <Carousel v-bind="config">
     <Slide v-for="item in listPartners" :key="item.id">
       <img :src="item.imagefile"
               class="card-img-top"
