@@ -1,9 +1,11 @@
 <script setup>
-import BackgroundNousContacter from './Background.nousContacter.vue';
+import BanierePage from '../../Components/MyComponents/BanierePage.vue';
 
 
 </script>
 <template>
-<Header/>
-<BackgroundNousContacter/>
+<Header>
+<BanierePage title="Nous Contacter"  :backgroundImage="'/images/background1.png'"/>
+</Header>
 </template>
+
