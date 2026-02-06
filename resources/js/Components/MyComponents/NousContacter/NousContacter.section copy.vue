@@ -1,74 +1,85 @@
 <script setup>
 
-
-
 </script>
+
 <template>
-  <section  id="nous_contacter-section" class="bg-light">
+  <section id="nous-contacter" class="nous-contacter" style="margin-top: 50px">
+    <div class="container" data-aos="fade-up">
       <header>
         <div>
-          <span class="spacerT"></span>
+          <span class="spacer"></span>
           <h1>Nous contacter</h1>
-          <span class="spacerT"></span>
+          <span class="spacer"></span>
         </div>
       </header>
-      <p id="message">Ils nous font confiance</p>
+
+<div class="row bg-blue-700">
+<div class="col">
+<div>
+    <img src="/images/sections/icon_section_nouscontacter.png" alt="" srcset="" style="background-size:cover; width:300px">
+</div>
+</div>
+<div class="col">
+<div class="card" style="width: 30rem;">
+
+  <div class="card-body">
+    <h5 class="card-title" style="color:red">Espace de contact</h5>
+    <p class="card-subtitle mb-2 text-muted">
+    Utilisez le formulaire ci-dessous pour nous contacter. Veuillez être aussi détaillé et précis que possible.
+</p>
+  </div>
+  <div class="card-body">
+  <form action="" method="post" class="border rounded-top rounded-4 min-h-20 bg-slate-400 border-black">
+  <label for="name">Nom</label>
+  <input type="text" value="name" />
+  <label for="name">Nom</label>
+  <input type="text" value="name" />
+  <label for="name">Nom</label>
+  <input type="text" value="name" />
+  <label for="name">Nom</label>
+  <input type="" value="name" />
+  <input type="button" value="submit">
+ </form>
+  </div>
+</div>
 
 
+</div>
 
-
-    <div class="row">
-    <div class="col px-9" >
-    <img id="col-image" src="/images/sections/icon_section_nouscontacter.png" alt="icon nous contacter">
+</div>
     </div>
-    <div class="col mx-9 my-10">
-    <form action="" method="post" style="width:549px; height:1068px;" class=" px-9 py-10 border border-white bg-white" >
-    <div id="form-contact" >
-<h1>Hello</h1>
-    </div>
-    </form>
-    </div>
-    </div>
-
-
-
-
-
-
-
-    </section>
-<Footer/>
+  </section>
+  <!-- End Nous contacter Section -->
+  <Footer/>
 </template>
+
 <style scoped>
-.row {
-    background-color: blue;
-  display: flex;
-  flex-wrap: wrap;        /* permet de passer à la ligne si l’écran est trop petit */
-  margin: 0 -10px;        /* petit "gutter" */
+header {
+  display: table;
+  width: 100%;
+  max-width: 100%;
 }
-
-.col {
-  flex: 1;                /* chaque colonne prend la même largeur */
-  min-width: 250px;       /* largeur minimale avant de se casser en ligne */
-  padding: 10px;
-  box-sizing: border-box;
-
-  text-align: center;
+header div {
+  display: table-row;
+  line-height: 1.5em;
+  font-size: 2em;
+  white-space: nowrap;
 }
-#col-image{
-    top:0;
-    left: 0;
-    background-size: cover;
-    width: 400px;
-    background-position: center;
+header h1 {
+  font-size: inherit; /* Change font-size in header */
+  overflow: hidden;
+  display: table-cell;
+  vertical-align: middle;
+  width: 1px;
+  table-layout: fixed;
 }
-header span.spacerT {
+header span.spacer {
   display: table-cell;
 }
 header h1 {
   padding: 0 10px;
 }
-header span.spacerTT:after {
+header span.spacer:after {
   display: inline-block;
   width: 100%;
   content: ".";
@@ -93,5 +104,7 @@ header span.spacerTT:after {
 }
 
 
-</style>
 
+
+
+</style>
