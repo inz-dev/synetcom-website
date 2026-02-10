@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <section id="nous-contacter" class="nous-contacter" style="margin-top: 50px">
+  <section id="nous-contacter" class="nous-contacter" style="margin-top:5px">
     <div class="container" data-aos="fade-up">
       <header class="mb-3">
         <div>
@@ -13,15 +13,15 @@
         </div>
       </header>
 
-  <div class="container py-3 bg-light">
+  <div class="container py-2 bg-light">
     <div class="row justify-content-center">
-      <div class="col-lg-10">
+      <div class="col-lg-12">
         <div class="contact-wrapper">
           <div class="row g-0">
-            <div class="col-md-5">
+            <div class="col-md-4">
               <div class="contact-info h-100">
                 <h3 class="mb-4">Entrez en contact</h3>
-                <p class="card-subtitle mb-4 ">
+                <p class="card-subtitle mb-4 " style="font-size: small; font-weight: 450;">
               Nous serions ravis d'avoir de vos nouvelles. Veuillez remplir le formulaire ou nous contacter en utilisant les informations ci-dessous.
                 </p>
 
@@ -65,7 +65,7 @@
               </div>
             </div>
 
-            <div class="col-md-7">
+            <div class="col-md-8">
               <div class="contact-form">
                 <h3 class="mb-4">Envoyez-nous un message</h3>
                 <form>
@@ -183,6 +183,7 @@ header span.spacer:after {
       align-items: center;
       margin-bottom: 25px;
       transition: all 0.3s ease;
+      font-size: 12px;
     }
 
     .contact-item:hover {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\NousContacterController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -26,7 +27,9 @@ Route::get('/', function () {
     ]);
 });
 Route::resource('nous-contacter', NousContacterController::class);
+Route::resource('about-us', AboutUsController::class);
 Route::get('nous-contacter', [NousContacterController::class, 'index'])->name('nous-contacter');
+Route::get('about-us', [AboutUsController::class, 'index'])->name('about-us');
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

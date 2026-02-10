@@ -1,7 +1,9 @@
 <script setup>
     import { router } from '@inertiajs/vue3';
 import SecondaryButton from '../MyComponents/SecondaryButton.vue';
-
+const propos=defineProps(
+    {  currentRoute:Boolean}
+)
     function goToSection(typePage){
        const section=document.getElementById(typePage)
        if(section){
@@ -50,8 +52,13 @@ const listServices=[
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive" >
           <ul class="navbar-nav" style="display:flex; gap:12px">
-            <li class="nav-item active">
-              <a class="active nav-link" href="/">Accueil</a>
+            <li class="nav-item">
+              <a class="active nav-link "   :class="{ active: currentRoute === 'Accueil' }" href="/">Accueil</a>
+            </li>
+            <li class="nav-item">
+
+              <a class="nav-link" @click.prevent="navigateTo('about-us')"
+               :class="{ active: currentRoute === 'Qui sommes-nous?' }">Qui sommes-nous?</a>
             </li>
 
             <li class="nav-item dropdown"  @click.prevent="goToSection('services')">
@@ -105,7 +112,15 @@ const listServices=[
 </template>
 
 <style scope>
+  .nav-link.active {
+  background-color: #28a745; /* vert */
+  color: #fff;
+}
 
+/* .navbar-nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
+  background-color: #97e6eb;
+  color: #000000;
+} */
  .nav-link.active:hover{
   border: 1px solid  #f15a2d;
   border-radius: 10px;
