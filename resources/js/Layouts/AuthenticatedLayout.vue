@@ -4,16 +4,18 @@ import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import { ref } from "vue";
 import FooterComponent from "@/Components/MyComponents/Footer.component.vue";
+import SideBar from "@/Components/Authentication/SideBar.vue";
 const showingNavigationDropdown = ref(false);
 </script>
 
 <template>
-    <div>
-        <div class="container">
-            <slot />
-        </div>
+    <v-layout>
+    <SideBar/>
+     <v-main>
+      <slot />
+</v-main>
 <FooterComponent />
-    </div>
+    </v-layout>
 </template>
 
 <style scoped>

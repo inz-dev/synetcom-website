@@ -6,6 +6,7 @@ import { createApp, h } from "vue";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 import "../css/app.css";
 import "./bootstrap";
+import "bootstrap-icons/font/bootstrap-icons.css";
 // Vuetify
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faClock, faUser } from "@fortawesome/free-solid-svg-icons";
@@ -52,6 +53,7 @@ createInertiaApp({
             .component("SecondaryButton", SecondaryButton)
             .component("FooterComponent", FooterComponent)
             .component("font-awesome-icon", FontAwesomeIcon)
+            .component("bootstrap-icons",BootstrapIcon)
             .component("BootstrapIcon", BootstrapIcon)
             .mount(el);
     },

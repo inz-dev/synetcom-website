@@ -112,10 +112,10 @@ const listServices=[
 </template>
 
 <style scope>
-  .nav-link.active {
-  background-color: #28a745; /* vert */
+/*   .nav-link.active {
+  background-color: #28a745;
   color: #fff;
-}
+} */
 
 /* .navbar-nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
   background-color: #97e6eb;

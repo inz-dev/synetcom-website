@@ -13,6 +13,7 @@
         "aos": "^2.3.4",
         "aos-vue": "^0.0.5",
         "bootstrap": "^5.3.2",
+        "bootstrap-icons": "^1.13.1",
         "sass": "^1.97.3",
         "vue-loader": "^17.4.2",
         "vue3-carousel": "^0.17.0",
@@ -20,7 +21,6 @@
     },
     "devDependencies": {
         "@inertiajs/vue3": "^1.0.0",
-
         "@vue/server-renderer": "^3.4.0",
         "autoprefixer": "^10.4.12",
         "axios": "^1.6.4",
