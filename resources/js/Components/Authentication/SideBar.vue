@@ -1,10 +1,11 @@
 <template>
     <div>
         <!-- Sidebar -->
+
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <a class="logo" href="/dashboard">
-                    <i class="bi bi-basket2-fill"></i>
+
                     <span class="logo-text">Synetcom</span>
                 </a>
                 <button class="menu-toggle" id="menuToggle">
@@ -14,93 +15,286 @@
 
             <ul class="nav-menu">
                 <li class="nav-item">
-                    <a href="index.html" class="nav-link active">
+                    <a href="/dashboard" class="nav-link dashboard-link" :class="{active: route().current('dashboard')}">
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="order.html" class="nav-link">
+                    <a href="/profil" class="nav-link profil-link " :class="{active: route().current('profil')}">
                         <i class="bi bi-receipt"></i>
-                        <span>Orders</span>
+                        <span>Mon Profil</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="restaurants.html" class="nav-link">
+                    <a href="/reports" class="nav-link reports-link" :class="{active: route().current('reports')}">
                         <i class="bi bi-shop"></i>
-                        <span>Restaurants</span>
+                        <span>Rapports</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="customer.html" class="nav-link">
+                    <a href="/setups" class="nav-link setups-link" :class="{active: route().current('setups')}">
                         <i class="bi bi-people-fill"></i>
-                        <span>Customers</span>
+                        <span>Configurations</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="riders.html" class="nav-link">
+                    <a href="/departments" class="nav-link departments-link" :class="{active: route().current('departements')}">
                         <i class="bi bi-bicycle"></i>
-                        <span>Delivery Riders</span>
+                        <span>Départements</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="analytics.html" class="nav-link">
+                    <a href="/analytics" class="nav-link analytics-link" :class="{active: route().current('analytics')}">
                         <i class="bi bi-bar-chart-fill"></i>
                         <span>Analytics</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="payments.html" class="nav-link">
+                    <a href="/pages" class="nav-link employees-link" :class="{active:route().current('pages')}">
                         <i class="bi bi-credit-card-fill"></i>
-                        <span>Payments</span>
+                        <span>Pages</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="reviews.html" class="nav-link">
+                  <a href="/employees" class="nav-link employees-link" :class="{ active: route().current('employees') }">
                         <i class="bi bi-chat-left-dots-fill"></i>
-                        <span>Reviews</span>
+                        <span>Employés</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="settings.html" class="nav-link">
+                    <a href="/settings" class="nav-link settings-link" :class="{ active: route().current('settings') }">
                         <i class="bi bi-gear-fill"></i>
-                        <span>Settings</span>
+                        <span>Paramètres</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="login.html" class="nav-link">
                         <i class="bi bi-box-arrow-in-right"></i>
-                        <span>Login</span>
+                        <span>Déconnexion</span>
                     </a>
                 </li>
             </ul>
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content" style="width: 100%">
-            <!-- Top Bar -->
-            <div class="top-bar">
-                <button class="menu-toggle-mobile" id="MenuToggleMobile">
-                    <i class="bi bi-list"></i>
-                </button>
-                <div class="search-bar">
-                    <i class="bi bi-search"></i>
-                    <input
-                        type="text"
-                        placeholder="Search orders"
-                    />
-                </div>
+         <main class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <button class="menu-toggle-mobile" id="MenuToggleMobile">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <div class="search-bar">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Rechercher...">
             </div>
 
-            <!-- Dashboard Content -->
-        </main>
+            <div class="top-bar-actions">
+                 <div class="dropdown notify-dropdown">
+                      <div class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" role="button">
+                       <button class="action-btn">
+                            <i class="bi bi-bell-fill"></i>
+                            <span class="badge-notification">12</span>
+                        </button>
+                     </div>
+
+                     <div class="dropdown-menu dropdown-menu-end mt-2">
+                        <div id="Notification" class="h-380 scroll-y p-3 custom-scrollbar">
+                            <ul class="timeline p-0">
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2">
+                                            DR
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Dr Smith uploaded a new report</h6>
+                                            <small class="d-block">10 Dec 2023 - 08:15 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2 media-info">
+                                            AP
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">New Appointment Scheduled</h6>
+                                            <small class="d-block">10 Dec 2023 - 09:45 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2 media-success">
+                                            <i class="fa fa-check-circle"></i>
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Patient checked in at reception</h6>
+                                            <small class="d-block">10 Dec 2023 - 10:20 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2">
+                                            AS
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Dr Alice shared a prescription</h6>
+                                            <small class="d-block">10 Dec 2023 - 11:00 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2 media-danger">
+                                            EM
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Emergency Alert: Critical Patient</h6>
+                                            <small class="d-block">10 Dec 2023 - 11:30 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2 media-primary">
+                                            <i class="fa fa-calendar-alt"></i>
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Next Appointment Reminder</h6>
+                                            <small class="d-block">10 Dec 2023 - 12:00 PM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+
+                        </div>
+                        <a class="all-notification" href="#">See all notifications <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                 </div>
+
+
+                <div class="dropdown notify-dropdown">
+                      <div class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" role="button">
+                        <button class="action-btn">
+                            <i class="bi bi-envelope-fill"></i>
+                            <span class="badge-notification">5</span>
+                        </button>
+                     </div>
+
+                     <div class="dropdown-menu dropdown-menu-end mt-2">
+                        <div id="Notification" class="h-380 scroll-y p-3 custom-scrollbar">
+                            <ul class="timeline p-0">
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2">
+                                            DR
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Dr Smith uploaded a new report</h6>
+                                            <small class="d-block">10 Dec 2023 - 08:15 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2 media-info">
+                                            AP
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">New Appointment Scheduled</h6>
+                                            <small class="d-block">10 Dec 2023 - 09:45 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2 media-success">
+                                            <i class="fa fa-check-circle"></i>
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Patient checked in at reception</h6>
+                                            <small class="d-block">10 Dec 2023 - 10:20 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2">
+                                            AS
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Dr Alice shared a prescription</h6>
+                                            <small class="d-block">10 Dec 2023 - 11:00 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2 media-danger">
+                                            EM
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Emergency Alert: Critical Patient</h6>
+                                            <small class="d-block">10 Dec 2023 - 11:30 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2 media-primary">
+                                            <i class="fa fa-calendar-alt"></i>
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Next Appointment Reminder</h6>
+                                            <small class="d-block">10 Dec 2023 - 12:00 PM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+
+                        </div>
+                        <a class="all-notification" href="#">See all notifications <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                 </div>
+                <div class="dropdown profile-dropdown">
+                     <div class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" role="button">
+                         <div class="user-profile">
+                            <div class="user-avatar">AD</div>
+                            <div class="user-info">
+                                <h6>Admin User</h6>
+                                <p>Super Admin</p>
+                            </div>
+                        </div>
+                     </div>
+                     <ul class="dropdown-menu dropdown-menu-end mt-2">
+                         <li><h6 class="dropdown-header">Settings</h6></li>
+                         <li><a class="dropdown-item" href="#"><i class="fa-regular fa-user"></i> Mes Paramètres</a></li>
+                         <li><a class="dropdown-item" href="#"><i class="fa-regular fa-bell"></i> Notifications</a></li>
+                         <li><a class="dropdown-item" href="#"><i class="fa-solid fa-shield-halved"></i> Confidentialité &amp; Sécurit</a></li>
+                         <li><a class="dropdown-item" href="#"><i class="fa-regular fa-credit-card"></i>Payements</a></li>
+                         <li>
+                             <div class="sign-out">
+                             <a class="dropdown-item text-danger" href="#"><i class="fa-solid fa-right-from-bracket"></i>Déconnexion</a>
+                             </div>
+                         </li>
+                     </ul>
+                 </div>
+
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <slot/>
+<FooterComponent />
+    </main>
+
     </div>
 </template>
 <script setup>
 import { onMounted } from "vue";
-
-
-
 
 onMounted(() => {
   console.log("Mounted and DOM ready");
@@ -108,7 +302,7 @@ onMounted(() => {
   const menuToggle = document.getElementById("menuToggle");
   const menuToggleMobile = document.getElementById("MenuToggleMobile");
   const sidebar = document.getElementById("sidebar");
-  const preview = document.getElementById("preview"); // Assure-toi que cet élément existe
+
 
   // Desktop Menu
   if (menuToggle && sidebar) {
@@ -133,64 +327,23 @@ onMounted(() => {
         !sidebar.contains(e.target) &&
         !menuToggleMobile.contains(e.target)
       ) {
+        console.log('mobile open')
         sidebar.classList.remove("mobile-open");
       }
+      console.log('no mobile open')
     });
   }
 
-  // Real-time Updates Simulation
-  function animateValue(id, start, end, duration) {
-    const element = document.getElementById(id);
-    if (!element) return;
 
-    const range = end - start;
-    const increment = range / (duration / 16);
-    let current = start;
-
-    const timer = setInterval(() => {
-      current += increment;
-      if (
-        (increment > 0 && current >= end) ||
-        (increment < 0 && current <= end)
-      ) {
-        current = end;
-        clearInterval(timer);
-      }
-      element.textContent = Math.floor(current); // Affiche la valeur
-    }, 16);
-  }
-
-  // Navigation
-  function showSection(section, event) {
-    document.querySelectorAll(".nav-link").forEach((link) => {
-      link.classList.remove("active");
-    });
-    if (event?.target) {
-      event.target.closest(".nav-link").classList.add("active");
-    }
-    console.log("Switching to section:", section);
-  }
-
-  // Drag & Drop Preview
-  if (preview) {
-    preview.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      preview.classList.add("dragging");
-    });
-
-    preview.addEventListener("dragleave", () => {
-      preview.classList.remove("dragging");
-    });
-  }
 });
 </script>
 
 
 <style>
 :root {
-    --primary-color: #ff6b35;
+    --primary-color:  #1b449c ;
     --primary-dark: #e85a2b;
-    --secondary-color: #2ecc71;
+    --secondary-color: #f15a2d ;
     --dark-bg: #1a1d29;
     --card-bg: #242837;
     --card-hover: #2d3142;
@@ -229,7 +382,7 @@ body {
 /* Sidebar */
 .sidebar {
     width: 260px;
-    height: 100vh;
+    height: calc(100% - 25px);
     background-color: var(--card-bg);
     position: fixed;
     left: 0;
@@ -279,7 +432,7 @@ body {
     gap: 12px;
     font-size: 24px;
     font-weight: 700;
-    color: var(--primary-color);
+    color: var(--secondary-color);
     text-decoration: none;
 }
 
@@ -337,7 +490,7 @@ body {
 }
 
 .nav-link.active {
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
     color: white;
 }
 
@@ -355,6 +508,7 @@ body {
     margin-left: 260px;
     transition: margin-left 0.3s ease;
     min-height: 100vh;
+    width: 100%
 }
 
 .sidebar.collapsed ~ .main-content {
@@ -373,7 +527,7 @@ body {
     top: 0;
     z-index: 999;
     gap: 5px;
-    width: 100vw;
+width:100vw;
 }
 
 .search-bar {
@@ -408,6 +562,7 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
+    width:300px;
 }
 
 .action-btn {
@@ -500,86 +655,6 @@ body {
     margin: 0;
 }
 
-.filter-btn {
-    padding: 6px 12px;
-    background-color: var(--dark-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    color: var(--text-secondary);
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.filter-btn:hover,
-.filter-btn.active {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    color: white;
-}
-
-/* Orders Table */
-.table-card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.table-header {
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.table-header h3 {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0;
-}
-
-.table-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.order-customer {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.customer-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.customer-info h6 {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.customer-info p {
-    margin: 0;
-    font-size: 12px;
-    color: var(--text-secondary);
-}
-
-.action-buttons {
-    display: flex;
-    gap: 8px;
-}
-
 .action-icon-btn {
     width: 32px;
     height: 32px;
@@ -605,7 +680,7 @@ body {
 }
 
 /* Responsive */
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
     .menu-toggle-mobile {
         display: block;
     }
@@ -660,70 +735,6 @@ body {
     }
 }
 
-/* Filter Cards */
-.filter-card {
-    background: var(--card-bg);
-    padding: 20px;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    cursor: pointer;
-    transition: all 0.3s;
-    border: 2px solid transparent;
-}
-
-.filter-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    border-color: var(--primary-color);
-}
-
-.filter-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    color: white;
-}
-
-.filter-info h3 {
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 0;
-    color: white;
-}
-
-.filter-info p {
-    margin: 0;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-/* Restaurant card styles */
-.restaurant-card {
-    background: var(--card-bg);
-    border-radius: 15px;
-    overflow: hidden;
-    transition: all 0.3s;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.restaurant-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-    border-color: var(--primary-color);
-}
-
-.restaurant-image {
-    height: 200px;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-}
 
 .status-badge {
     position: absolute;
@@ -732,78 +743,6 @@ body {
     text-transform: uppercase;
     font-size: 0.7rem;
     font-weight: 600;
-}
-
-.restaurant-body {
-    padding: 20px;
-}
-
-.restaurant-name {
-    color: white;
-    font-weight: bold;
-    margin-bottom: 8px;
-    font-size: 1.2rem;
-}
-
-.restaurant-cuisine {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-}
-
-.restaurant-rating {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.restaurant-stats {
-    display: flex;
-    justify-content: space-between;
-    padding: 15px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 15px;
-}
-
-.restaurant-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.restaurant-actions .btn {
-    flex: 1;
-    min-width: 80px;
-}
-
-/* Rider Card Styles */
-.rider-card {
-    background: var(--card-bg);
-    border-radius: 15px;
-    overflow: hidden;
-    transition: all 0.3s;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.rider-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-    border-color: var(--primary-color);
-}
-
-.rider-header {
-    background: linear-gradient(135deg, var(--card-bg) 0%, #1f2f4d 100%);
-    padding: 30px 20px 20px;
-    text-align: center;
-    position: relative;
-}
-
-.rider-avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: 4px solid var(--primary-color);
 }
 
 .info-item {
@@ -1036,71 +975,11 @@ body {
     padding: 4px 0;
 }
 
-.login-container {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 500px;
-    padding: 20px;
-    margin: auto;
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-.input-icon {
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #94a3b8;
-    font-size: 18px;
-}
-.form-check-label {
-    color: #e2e8f0;
-    font-size: 14px;
-    cursor: pointer;
-}
-.btn-login {
-    width: 100%;
-    background: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    padding: 14px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
-}
-
-.btn-login:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
-}
-
-.btn-login:active {
-    transform: translateY(0);
-}
 
 @media (max-width: 576px) {
     .login-card {
         padding: 40px 30px;
     }
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
 }
 
 @keyframes fadeIn {
@@ -1124,12 +1003,6 @@ body {
     }
 }
 
-.error-icon {
-    font-size: 120px;
-    color: #ff6b35;
-    margin-bottom: 20px;
-    animation: bounce 2s ease-in-out infinite;
-}
 
 @keyframes bounce {
     0%,

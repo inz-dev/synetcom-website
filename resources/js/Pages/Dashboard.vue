@@ -5,14 +5,8 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 <template>
   <AuthenticatedLayout>
+<div class="mt-15 bg-white-900">
 
-
-
-
-   <!--  <div class="py-12">
-      <v-card>
-        <v-card-title>You're logged in!</v-card-title>
-      </v-card>
-    </div> -->
+    </div>
   </AuthenticatedLayout>
 </template>
