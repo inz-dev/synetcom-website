@@ -1,37 +1,6 @@
 <script setup>
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-
-const listCards=[
-    {id:1,
-        icon:"bi bi-receipt",
-        tagIcon:"bi bi-arrow-up",
-        tagValue: "12 %",
-        value:1.547,
-        title:'Total Orders Today',
-        updating:"Updated 5 mins ago"
-
-    },
-    {id:2,
-        icon:"bi bi-receipt",
-        tagIcon:"bi bi-arrow-up",
-        tagValue: "12 %",
-        value:1.547,
-        title:'Total Orders Today',
-        updating:"Updated 5 mins ago"
-
-    },
-    {id:3,
-        icon:"bi bi-receipt",
-        tagIcon:"bi bi-arrow-up",
-        tagValue: "12 %",
-        value:1.547,
-        title:'Total Orders Today',
-        updating:"Updated 5 mins ago"
-
-    }
-
-]
 </script>
 
 <template>
@@ -44,31 +13,79 @@ const listCards=[
             </div>
 
             <!-- Stats Grid -->
-            <div class="row gy-2 gy-l-0  stats-grid">
-                <div class="mb-4 col-12 col-sm-7 col-xl-4 col-md-6 stat-card" v-for="item in listCards"
-          :key="item.id">
+            <div class="stats-grid">
+                <div class="stat-card">
                     <div class="stat-header">
                         <div class="stat-icon primary">
-                            <i :class="item.icon"></i>
+                            <i class="bi bi-receipt"></i>
                         </div>
                         <div class="stat-trend up">
-                            <i :class="item.tagIcon"></i> {{ item.tagValue }}
+                            <i class="bi bi-arrow-up"></i> 12%
                         </div>
                     </div>
-                    <div class="stat-value" id="totalOrders">{{ item.value }}</div>
-                    <div class="stat-label">{{ item.title }}</div>
+                    <div class="stat-value" id="totalOrders">1,547</div>
+                    <div class="stat-label">Total Orders Today</div>
                     <div class="stat-footer">
                         <i class="bi bi-clock"></i>
-                        <span>{{ item.updating }}</span>
+                        <span>Updated 5 mins ago</span>
                     </div>
                 </div>
 
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon success">
+                            <i class="bi bi-currency-dollar"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="bi bi-arrow-up"></i> 8.5%
+                        </div>
+                    </div>
+                    <div class="stat-value" id="totalRevenue">$24,580</div>
+                    <div class="stat-label">Revenue Today</div>
+                    <div class="stat-footer">
+                        <i class="bi bi-graph-up"></i>
+                        <span>vs $22,650 yesterday</span>
+                    </div>
+                </div>
 
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon warning">
+                            <i class="bi bi-bicycle"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="bi bi-arrow-up"></i> 3.2%
+                        </div>
+                    </div>
+                    <div class="stat-value" id="activeRiders">87</div>
+                    <div class="stat-label">Active Riders</div>
+                    <div class="stat-footer">
+                        <i class="bi bi-geo-alt"></i>
+                        <span>45 on delivery</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon info">
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <div class="stat-trend up">
+                            <i class="bi bi-arrow-up"></i> 0.3
+                        </div>
+                    </div>
+                    <div class="stat-value">4.8</div>
+                    <div class="stat-label">Average Rating</div>
+                    <div class="stat-footer">
+                        <i class="bi bi-chat-left-dots"></i>
+                        <span>From 2,341 reviews</span>
+                    </div>
+                </div>
             </div>
 
             <!-- Charts Row -->
-           <!--  <div class="row">
-                <div class="col-lg-6 mb-4">
+            <div class="row">
+                <div class="col-lg-8 mb-4">
                     <div class="chart-card">
                         <div class="chart-header">
                             <h3>Revenue Analytics</h3>
@@ -91,7 +108,7 @@ const listCards=[
                         <canvas id="orderStatusChart"></canvas>
                     </div>
                 </div>
-            </div> -->
+            </div>
 
         </div>
   </AuthenticatedLayout>
@@ -121,23 +138,19 @@ const listCards=[
 
 /* Stats Cards */
 .stats-grid {
-  display: flex;
-  justify-items: center;
-  align-items: center;
- /* grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));*/
-  gap: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
   margin-bottom: 32px;
-
 }
 
 .stat-card {
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  padding: 15px;
+  padding: 24px;
   transition: all 0.3s;
   cursor: pointer;
-
 }
 
 .stat-card:hover {

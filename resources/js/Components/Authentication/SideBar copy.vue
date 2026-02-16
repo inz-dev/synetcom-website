@@ -99,7 +99,80 @@
                         </button>
                      </div>
 
+                     <div class="dropdown-menu dropdown-menu-end mt-2">
+                        <div id="Notification" class="h-380 scroll-y p-3 custom-scrollbar">
+                            <ul class="timeline p-0">
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2">
+                                            DR
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Dr Smith uploaded a new report</h6>
+                                            <small class="d-block">10 Dec 2023 - 08:15 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2 media-info">
+                                            AP
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">New Appointment Scheduled</h6>
+                                            <small class="d-block">10 Dec 2023 - 09:45 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2 media-success">
+                                            <i class="fa fa-check-circle"></i>
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Patient checked in at reception</h6>
+                                            <small class="d-block">10 Dec 2023 - 10:20 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2">
+                                            AS
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Dr Alice shared a prescription</h6>
+                                            <small class="d-block">10 Dec 2023 - 11:00 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2 media-danger">
+                                            EM
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Emergency Alert: Critical Patient</h6>
+                                            <small class="d-block">10 Dec 2023 - 11:30 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2 media-primary">
+                                            <i class="fa fa-calendar-alt"></i>
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Next Appointment Reminder</h6>
+                                            <small class="d-block">10 Dec 2023 - 12:00 PM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
 
+                        </div>
+                        <a class="all-notification" href="#">See all notifications <i class="fas fa-arrow-right"></i></a>
+                    </div>
                  </div>
 
 
@@ -110,6 +183,81 @@
                             <span class="badge-notification">5</span>
                         </button>
                      </div>
+
+                     <div class="dropdown-menu dropdown-menu-end mt-2">
+                        <div id="Notification" class="h-380 scroll-y p-3 custom-scrollbar">
+                            <ul class="timeline p-0">
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2">
+                                            DR
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Dr Smith uploaded a new report</h6>
+                                            <small class="d-block">10 Dec 2023 - 08:15 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2 media-info">
+                                            AP
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">New Appointment Scheduled</h6>
+                                            <small class="d-block">10 Dec 2023 - 09:45 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2 media-success">
+                                            <i class="fa fa-check-circle"></i>
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Patient checked in at reception</h6>
+                                            <small class="d-block">10 Dec 2023 - 10:20 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2">
+                                            AS
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Dr Alice shared a prescription</h6>
+                                            <small class="d-block">10 Dec 2023 - 11:00 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2 media-danger">
+                                            EM
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Emergency Alert: Critical Patient</h6>
+                                            <small class="d-block">10 Dec 2023 - 11:30 AM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="timeline-panel">
+                                        <div class="media me-2 media-primary">
+                                            <i class="fa fa-calendar-alt"></i>
+                                        </div>
+                                        <div class="media-body">
+                                            <h6 class="mb-1">Next Appointment Reminder</h6>
+                                            <small class="d-block">10 Dec 2023 - 12:00 PM</small>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+
+                        </div>
+                        <a class="all-notification" href="#">See all notifications <i class="fas fa-arrow-right"></i></a>
+                    </div>
                  </div>
                 <div class="dropdown profile-dropdown">
                      <div class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" role="button">
@@ -117,7 +265,7 @@
                             <div class="user-avatar">AD</div>
                             <div class="user-info">
                                 <h6>Ali</h6>
-                                <p><small>Super Admin</small></p>
+                                <p>Super Admin</p>
                             </div>
                         </div>
                      </div>
@@ -379,12 +527,12 @@ body {
     top: 0;
     z-index: 999;
     gap: 5px;
-width:99vw;
+width:100vw;
 }
 
 .search-bar {
     position: relative;
-    width: 150px;
+    width: 200px;
 }
 
 .search-bar input {
