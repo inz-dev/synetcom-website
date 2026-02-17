@@ -1,18 +1,23 @@
 <script setup>
 import { onMounted } from "vue";
-import { router } from "@inertiajs/vue3";
+
 
 const listItems=[
-    {id:1, title:'Dashboard', link:'dashboard', icon:'bi bi-grid-fill', classActive:'', },
-    {id:2, title:'Mon profil', link:'profil', icon:'bi bi-receipt', classActive:'', },
-    {id:3, title:'Pages', link:'pages', icon:'bi bi-credit-card-fill', classActive:'', },
-    {id:4, title:'Configurations', link:'setups', icon:'bi bi-people-fill', classActive:'',},
-    {id:5, title:'Départements', link:'departments', icon:'bi bi-bicycle', classActive:'', },
-    {id:6, title:'Projets', link:'projects', icon:'bi bi-bar-chart-fill', classActive:'', },
-    {id:7, title:'Employés', link:'employees', icon:'bi bi-chat-left-dots-fill', classActive:'', },
-     {id:8, title:'Rapports', link:'reports', icon:'bi bi-shop', classActive:'',},
-      {id:9, title:'Paramètres', link:'settings', icon:'bi bi-gear-fill', classActive:'', },
-       {id:10, title:'Deconnexion', link:'logout', icon:'bi bi-box-arrow-in-right', classActive:''}
+    {id:1, title:'Dashboard', link:'/dashboard', icon:'bi bi-grid-fill', classActive:''},
+    {id:2, title:'Mon profil', link:'/profil', icon:'bi bi-receipt', classActive:''},
+    {id:3, title:'Pages', link:'/pages', icon:'bi bi-credit-card-fill', classActive:''},
+    {id:4, title:'Configurations', link:'/setups', icon:'bi bi-people-fill', classActive:''},
+    {id:5, title:'Départements', link:'/departments', icon:'bi bi-bicycle', classActive:''},
+    {id:6, title:'Projets', link:'/projects', icon:'bi bi-bar-chart-fill', classActive:''},
+    {id:7, title:'Employés', link:'/employees', icon:'bi bi-bar-chart-fill', classActive:''},
+     {id:8, title:'Rapports', link:'/reports', icon:'bi bi-shop', classActive:''},
+      {id:9, title:'Paramètres', link:'/settings', icon:'bi bi-gear-fill', classActive:''},
+       {id:10, title:'Deconnexion', link:'/logout', icon:'bi bi-box-arrow-in-right', classActive:''},
+
+
+
+
+
 
 ]
 
@@ -20,7 +25,7 @@ const activeClass=(vRoute) =>computed(() => {
    return   route().current(vRoute)
 })
 
-const logout=() =>router.post('/logout')
+const fRoute=(vRoute) =>route().current(vRoute)
 onMounted(() => {
   console.log("Mounted and DOM ready");
 
@@ -78,17 +83,66 @@ onMounted(() => {
             </div>
 
             <ul class="nav-menu">
-                <li class="nav-item" v-for="item in listItems" :key="item.id" >
-                  <a v-if="item.title=='Déconnexion'"  class="nav-link" @click="logout">
-                        <i :class="item.icon"></i>
-                        <span>{{ item.title }}</span>
-                    </a>
-                    <a v-else :href="item.link" class="nav-link dashboard-link" :class="{active: route().current(item.link)}">
-                        <i :class="item.icon"></i>
-                        <span>{{ item.title }}</span>
+                <li class="nav-item">
+                    <a href="/dashboard" class="nav-link dashboard-link" :class="{active: route().current('dashboard')}">
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Dashboard</span>
                     </a>
                 </li>
-
+                <li class="nav-item">
+                    <a href="/profil" class="nav-link profil-link " :class="{active: route().current('profil')}">
+                        <i class="bi bi-receipt"></i>
+                        <span>Mon Profil</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/reports" class="nav-link reports-link" :class="{active: route().current('reports')}">
+                        <i class="bi bi-shop"></i>
+                        <span>Rapports</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/setups" class="nav-link setups-link" :class="{active: route().current('setups')}">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Configurations</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/departments" class="nav-link departments-link" :class="{active: route().current('departements')}">
+                        <i class="bi bi-bicycle"></i>
+                        <span>Départements</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/analytics" class="nav-link analytics-link" :class="{active: route().current('analytics')}">
+                        <i class="bi bi-bar-chart-fill"></i>
+                        <span>Analytics</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages" class="nav-link employees-link" :class="{active:route().current('pages')}">
+                        <i class="bi bi-credit-card-fill"></i>
+                        <span>Pages</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/employees" class="nav-link employees-link" :class="{ active: route().current('employees') }">
+                        <i class="bi bi-chat-left-dots-fill"></i>
+                        <span>Employés</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/settings" class="nav-link settings-link" :class="{ active: route().current('settings') }">
+                        <i class="bi bi-gear-fill"></i>
+                        <span>Paramètres</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="login.html" class="nav-link">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        <span>Déconnexion</span>
+                    </a>
+                </li>
             </ul>
         </aside>
 
@@ -202,9 +256,7 @@ body {
     color: var(--text-primary);
     overflow-x: hidden;
 }
-ul{
-    height: 50px;
-}
+
 /* Sidebar */
 .sidebar {
     width: 260px;

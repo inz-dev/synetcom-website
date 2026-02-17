@@ -47,6 +47,7 @@ const submit = () => {
 
 onMounted(() => {
   console.log(`the component is now mounted.`)
+  /* console.log("form :", form) */
 
 })
 

@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('social_medias', function (Blueprint $table) {
-            $table->uuid('id_social_media')->primary();
+            $table->uuid('id_social_media')->primary()->unique();
             $table->string('nom_social_media');
             $table->string('lien_social_media')->nullable();
              $table->string('logo_social_media')->nullable();
-  $table->foreignIdFor(\App\Models\Telephones::class)
+  $table->foreignUuid(\App\Models\Telephones::class)
          ->nullable()->references('id_telephone')->on('telephones')->nullOnDelete();
             $table->softDeletes();
             $table->timestamps();

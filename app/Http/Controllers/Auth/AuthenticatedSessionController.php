@@ -50,4 +50,14 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
+
+    protected function logout(Request $request):Response
+    {
+        return Inertia::render('Auth/Logout', [
+             $request->session()->invalidate(),
+
+        $request->session()->regenerateToken()
+
+        ]);
+    }
 }

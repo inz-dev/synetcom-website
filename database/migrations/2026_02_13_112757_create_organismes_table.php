@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('organismes', function (Blueprint $table) {
-            $table->uuid('id_organisme')->primary();
+            $table->uuid('id_organisme')->primary()->unique();
             $table->string('nom_organisme');
             $table->string('adresse_organisme');
             $table->string('logo_organisme');

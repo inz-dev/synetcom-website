@@ -53,12 +53,11 @@ const listServices=[
         <div class="collapse navbar-collapse" id="navbarResponsive" >
           <ul class="navbar-nav" style="display:flex; gap:12px">
             <li class="nav-item">
-              <a class="active nav-link "   :class="{ active: currentRoute === 'Accueil' }" href="/">Accueil</a>
+              <a class="active nav-link " href="/">Accueil</a>
             </li>
             <li class="nav-item">
 
-              <a class="nav-link" @click.prevent="navigateTo('about-us')"
-               :class="{ active: currentRoute === 'Qui sommes-nous?' }">Qui sommes-nous?</a>
+              <a class="nav-link" @click.prevent="navigateTo('about-us')">Qui sommes-nous?</a>
             </li>
 
             <li class="nav-item dropdown"  @click.prevent="goToSection('services')">

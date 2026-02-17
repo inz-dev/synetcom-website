@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employes_has_social_medias', function (Blueprint $table) {
-            $table->foreignIdFor(\App\Models\Employes::class)
+            $table->foreignUuid(\App\Models\Employes::class)
             ->index()->references('id_employe')->on('employes');
-            $table->foreignIdFor(\App\Models\SocialMedias::class)
+            $table->foreignUuid(\App\Models\SocialMedias::class)
             ->index()->references('id_social_media')->on('social_medias');
             $table->softDeletes();
             $table->timestamps();

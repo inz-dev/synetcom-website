@@ -12,13 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('organisme_has_social_medias', function (Blueprint $table) {
-         $table->foreignIdFor(\App\Models\Organismes::class)
+         $table->foreignUuid(\App\Models\Organismes::class)
          ->index()->references('id_organisme')->on('organismes');
-        $table->foreignIdFor(\App\Models\SocialMedias::class)->index()
-                ->references('id_social_media')->on('social_medias');
-
+        $table->foreignUuid(\App\Models\SocialMedias::class)->index()->references('id_social_media')->on('social_medias');
+        $table->softDeletes();
 /*             $table->primary('id_organisme','id_social_media');
- */            $table->timestamps();
+ */        $table->timestamps();
         });
     }
 

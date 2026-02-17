@@ -4,15 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Ramsey\Uuid\Uuid as RamseyUuid;
 use Thiagoprz\CompositeKey\HasCompositeKey;
-
+use Webpatser\Uuid\Uuid;
 class EmployesHasSocialMedias extends Model
 {
     use HasFactory, HasCompositeKey;
+
+public $incrementing = true;
+protected $keyType='string';
      protected $primaryKey=[
         'employes_id',
         'social_medias_id',
     ];
+
+    protected static function boot(){
+        parent::boot();
+        static::creating(
+            function($model){
+                $model->{$model->getKeyName()}= Uuid::generate()->string;
+            }
+        );
+    }
 
     protected $fillable=[
        'employes_id',

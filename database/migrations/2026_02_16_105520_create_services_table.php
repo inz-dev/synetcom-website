@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('services', function (Blueprint $table) {
-            $table->uuid('id_service')->primary();
+            $table->uuid('id_service')->primary()->unique();
             $table->string('nom_service');
             $table->string('description_service');
             $table->string('icon_service');
-            $table->foreignIdFor(\App\Models\Departements::class)->index()->references('id_departement')->on('departements');
+            $table->foreignUuid(\App\Models\Departements::class)->index()->references('id_departement')->on('departements');
             $table->timestamps();
         });
     }

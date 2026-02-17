@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\DepartementsController;
 use App\Http\Controllers\NousContacterController;
+use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SettingsController;
@@ -47,6 +49,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/reports', [ReportsController::class, 'index'])->name('reports');
 Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+Route::get('/pages', [PagesController::class, 'index'])->name('pages');
+Route::get('/departments',[DepartementsController::class,'index' ])->name('departements');
 
 });
 

@@ -2,14 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Webpatser\Uuid\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Partenaires extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory;
+public $incrementing = false;   // pas d'auto-incrément
+    protected $keyType = 'string';  // type string au lieu d'int
+    protected $primaryKey = 'id_partenaire';
+    protected static function boot()
+    {
+        parent::boot();
 
+        static::creating(function ($model) {
+            if (!$model->getKey()) {
+                $model->{$model->getKeyName()} = Uuid::generate()->string;
+            }
+        });
+    }
     protected $fillable=[
         'id_partenaire',
         'nom_partenaire',

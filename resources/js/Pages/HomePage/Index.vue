@@ -11,7 +11,7 @@ import WhyChooseUsHome from "@/Components/Welcome/Sections/WhyChooseUs.home.vue"
 </script>
 
 <template>
-  <Header  currentRoute="Accueil">
+  <Header>
    <BanierePage title="Synetcom"  :backgroundImage="'/images/background1.png'">
     <p class="text-center text-white fs-5 fw-medium font-family-Montserrat">
           Développer votre entreprise chaque jour avec la transformation numérique.
