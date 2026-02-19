@@ -11,13 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('services', function (Blueprint $table) {
-            $table->uuid('id_service')->primary()->unique();
-            $table->string('nom_service');
-            $table->string('description_service');
-            $table->string('icon_service');
+        Schema::create('postes', function (Blueprint $table) {
+            $table->uuid('id_poste')->primary()->unique();
+            $table->string('nom_poste')->primary();
+            $table->date('date_debut_poste')->default(now());
+             $table->date('date_fin_poste')->default(now());
+            $table->foreignUuid('id_employe') ->index()->references('id_employe')->on('employes');
             $table->foreignUuid('id_departement')->index()->references('id_departement')->on('departements');
+            $table->softDeletes();
             $table->timestamps();
+
         });
     }
 
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('services');
+        Schema::dropIfExists('postes');
     }
 };

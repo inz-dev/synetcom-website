@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('telephones', function (Blueprint $table) {
             $table->uuid('id_telephone')->primary()->unique();
             $table->string('code_telephone')->default('+227');
-            $table->integer('telephone');
+            $table->integer('telephone')->unique();
             $table->timestamps();
             $table->softDeletes();
 

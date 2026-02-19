@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('departements_has_employes', function (Blueprint $table) {
         /* $table->foreignId('id_employe')->constrained('employes', 'id_employe')->index();
         $table->foreignId('id_departement')->constrained('departements', 'id_departement')->index();*/
-            $table->foreignUuid(\App\Models\Departements::class)
+            $table->foreignUuid('id_departement')
             ->index()->references('id_departement')->on('departements');
-             $table->foreignUuid(\App\Models\Employes::class)
+             $table->foreignUuid('id_employe')
             ->index()->references('id_employe')->on('employes');
            /*  $table->uuid('id_departement','id_employe')->primary(); */
             $table->date('date_debut');

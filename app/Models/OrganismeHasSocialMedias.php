@@ -12,8 +12,8 @@ class OrganismeHasSocialMedias extends Model
     public $incrementing = false;   // pas d'auto-incrément
     protected $keyType = 'string';  // type string au lieu d'int
        protected $primaryKey=[
-        'organismes_id',
-        'social_medias_id',
+        'id_organisme',
+        'id_social_media',
     ];
 
     protected static function boot()

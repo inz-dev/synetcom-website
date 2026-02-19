@@ -50,7 +50,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports', [ReportsController::class, 'index'])->name('reports');
 Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
 Route::get('/pages', [PagesController::class, 'index'])->name('pages');
-Route::get('/departments',[DepartementsController::class,'index' ])->name('departements');
+Route::get('/departements',[DepartementsController::class,'index' ])->name('departements');
+Route::get('/reports',[ReportsController::class,'index' ])->name('reports');
 
 });
 

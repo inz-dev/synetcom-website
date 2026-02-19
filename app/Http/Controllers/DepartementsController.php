@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Departements;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class DepartementsController extends Controller
 {
@@ -13,6 +14,9 @@ class DepartementsController extends Controller
     public function index()
     {
         //
+        return Inertia::render('Departements/Index.departements',[
+
+        ]);
     }
 
     /**

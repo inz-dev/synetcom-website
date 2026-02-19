@@ -14,8 +14,8 @@ class EmployesHasSocialMedias extends Model
 public $incrementing = true;
 protected $keyType='string';
      protected $primaryKey=[
-        'employes_id',
-        'social_medias_id',
+        'id_employes',
+        'id_social_media',
     ];
 
     protected static function boot(){

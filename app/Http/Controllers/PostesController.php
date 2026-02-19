@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Services;
+use App\Models\Postes;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
-class ServicesController extends Controller
+class PostesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +13,6 @@ class ServicesController extends Controller
     public function index()
     {
         //
-        return Inertia::render('Services/Index.services', [
-
-        ]);
     }
 
     /**
@@ -38,7 +34,7 @@ class ServicesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Services $services)
+    public function show(Postes $postes)
     {
         //
     }
@@ -46,7 +42,7 @@ class ServicesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Services $services)
+    public function edit(Postes $postes)
     {
         //
     }
@@ -54,7 +50,7 @@ class ServicesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Services $services)
+    public function update(Request $request, Postes $postes)
     {
         //
     }
@@ -62,7 +58,7 @@ class ServicesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Services $services)
+    public function destroy(Postes $postes)
     {
         //
     }

@@ -6,21 +6,22 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Webpatser\Uuid\Uuid;
-class Employes extends Model
+class Postes extends Model
 {
-    use HasFactory, HasUuids;
+
+    use HasFactory,HasUuids;
 
     protected $fillable = [
+        'id_poste',
+        'nom_poste',
+        'date_debut_poste',
+        'date_fin_poste',
         'id_employe',
-        'nom_employe',
-        'adresse_employe',
-        'profil_employe',
-        'date_embauche_employe',
         'type_contrat'
     ];
      public $incrementing = false;   // pas d'auto-incrément
     protected $keyType = 'string';  // type string au lieu d'int
-    protected $primaryKey = 'id_employe';
+    protected $primaryKey = 'id_poste';
     protected static function boot()
     {
         parent::boot();
@@ -36,12 +37,6 @@ class Employes extends Model
     {
         return $this->belongsTo(\App\Models\Departements::class);
     }
-    public function departements_has_employes()
-    {
-        return $this->belongsToMany(\App\Models\DepartementsHasEmployes::class);
-    }
-    public function social_medias()
-    {
-        return $this->belongsToMany(\App\Models\SocialMedias::class);
-    }
+
+
 }
