@@ -13,7 +13,7 @@ defineProps({
 </script>
 <template>
     <AuthenticatedLayout>
-    <main>
-     <h1>Profile</h1></main>
+
+     <h1>Profile</h1>
     </AuthenticatedLayout>
 </template>

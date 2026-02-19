@@ -83,7 +83,7 @@ onMounted(() => {
                         <i :class="item.icon"></i>
                         <span>{{ item.title }}</span>
                     </a>
-                    <a v-else :href="item.link" class="nav-link dashboard-link" :class="{active: route().current(item.link)}">
+                    <a v-else :href="item.link" class="nav-link" :class="{active: route().current(item.link)}">
                         <i :class="item.icon"></i>
                         <span>{{ item.title }}</span>
                     </a>
@@ -215,7 +215,7 @@ ul{
     top: 0;
     border-right: 1px solid var(--border-color);
     overflow-y: auto;
-    transition: all 0.3s ease;
+    transition: all 1s ease;
     z-index: 1000;
 }
 
@@ -332,9 +332,9 @@ ul{
 /* Main Content */
 .main-content {
     margin-left: 260px;
-    transition: margin-left 0.3s ease;
-    min-height: 100vh;
-    width: 100%
+    transition: margin-left 1s ease-in-out;
+
+
 }
 
 .sidebar.collapsed ~ .main-content {
@@ -352,13 +352,12 @@ ul{
     position: sticky;
     top: 0;
     z-index: 999;
-    gap: 5px;
-width:99vw;
+width: calc(100% -260px);
 }
 
 .search-bar {
     position: relative;
-    width: 150px;
+    width: 200px;
 }
 
 .search-bar input {
