@@ -155,6 +155,7 @@ onMounted(() => {
 
         <!-- Dashboard Content -->
         <slot/>
+        <br> <br>
 <FooterComponent />
     </main>
 
@@ -331,10 +332,9 @@ ul{
 
 /* Main Content */
 .main-content {
+    margin-top: 100px;
     margin-left: 260px;
     transition: margin-left 1s ease-in-out;
-
-
 }
 
 .sidebar.collapsed ~ .main-content {
@@ -345,14 +345,16 @@ ul{
 .top-bar {
     background-color: var(--card-bg);
     border-bottom: 1px solid var(--border-color);
-    padding: 16px 32px;
+    padding: 18px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: sticky;
+    position:fixed;
     top: 0;
+    left:0;
     z-index: 999;
-width: calc(100% -260px);
+    gap:5px;
+    width: 100%;
 }
 
 .search-bar {

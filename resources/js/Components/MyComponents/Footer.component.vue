@@ -29,5 +29,6 @@
     background: linear-gradient(135deg, #1b449c 0%, #f15a2d 100%);
     color: white;
     text-align: center;
+
 }
 </style>

@@ -37,6 +37,7 @@ Route::get('/', function () {
 });
 Route::resource('nous-contacter', NousContacterController::class);
 Route::resource('about-us', AboutUsController::class);
+Route::resource('departements',DepartementsController::class);
 Route::get('nous-contacter', [NousContacterController::class, 'index'])->name('nous-contacter');
 Route::get('about-us', [AboutUsController::class, 'index'])->name('about-us');
 Route::get('/dashboard', function () {

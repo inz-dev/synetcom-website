@@ -9,60 +9,83 @@ const props=defineProps(
     {allDepartments:Array}
 )
 const createNewRecord=()=>useForm ({
-    id_departement:null,
       nom_departement: '',
     }
 )
-  const departements=[]
-  if(props.allDepartments || props.allDepartments.length!=0)
-{props.allDepartments.forEach((el, index)=>{
-    if(el){console.log('el:', el);
-    departements.push({
-        index:index+1,
-        ...el
-    })
-    }
-})}
-console.log('test:', departements);
 
+  const departements =[...props.allDepartments]
   const formModel = createNewRecord()
   const dialog = shallowRef(false)
   const isEditing = toRef(() => !!formModel.id_departement)
 
   const headers = [
-    { id: 'N°', key: 'index', align: 'start' },
+    { id: 'N°', key: 'num', align: 'start' },
     { title: 'Titre', key: 'nom_departement', align: 'start' },
     { title: 'Actions', key: 'actions', align: 'end', sortable: false },
   ]
-const addDepartements=(e)=>{
-    e.preventDefault();
-    dialog.value = true
-
-}
-
-const save=(e)=>{
-    e.preventDefault();
-    if (isEditing.value){
-
-    }
-    else{
-        console.log("ajout")
-       formModel.post(route('departements.store'),{
-
-       })
-    }
-    dialog.value = false
-
-}
 
   onMounted(() => {
     console.log("props.allDepartments:",props.allDepartments)
      console.log("departments:",departements, departements[0])
     //departements.map(el=> console.log(el))
-
+    reset()
   })
 
+  function add () {
+    formModel = createNewRecord()
+    dialog.value = true
+  }
 
+  function edit (item) {
+
+    const found = departements?
+    departements.find(dept => dept.id_departement === item.id_departement):[]
+
+if(found || found.length!=0){
+
+
+    formModel = {
+      id_departement: found.id_departement,
+      nom_departement: found.nom_departement,
+    }
+    }
+
+    dialog.value = true
+  }
+
+  function remove (item) {
+    console.log('item from remove:', item);
+
+    const index = departements.findIndex(dept => dept.id_departement === item.id_departement)
+    departements.splice(index, 1)
+  }
+
+  function save () {
+    console.log('formModel:',formModel);
+
+    if (isEditing.value) {
+      const index = departements.findIndex(dept =>dept.id_departement=== formModel.id_departement)
+      const idUpdating= formModel.id_departement
+      console.log('index from save:', index, idUpdating);
+    /*   router.post(`/departement/${}`,{
+
+      }) */
+      departements[index] = formModel
+      console.log(departements[index] );
+
+    } else {
+      formModel.id_departement = departements.length + 1
+      departements.push(formModel)
+    }
+
+    dialog.value = false
+  }
+
+  function reset () {
+    dialog.value = false
+    formModel = createNewRecord()
+    departements = [props.allDepartments]
+  }
 </script>
 
 
@@ -92,8 +115,7 @@ const save=(e)=>{
             text="Ajouter"
             border
             color="blue"
-            @click="addDepartements"
-
+            @click="add"
           ></v-btn>
         </v-toolbar>
       </template>
@@ -111,9 +133,9 @@ const save=(e)=>{
 
       <template v-slot:item.actions="{ item }">
         <div class="d-flex ga-2 justify-end">
-          <v-icon color="orange"  icon="mdi-pencil" :key="item" size="small" ></v-icon>
+          <v-icon color="orange"  icon="mdi-pencil" :key="item" size="small" @click="edit(item)"></v-icon>
 
-          <v-icon color="red" icon="mdi-delete" size="small" ></v-icon>
+          <v-icon color="red" icon="mdi-delete" size="small" @click="remove(item.id_departement)"></v-icon>
         </div>
       </template>
 
@@ -124,7 +146,7 @@ const save=(e)=>{
           text="Réinitialiser les données"
           variant="text"
           border
-
+          @click="reset"
         ></v-btn>
       </template>
     </v-data-table>
@@ -150,7 +172,7 @@ const save=(e)=>{
 
         <v-spacer></v-spacer>
 
-        <v-btn text="Enregistrer" @click="save" ></v-btn>
+        <v-btn text="Enregistrer" @click="save"></v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
