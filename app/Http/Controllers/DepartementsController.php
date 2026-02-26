@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Departements;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class DepartementsController extends Controller
@@ -15,8 +16,8 @@ class DepartementsController extends Controller
     public function index()
     {
         //
-        return Inertia::render('Departements/Index.departements',[
-            'allDepartments'=>Departements::all(),
+        return Inertia::render('Departements/Index.departements', [
+            'allDepartments' => Departements::all(),
 
         ]);
     }
@@ -34,27 +35,35 @@ class DepartementsController extends Controller
      */
     public function store(Request $request)
     {
-        //
         try {
-            //code...
-        $request->validate([
-            'nom_departement'=>'required|string'
-        ]);
-        $dept = Departements::create($request->validate());
-/*         dump('dept:', $dept);
-dd("end try"); */
-        $dept->save();
-            return Redirect::route('departements')->with('OK', 'Opération réussie: ');
 
+        $request->validate([
+
+            'nom_departement' => 'required|string|min:4',
+        ], [
+            'nom_departement.required' => 'Veuillez entrer le nom du département.',
+            'nom_departement.min' => 'Veuillez entrer un minimum de 4 caractères.',
+
+        ]);
+        $dept = Departements::create(
+            ['nom_departement' => $request->nom_departement,
+
+            ]
+
+        );
+        $dept->save();
+        /* dd("save:", $dept); */
         } catch (\Throwable $th) {
             //throw $th;
-           /*  dump('error:', $th);
-            dd("end catch"); */
-            return  Redirect::route('departements')->with('Erreur', 'Opération echouée: ' . $th->getMessage());
-        }
-        #dd("end");
-    }
+            /* dump('th:',$th);
+            dd('end throw'); */
+          return Inertia::render('Departements/Index.departements', [
+            'serverError' => $th->getMessage(), // ou un message custom
+        ]);
 
+        }
+
+    }
     /**
      * Display the specified resource.
      */

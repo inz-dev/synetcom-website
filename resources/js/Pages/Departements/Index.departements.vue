@@ -1,31 +1,33 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { useForm, router } from '@inertiajs/vue3';
+import { useForm, router, usePage } from '@inertiajs/vue3';
 
   import { onMounted, ref, shallowRef, toRef } from 'vue'
 
   const currentYear = new Date().getFullYear()
 const props=defineProps(
-    {allDepartments:Array}
+    {allDepartments:Array},
+    {errors:Object}
 )
-const createNewRecord=()=>useForm ({
-    id_departement:null,
-      nom_departement: '',
-    }
-)
+const page = usePage()
+const errors = page.props.errors
   const departements=[]
   if(props.allDepartments || props.allDepartments.length!=0)
 {props.allDepartments.forEach((el, index)=>{
-    if(el){console.log('el:', el);
+     if(el){
+    /*console.log('el:', el); */
     departements.push({
         index:index+1,
         ...el
     })
     }
 })}
-console.log('test:', departements);
 
-  const formModel = createNewRecord()
+  const formModel =useForm ({
+    id_departement:null,
+      nom_departement: '',
+    }
+)
   const dialog = shallowRef(false)
   const isEditing = toRef(() => !!formModel.id_departement)
 
@@ -39,25 +41,32 @@ const addDepartements=(e)=>{
     dialog.value = true
 
 }
+let TErrors=[]
+const add= (e)=>{
+        console.log("ajout")
+      formModel.post(route('departements.store'),{
+        onError:(e)=>{
+            console.log('error:', e)
+            TErrors.push(e)
+        }
 
+       })
+
+    }
 const save=(e)=>{
     e.preventDefault();
     if (isEditing.value){
 
     }
-    else{
-        console.log("ajout")
-       formModel.post(route('departements.store'),{
 
-       })
-    }
+    /* if (errors) dialog.value = true */
     dialog.value = false
 
 }
 
   onMounted(() => {
-    console.log("props.allDepartments:",props.allDepartments)
-     console.log("departments:",departements, departements[0])
+    console.log("props.allDepartments:",errors)
+     //console.log("departments:",departements, departements[0])
     //departements.map(el=> console.log(el))
 
   })
@@ -102,6 +111,8 @@ const save=(e)=>{
 </template> -->
       <template v-slot:item.nom_departement="{ value }">
       <span>{{ value }}</span>
+
+
         <!-- <v-chip :text="value" border="thin opacity-25" prepend-icon="mdi-book" label>
           <template v-slot:prepend>
             <v-icon color="medium-emphasis"></v-icon>
@@ -138,8 +149,18 @@ const save=(e)=>{
       <template v-slot:text>
         <v-row>
           <v-col cols="12">
-            <v-text-field v-model="formModel.nom_departement" label="Nom du département"></v-text-field>
+            <v-text-field v-model="formModel.nom_departement"
+
+            aria-required="true"
+            :error-messages="formModel.errors.nom_departement"
+            >
+            <template v-slot:label>
+        Nom du département<span class="text-red-500">&nbsp;*</span>
+      </template>
+            </v-text-field>
+                      <span v-if="formModel.errors.nom_departement">{{ formModel.errors.nom_departement }}</span>
           </v-col>
+
         </v-row>
       </template>
 
@@ -150,7 +171,7 @@ const save=(e)=>{
 
         <v-spacer></v-spacer>
 
-        <v-btn text="Enregistrer" @click="save" ></v-btn>
+        <v-btn text="Enregistrer" @click="add" ></v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -161,5 +182,10 @@ const save=(e)=>{
 </AuthenticatedLayout>
 </template>
 <style>
+.text-red-500 {
+  font-size: 1.2em;
+  margin-left: 2px;
+   color: #ef4444;
+}
 
 </style>

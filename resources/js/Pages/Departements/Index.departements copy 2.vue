@@ -13,7 +13,7 @@ const createNewRecord=()=>useForm ({
     }
 )
 
-  const departements =[...props.allDepartments]
+  let departements =[...props.allDepartments]
   const formModel = createNewRecord()
   const dialog = shallowRef(false)
   const isEditing = toRef(() => !!formModel.id_departement)

@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -27,4 +28,15 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+
+    protected function invalidJson($request, ValidationException $exception)
+{
+    return response()->json([
+        'status' => 'error',
+        'title' => 'Validation échouée',
+        'errors' => $exception->errors(),
+        'hint' => 'Veuillez corriger les champs indiqués.',
+    ], 422);
+}
 }

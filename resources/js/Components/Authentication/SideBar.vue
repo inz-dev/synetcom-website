@@ -1,6 +1,15 @@
 <script setup>
-import { onMounted } from "vue";
-import { router } from "@inertiajs/vue3";
+import { onMounted, computed } from "vue";
+import { router, usePage } from "@inertiajs/vue3";
+const page=usePage()
+let user;
+if(page.props.auth && page.props.auth.user ){
+user=computed(()=>page.props.auth.user)
+
+}
+const {lastname, firstname}=user.value
+const initialName=firstname[0].toUpperCase()+lastname[0].toUpperCase()
+const name=lastname + " "+firstname
 
 const listItems=[
     {id:1, title:'Dashboard', link:'dashboard', icon:'bi bi-grid-fill', classActive:'', },
@@ -22,7 +31,7 @@ const activeClass=(vRoute) =>computed(() => {
 
 const logout=() =>router.post('/logout')
 onMounted(() => {
-  console.log("Mounted and DOM ready");
+  console.log("Mounted and DOM ready:", lastname, firstname,initialName);
 
   const menuToggle = document.getElementById("menuToggle");
   const menuToggleMobile = document.getElementById("MenuToggleMobile");
@@ -129,9 +138,9 @@ onMounted(() => {
                 <div class="dropdown profile-dropdown">
                      <div class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" role="button">
                          <div class="user-profile">
-                            <div class="user-avatar">AD</div>
+                            <div class="user-avatar">{{ initialName }}</div>
                             <div class="user-info">
-                                <h6>Ali</h6>
+                                <h6>{{ name }}</h6>
                                 <p><small>Super Admin</small></p>
                             </div>
                         </div>

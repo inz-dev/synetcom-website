@@ -69,9 +69,9 @@ function  openlink(item) {
     </div>
 
     <div class="container overflow-hidden mt-5">
-    <div class="img-card">
+    <div class="row gy-4 gy-xl-0">
      <Carousel v-bind="config">
-    <Slide v-for="item in listPartners" :key="item.id">
+    <Slide class="col-12 col-sm-3 col-xl-4 col-md-12" v-for="item in listPartners" :key="item.id">
       <img :src="item.imagefile"
               class="card-img-top"
               :alt="item.title"
@@ -109,7 +109,7 @@ function  openlink(item) {
 .card-img-top{
     cursor:pointer;
     background-size: cover;
-    height: 200px;
+
 }
 .img-card:hover {
   background-image: #f15a2d;
