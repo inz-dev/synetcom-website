@@ -17,7 +17,7 @@ class SocialMediasSeeder extends Seeder
         //
         SocialMedias::create([
      'nom_social_media'=>'autre',
-     'id_telephone'=>null,
+    'id_telephone'=>Telephones::first()->id_telephone,
      'id_email'=>null
         ]);
            SocialMedias::create([

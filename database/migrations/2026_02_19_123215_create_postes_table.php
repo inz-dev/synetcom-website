@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('postes', function (Blueprint $table) {
             $table->uuid('id_poste')->primary()->unique();
-            $table->string('nom_poste')->primary();
+            $table->string('nom_poste');
             $table->date('date_debut_poste')->default(now());
              $table->date('date_fin_poste')->default(now());
             $table->foreignUuid('id_employe') ->index()->references('id_employe')->on('employes');

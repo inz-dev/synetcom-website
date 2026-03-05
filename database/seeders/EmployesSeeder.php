@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Employes;
+use App\Models\Telephones;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

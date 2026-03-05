@@ -96,7 +96,7 @@
                 </form>
 
                 <div class="map-container mt-4">
-                  <img src="/api/placeholder/800/200" alt="Map" style="width: 100%; height: 100%; object-fit: cover;">
+                  <img src="" alt="Map" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
               </div>
             </div>

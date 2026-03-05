@@ -16,9 +16,9 @@ return new class extends Migration
             /*$table->uuid('id_page')->default(DB::raw('(UUID())'))->primary()->unique();*/
              $table->uuid('id_page')->primary()->unique();
             $table->string('titre_page');
-             $table->string('slogan_page');
-             $table->string('banniere_page');
-              $table->text('description_page');
+             $table->string('slogan_page')->nullable();
+             $table->string('banniere_page')->nullable();
+              $table->text('description_page')->nullable();
                $table->softDeletes();
             $table->timestamps();
         });

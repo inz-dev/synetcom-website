@@ -9,6 +9,7 @@ const customeTheme = {
     colors: {
         primary: "#1B449C",
         secondary: "#F15A2D",
+        focus: "#F15A2D",
         accent: "#82B1FF",
         error: "#FF5252",
         info: "#2196F3",

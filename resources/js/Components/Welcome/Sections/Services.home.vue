@@ -140,7 +140,7 @@ export default {
       </div>
     </div>
 
-    <div class="container-fluid overflow-hidden">
+    <div class="container overflow-hidden">
       <div class="row gy-4 gy-xl-0">
         <div
           class="mb-4 col-12 col-sm-7 col-xl-4 col-md-6"

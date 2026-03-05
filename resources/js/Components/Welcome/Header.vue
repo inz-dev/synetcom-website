@@ -6,10 +6,20 @@ const propos=defineProps(
 )
     function goToSection(typePage){
        const section=document.getElementById(typePage)
+       console.log('section:', section)
        if(section){
         section.scrollIntoView({behavior:'smooth'})
        }
     }
+const listItems=[
+    {id:1, titre_menu:'Accueil', link:'', description_menu:'description',classActive:'',as_sousmenu:0 },
+    {id:2, titre_menu:'Qui sommes-nous?', link:'about_us',description_menu:'description', classActive:'', as_sousmenu:0},
+     {id:3, titre_menu:'Services', link:'about_us',description_menu:'description', classActive:'',as_sousmenu:1 , sousmenu:['Solutions Entreprise','Développement apps/sites','Hébergement sites web','Autres']},
+      {id:4, titre_menu:'Equipe', link:'team',description_menu:'description', classActive:'', as_sousmenu:0},
+       {id:5, titre_menu:'Partenaires', link:'partners',description_menu:'description', classActive:'',as_sousmenu:0 },
+    {id:6, titre_menu:'Nous contacter', link:'nous-contacter',description_menu:'description', classActive:'',as_sousmenu:0 },
+       {id:7, titre_menu:'Recrutement', link:'recrutement',description_menu:'description', classActive:'',as_sousmenu:0 },
+]
 
 const navigateTo=(routeName)=>{
     console.log('routeName:',routeName)

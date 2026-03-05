@@ -2,13 +2,20 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { useForm, router, usePage } from '@inertiajs/vue3';
 
-  import { onMounted, ref, shallowRef, toRef } from 'vue'
+  import { onMounted,watch, ref, shallowRef, toRef } from 'vue'
 
-  const currentYear = new Date().getFullYear()
+const currentYear = new Date().getFullYear()
 const props=defineProps(
     {allDepartments:Array},
     {errors:Object}
 )
+const search = ref('');
+const loading = ref(false);
+watch(search, (newSearchTerm, oldSearchTerm) => {
+  // Perform actions here, e.g., an API call (especially for server-side tables)
+  console.log(`Search term changed from ${oldSearchTerm} to ${newSearchTerm}`);
+  updateData()
+});
 const page = usePage()
 const errors = page.props.errors
   const departements=[]
@@ -23,7 +30,21 @@ const errors = page.props.errors
     }
 })}
 
-  const formModel =useForm ({
+function reset(){
+    search.value=""
+    //departements=[...props.allDepartments]
+}
+function updateData() {
+
+      router.get("/departements", {
+        preserveState: true,
+        preverseScroll: true,
+        onSuccess: () => {
+          console.log("herre")
+        },
+      });
+    }
+const formModel =useForm ({
     id_departement:null,
       nom_departement: '',
     }
@@ -31,11 +52,11 @@ const errors = page.props.errors
   const dialog = shallowRef(false)
   const isEditing = toRef(() => !!formModel.id_departement)
 
-  const headers = [
-    { id: 'N°', key: 'index', align: 'start' },
+  const headers = ref([
+    { title: 'N°', key: 'index', align: 'start' },
     { title: 'Titre', key: 'nom_departement', align: 'start' },
     { title: 'Actions', key: 'actions', align: 'end', sortable: false },
-  ]
+  ])
 const addDepartements=(e)=>{
     e.preventDefault();
     dialog.value = true
@@ -45,12 +66,18 @@ let TErrors=[]
 const add= (e)=>{
         console.log("ajout")
       formModel.post(route('departements.store'),{
+        onSuccess:(e)=>{
+            console.log('success:', e)
+            dialog.value=false
+            loading.value=true
+        },
         onError:(e)=>{
             console.log('error:', e)
             TErrors.push(e)
         }
 
        })
+       loading.value=false
 
     }
 const save=(e)=>{
@@ -80,18 +107,36 @@ const save=(e)=>{
 <div class="container mb-2" id="cont">
   <div class="row gy-2 gy-xl-0 m-4">
  <v-sheet border rounded >
+
+ <v-text-field v-model="search"  prepend-inner-icon="mdi-magnify"
+        label="Recherche"
+        single-line
+      variant="outlined"
+      color="secondary"
+        clearable
+        hide-details
+        class="py-4"
+        solo
+        style="max-width: 300px" />
     <v-data-table
       :headers="headers"
       :hide-default-footer="departements.length < 3"
       :items="departements"
+      :search="search"
+      :loading="loading"
        fixed-header
+       sort-asc-icon="mdi-sort-ascending"
+    sort-desc-icon="mdi-sort-descending"
+    sort-icon="mdi-swap-vertical"
     >
       <template v-slot:top>
-        <v-toolbar flat>
-          <v-toolbar-title>
-            <v-icon color="medium-emphasis" icon="mdi-book-multiple" size="x-small" start></v-icon>
 
-            Départements
+        <v-toolbar flat>
+
+          <v-toolbar-title color="primary">
+            <v-icon color="primary" icon="mdi-book-multiple" size="x-small" start></v-icon>
+<span style="color:#1B449C">Départements</span>
+
           </v-toolbar-title>
 
           <v-btn
@@ -100,11 +145,13 @@ const save=(e)=>{
             rounded="lg"
             text="Ajouter"
             border
-            color="blue"
+            color="primary"
             @click="addDepartements"
 
           ></v-btn>
+
         </v-toolbar>
+
       </template>
 <!-- <template v-slot:item.id="{ value }">
 
@@ -135,6 +182,7 @@ const save=(e)=>{
           text="Réinitialiser les données"
           variant="text"
           border
+          @click="reset"
 
         ></v-btn>
       </template>
@@ -171,7 +219,7 @@ const save=(e)=>{
 
         <v-spacer></v-spacer>
 
-        <v-btn text="Enregistrer" @click="add" ></v-btn>
+        <v-btn text="Enregistrer" :loading="formModel.processing" @click="add" ></v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

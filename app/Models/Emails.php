@@ -26,6 +26,6 @@ class Emails extends Model
      }
 
     public function socialMedias(){
-        return $this->belongsTo(\App\Models\SocialMedias::class,'id_social_media');
+        return $this->hasMany(\App\Models\SocialMedias::class,'id_social_media');
     }
 }

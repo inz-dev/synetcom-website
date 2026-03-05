@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
-use Webpatser\Uuid\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-class Pages extends Model
+use Webpatser\Uuid\Uuid;
+class Menus extends Model
 {
     use HasFactory;
-
-    public $incrementing = false;   // pas d'auto-incrément
+     public $incrementing = false;   // pas d'auto-incrément
     protected $keyType = 'string';  // type string au lieu d'int
-    protected $primaryKey = 'id_page';
+    protected $primaryKey = 'id_menu';
     protected static function boot()
     {
         parent::boot();
@@ -25,13 +23,14 @@ class Pages extends Model
     }
 
     protected $fillable = [
-        'id_page',
-        'titre_page',
-        'description_page',
-        'slogan_page',
-        'banniere_page'
+        'id_menu',
+        'titre_menu',
+        'description_menu',
+        'a_sousmenu',
+
     ];
-     public function menus(){
-        return $this->belongsToMany(\App\Models\Menus::class);
+
+     public function pages(){
+        return $this->belongsToMany(\App\Models\Pages::class);
     }
 }

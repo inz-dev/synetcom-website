@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('adresse_organisme');
             $table->string('logo_organisme');
             $table->string('slogan_organisme')->default('Notre slogan');
+            $table->string('lien_map_organisme')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

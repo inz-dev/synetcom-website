@@ -26,6 +26,6 @@ class Telephones extends Model
 
      }
     public function socialMedia(){
-        return $this->belongsTo(\App\Models\SocialMedias::class);
+        return $this->hasMany(\App\Models\SocialMedias::class);
     }
 }

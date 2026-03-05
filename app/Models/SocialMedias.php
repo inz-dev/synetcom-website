@@ -40,6 +40,9 @@ public $incrementing=false;
     }
 
     public function telephones(){
-        return $this->hasMany(\App\Models\telephones::class);
+        return $this->belongsTo(\App\Models\telephones::class);
+    }
+     public function emails(){
+        return $this->belongsTo(\App\Models\emails::class);
     }
 }
