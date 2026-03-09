@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             EmployesSeeder::class,
             OrganismesSeeder::class,
             EmployesHasSocialMediasSeeder::class,
+            ServicesSeeder::class
 
         ]);
     }

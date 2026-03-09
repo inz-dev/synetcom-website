@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
-use Webpatser\Uuid\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+use Webpatser\Uuid\Uuid;
 use Illuminate\Database\Eloquent\Model;
 
-class Partenaires extends Model
+
+class Client extends Model
 {
+
     use HasFactory;
     public $incrementing = false;   // pas d'auto-incrément
     protected $keyType = 'string';  // type string au lieu d'int
-    protected $primaryKey = 'id_partenaire';
+    protected $primaryKey = 'id_client';
     protected static function boot()
     {
         parent::boot();
@@ -23,12 +26,13 @@ class Partenaires extends Model
         });
     }
     protected $fillable = [
-        'id_partenaire',
-        'nom_partenaire',
-        'logo_partenaire',
-        'lien_partenaire',
-        'description_partenaire',
-        'duree_partenaire'
+        'id_client',
+        'nom_client',
+        'logo_client',
+        'lien_client',
+        'description_client',
+        'duree_client',
+        'est_partenaire_client'
 
     ];
 
