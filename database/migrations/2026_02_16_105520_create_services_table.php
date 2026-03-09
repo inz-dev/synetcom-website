@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->uuid('id_service')->primary()->unique();
             $table->string('nom_service');
-            $table->string('description_service');
-            $table->string('icon_service');
+            $table->string('description_service')->nullable();
+            $table->string('icon_service')->nullable();
             $table->foreignUuid('id_departement')->index()->references('id_departement')->on('departements');
             $table->timestamps();
         });
