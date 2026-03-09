@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Telephones;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
@@ -31,6 +32,8 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+    /*     $tests =Telephones::select('id_telephone')->orderBy('created_at', 'asc')->skip(2)->take(1)->get()[0]['id_telephone'];
+ dd('$tests', $tests); */
         return [
             ...parent::share($request),
             'auth' => [

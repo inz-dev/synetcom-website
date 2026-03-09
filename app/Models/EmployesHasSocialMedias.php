@@ -13,10 +13,7 @@ class EmployesHasSocialMedias extends Model
 
 public $incrementing = true;
 protected $keyType='string';
-     protected $primaryKey=[
-        'id_employes',
-        'id_social_media',
-    ];
+     protected $primaryKey='id_employes_has_social_media';
 
     protected static function boot(){
         parent::boot();
@@ -28,8 +25,10 @@ protected $keyType='string';
     }
 
     protected $fillable=[
-       'employes_id',
-        'social_medias_id',
+    'id_employes_has_social_media',
+    'id_employe',
+    'id_social_media',
+    'actif_employes_has_social_media'
     ];
      public function employes(){
         return $this->hasMany(\App\Models\Employes::class,'id_employe');

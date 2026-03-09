@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             DepartementsSeeder::class,
             EmployesSeeder::class,
             OrganismesSeeder::class,
+            EmployesHasSocialMediasSeeder::class,
 
         ]);
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\NousContacter;
+use App\Models\Telephones;
 use App\Models\Welcome;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

@@ -13,10 +13,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employes_has_social_medias', function (Blueprint $table) {
-            $table->foreignUuid('id_employe')
-            ->index()->references('id_employe')->on('employes');
-            $table->foreignUuid('id_social_media')
-            ->index()->references('id_social_media')->on('social_medias');
+            $table->uuid('id_employes_has_social_media')->primary();
+            $table->foreignUuid('id_employe')->index()->references('id_employe')->on('employes');
+            $table->foreignUuid('id_social_media')->index()->references('id_social_media')->on('social_medias');
+            $table->bigInteger('actif_employes_has_social_media')->default(1);
             $table->softDeletes();
             $table->timestamps();
         });
