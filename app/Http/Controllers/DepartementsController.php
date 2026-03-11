@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Departements;
+use App\Models\Services;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -16,8 +17,10 @@ class DepartementsController extends Controller
     public function index()
     {
         //
+        $data= Services::with('Departements')->get();
+        /* dd('test:', $data); */
         return Inertia::render('Departements/Index.departements', [
-            'allDepartments' => Departements::all(),
+            'allDepartments' => $data,
 
         ]);
     }

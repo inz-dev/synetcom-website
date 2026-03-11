@@ -28,9 +28,9 @@ public $incrementing=false;
         });
 
      }
-     public function services(){
-         return  $this->belongsTo(\App\Models\Services::class,'id_service');
-        }
+    public function services(){
+        return $this->hasMany(\App\Models\Services::class,'id_service');
+    }
         public function departements_has_employes(){
         return $this->belongsToMany(\App\Models\DepartementsHasEmployes::class);
     }

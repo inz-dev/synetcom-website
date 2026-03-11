@@ -1,114 +1,93 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { useForm, router, usePage } from '@inertiajs/vue3';
-
-  import { onMounted,watch, ref, shallowRef, toRef } from 'vue'
-
-const currentYear = new Date().getFullYear()
+import { onMounted,watch, ref, shallowRef, toRef } from 'vue'
 const props=defineProps(
     {allDepartments:Array},
     {errors:Object}
 )
-const search = ref('');
-const loading = ref(false);
-watch(search, (newSearchTerm, oldSearchTerm) => {
-  // Perform actions here, e.g., an API call (especially for server-side tables)
-  console.log(`Search term changed from ${oldSearchTerm} to ${newSearchTerm}`);
-  updateData()
-});
-const page = usePage()
-const errors = page.props.errors
-  const departements=[]
+let newSet= new Set();
+let uniqueDepts
+const departements=[]
   if(props.allDepartments || props.allDepartments.length!=0)
-{props.allDepartments.forEach((el, index)=>{
-     if(el){
-    /*console.log('el:', el); */
-    departements.push({
-        index:index+1,
-        ...el
-    })
-    }
-})}
-
-function reset(){
-    search.value=""
-    //departements=[...props.allDepartments]
+{
+      props.allDepartments.forEach((element,index) => {
+/* console.log("element:", element) */
+departements.push({
+    index:index+1,
+    ...element})
+      })
+    uniqueDepts =props.allDepartments.filter(({ id_departement }) => !newSet.has(id_departement) && newSet.add(id_departement));
 }
-function updateData() {
 
-      router.get("/departements", {
-        preserveState: true,
-        preverseScroll: true,
-        onSuccess: () => {
-          console.log("herre")
-        },
-      });
-    }
-const formModel =useForm ({
-    id_departement:null,
-      nom_departement: '',
-    }
-)
-  const dialog = shallowRef(false)
-  const isEditing = toRef(() => !!formModel.id_departement)
+//const plainArray=uniqueDepts.map(obj =>({ obj }) )
 
-  const headers = ref([
-    { title: 'N°', key: 'index', align: 'start' },
-    { title: 'Titre', key: 'nom_departement', align: 'start' },
-    { title: 'Actions', key: 'actions', align: 'end', sortable: false },
-  ])
-const addDepartements=(e)=>{
-    e.preventDefault();
-    dialog.value = true
+const plainArray = uniqueDepts.map((proxy,index) => {
+   /*  console.log('index:', index)
+    console.log('proxy:', proxy) */
+  return {
+    index:index+1,
+    id_dept: proxy.id_departement,
+    nom_dept: proxy.nom_departement
+  };
+});
+console.log('plainArray:', departements)
+const headersT = [
+    { title: "N° Service", key: "index" },
+    { title: "Service", sortable: false, key: "nom_service" },
+    { title: "Description", key: "description_service", align: "end" },
 
-}
-let TErrors=[]
-const add= (e)=>{
-        console.log("ajout")
-      formModel.post(route('departements.store'),{
-        onSuccess:(e)=>{
-            console.log('success:', e)
-            dialog.value=false
-            loading.value=true
-        },
-        onError:(e)=>{
-            console.log('error:', e)
-            TErrors.push(e)
-        }
 
-       })
-       loading.value=false
+];
+const groupByT = [{ key: "departements.nom_departement", order: "asc" }];
 
-    }
-const save=(e)=>{
-    e.preventDefault();
-    if (isEditing.value){
+const groupBy = [{ key: "type", order: "asc" }];
 
-    }
-
-    /* if (errors) dialog.value = true */
-    dialog.value = false
-
-}
+const headers = [
+    { title: "Tool Name", sortable: false, key: "name" },
+    { title: "Weight(kg)", key: "weight", align: "end" },
+    { title: "Length(cm)", key: "length", align: "end" },
+    { title: "Price($)", key: "price", align: "end" },
+];
+const search = ref('');
+const tools = [
+    { name: "Hammer", weight: 0.5, length: 30, price: 10, type: "hand" },
+    { name: "Screwdriver", weight: 0.2, length: 20, price: 5, type: "hand" },
+    { name: "Drill", weight: 1.5, length: 25, price: 50, type: "power" },
+    { name: "Saw", weight: 0.7, length: 50, price: 15, type: "hand" },
+    {
+        name: "Tape Measure",
+        weight: 0.3,
+        length: 10,
+        price: 8,
+        type: "measuring",
+    },
+    { name: "Level", weight: 0.4, length: 60, price: 12, type: "measuring" },
+    { name: "Wrench", weight: 0.6, length: 25, price: 10, type: "hand" },
+    { name: "Pliers", weight: 0.3, length: 15, price: 7, type: "hand" },
+    { name: "Sander", weight: 2.0, length: 30, price: 60, type: "power" },
+    {
+        name: "Multimeter",
+        weight: 0.5,
+        length: 15,
+        price: 30,
+        type: "measuring",
+    },
+];
 
   onMounted(() => {
-    console.log("props.allDepartments:",errors)
-     //console.log("departments:",departements, departements[0])
+     console.log("props.allDepartments:",props.allDepartments)
+ /* console.log("departments:", departements) */
     //departements.map(el=> console.log(el))
 
   })
-
-
 </script>
 
-
 <template>
-<AuthenticatedLayout>
-<div class="container mb-2" id="cont">
-  <div class="row gy-2 gy-xl-0 m-4">
- <v-sheet border rounded >
-
- <v-text-field v-model="search"  prepend-inner-icon="mdi-magnify"
+    <AuthenticatedLayout>
+        <div class="container mb-2">
+            <div class="row gy-2 gy-xl-0 m-4">
+            <v-text-field v-model="search"  prepend-inner-icon="mdi-magnify"
         label="Recherche"
         single-line
       variant="outlined"
@@ -118,18 +97,15 @@ const save=(e)=>{
         class="py-4"
         solo
         style="max-width: 300px" />
-    <v-data-table
-      :headers="headers"
-      :hide-default-footer="departements.length < 3"
-      :items="departements"
-      :search="search"
-      :loading="loading"
-       fixed-header
-       sort-asc-icon="mdi-sort-ascending"
-    sort-desc-icon="mdi-sort-descending"
-    sort-icon="mdi-swap-vertical"
-    >
-      <template v-slot:top>
+                <v-data-table
+                    :group-by="groupByT"
+                    :headers="headersT"
+                    :items="departements"
+                    :items-per-page="-1"
+                    item-value="nom_service"
+                    hide-default-footer
+                >
+                 <template v-slot:top>
 
         <v-toolbar flat>
 
@@ -153,87 +129,25 @@ const save=(e)=>{
         </v-toolbar>
 
       </template>
-<!-- <template v-slot:item.id="{ value }">
+                    <template v-slot:group-summary="{ item, columns }">
+                    {{ console.log('columns:',item) }}
+                        <tr class="font-weight-bold text-red">
+                            <td
+                                v-for="c in columns"
+                                :key="c.key"
+                                :class="[
+                                    'v-data-table__td',
+                                    c.align
+                                        ? `v-data-table-column--align-${c.align}`
+                                        : '',
+                                ]"
+                            >
 
-</template> -->
-      <template v-slot:item.nom_departement="{ value }">
-      <span>{{ value }}</span>
-
-
-        <!-- <v-chip :text="value" border="thin opacity-25" prepend-icon="mdi-book" label>
-          <template v-slot:prepend>
-            <v-icon color="medium-emphasis"></v-icon>
-          </template>
-        </v-chip> -->
-      </template>
-
-      <template v-slot:item.actions="{ item }">
-        <div class="d-flex ga-2 justify-end">
-          <v-icon color="orange"  icon="mdi-pencil" :key="item" size="small" ></v-icon>
-
-          <v-icon color="red" icon="mdi-delete" size="small" ></v-icon>
+                            </td>
+                        </tr>
+                    </template>
+                </v-data-table>
+            </div>
         </div>
-      </template>
-
-      <template v-slot:no-data>
-        <v-btn
-          prepend-icon="mdi-backup-restore"
-          rounded="lg"
-          text="Réinitialiser les données"
-          variant="text"
-          border
-          @click="reset"
-
-        ></v-btn>
-      </template>
-    </v-data-table>
-  </v-sheet>
-
-  <v-dialog v-model="dialog" max-width="500">
-    <v-card
-      :subtitle="`${isEditing ? 'Mise à jour d\'' : 'Création d\''} un département`"
-      :title="`${isEditing ? 'Modifier' : 'Ajouter'} un département`"
-    >
-      <template v-slot:text>
-        <v-row>
-          <v-col cols="12">
-            <v-text-field v-model="formModel.nom_departement"
-
-            aria-required="true"
-            :error-messages="formModel.errors.nom_departement"
-            >
-            <template v-slot:label>
-        Nom du département<span class="text-red-500">&nbsp;*</span>
-      </template>
-            </v-text-field>
-                      <span v-if="formModel.errors.nom_departement">{{ formModel.errors.nom_departement }}</span>
-          </v-col>
-
-        </v-row>
-      </template>
-
-      <v-divider></v-divider>
-
-      <v-card-actions class="bg-surface-light">
-        <v-btn text="Annuler" variant="plain" @click="dialog = false"></v-btn>
-
-        <v-spacer></v-spacer>
-
-        <v-btn text="Enregistrer" :loading="formModel.processing" @click="add" ></v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-
- </div>
-</div>
-
-</AuthenticatedLayout>
+    </AuthenticatedLayout>
 </template>
-<style>
-.text-red-500 {
-  font-size: 1.2em;
-  margin-left: 2px;
-   color: #ef4444;
-}
-
-</style>

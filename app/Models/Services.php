@@ -31,8 +31,8 @@ class Services extends Model
     'icon_service',
     'id_departement'
     ];
+  public function departements(){
+         return  $this->belongsTo(\App\Models\Departements::class,'id_departement');
+        }
 
-    public function departements(){
-        return $this->hasMany(\App\Models\Departements::class);
-    }
 }
