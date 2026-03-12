@@ -57,6 +57,11 @@ class DepartementsController extends Controller
         );
         $dept->save();
         /* dd("save:", $dept); */
+
+return redirect()->route('Departements.Index.departements')->with('message', [
+            'type' => 'success',
+            'text' => 'Le département est créé avec succès!',
+        ]);
         } catch (\Throwable $th) {
             //throw $th;
             /* dump('th:',$th);

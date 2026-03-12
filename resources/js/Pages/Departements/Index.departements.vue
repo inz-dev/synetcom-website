@@ -1,12 +1,10 @@
-
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { useForm, router, usePage } from '@inertiajs/vue3';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import { useForm, router, usePage } from "@inertiajs/vue3";
+import { formToJSON } from "axios";
 
-  import { onMounted,watch, ref, shallowRef, toRef } from 'vue'
-  const props = defineProps({ allDepartments: Array }, { errors: Object });
-let newSet = new Set();
-let uniqueDepts;
+import { onMounted, watch, ref, shallowRef, toRef } from "vue";
+const props = defineProps({ allDepartments: Array }, { errors: Object });
 const departements = [];
 if (props.allDepartments || props.allDepartments.length != 0) {
     props.allDepartments.forEach((element, index) => {
@@ -16,44 +14,86 @@ if (props.allDepartments || props.allDepartments.length != 0) {
             ...element,
         });
     });
-
-
 }
 
- const headersT = [
-    { width: 50, title: 'N°', key: 'index', align: 'start', sortable: true },
-   { width: 180, title: 'Département', key: 'nom_departement', sortable: true },
-    { width: 200, title: 'Infos', key: 'description_departement' },
-    { width: 80, key: 'data-table-expand' }, // optional, to keep it as short as possible
+const headers = [
+    { width: 50, title: "N°", key: "index", align: "start", sortable: true },
+    {
+        width: 180,
+        title: "Département",
+        key: "nom_departement",
+        sortable: true,
+    },
+    { width: 200, title: "Infos", key: "description_departement" },
+    { width: 80, key: "data-table-expand" }, // optional, to keep it as short as possible
     { title: "Actions", key: "actions", align: "end", sortable: false },
-  ]
+];
+function updateData() {
 
-  onMounted(() => {
+      router.get("/departements", {
+        preserveState: true,
+        preverseScroll: true,
+        onSuccess: () => {
+          console.log("herre")
+        },
+      });
+    }
+const formModel =useForm ({
+    id_departement:null,
+      nom_departement: '',
+      description_departement:""
+    }
+)
+  const dialog = shallowRef(false)
+  const isEditing = toRef(() => !!formModel.id_departement)
+onMounted(() => {
     console.log("props.allDepartments:", props.allDepartments);
-     console.log("departments:", departements)
+    console.log("departments:", departements);
     //departements.map(el=> console.log(el))
 });
-function rowClass(item, index){
-    return index %2==0?'even-line':'odd-line'
+const addDepartements=(e)=>{
+    e.preventDefault();
+    dialog.value = true
 
 }
+let TErrors=[]
+const saveDept= (e)=>{
+        console.log("ajout:", formModel)
+      formModel.post(route('departements.store'),{
+        onSuccess:(e)=>{
+            console.log('success:', e)
+            dialog.value=false
+
+        },
+        onError:(e)=>{
+            console.log('error:', e)
+            TErrors.push(e)
+        }
+
+       })
+
+
+    }
 </script>
 
 <template>
     <AuthenticatedLayout>
         <div class="container mb-2">
-           <div class="row gy-2 gy-xl-0 mt-4">
-           <v-data-table
-    :headers="headersT"
-    :items="departements"
-    item-value="nom_departement"
-                        fixed-header
-       sort-asc-icon="mdi-sort-ascending"
-    sort-desc-icon="mdi-sort-descending"
-    sort-icon="mdi-swap-vertical"
-    show-expand
-  >
-    <template v-slot:top>
+            <div class="row gy-2 gy-xl-0 mt-4">
+            <v-sheet border rounded class="mb-4">
+                <v-data-table
+                    :headers="headers"
+                    :items="departements"
+                    item-value="nom_departement"
+                    fixed-header
+                    height="450"
+                   :hide-default-footer="departements.length < 11"
+                    sort-asc-icon="mdi-sort-ascending"
+                    sort-desc-icon="mdi-sort-descending"
+                    sort-icon="mdi-swap-vertical"
+                    show-expand
+                >
+                    <template v-slot:top>
                         <v-toolbar flat class="mt-4 bg-primary">
                             <v-toolbar-title color="white">
                                 <v-icon
@@ -76,7 +116,8 @@ function rowClass(item, index){
                             ></v-btn>
                         </v-toolbar>
                     </template>
-  <template v-slot:item.actions="{ item }">
+
+                    <template v-slot:item.actions="{ item }">
                         <div class="d-flex ga-2 justify-end">
                             <v-icon
                                 color="orange"
@@ -92,69 +133,121 @@ function rowClass(item, index){
                             ></v-icon>
                         </div>
                     </template>
-    <template v-slot:item.data-table-expand="{ internalItem, isExpanded, toggleExpand }">
-      <v-btn
-        :append-icon="isExpanded(internalItem) ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-        :text="isExpanded(internalItem) ? 'Ses services' : 'Voir Services'"
-        class="text-none"
+                    <template
+                        v-slot:item.data-table-expand="{
+                            internalItem,
+                            isExpanded,
+                            toggleExpand,
+                        }"
+                    >
+                        <v-btn
+                            :append-icon="
+                                isExpanded(internalItem)
+                                    ? 'mdi-chevron-up'
+                                    : 'mdi-chevron-down'
+                            "
+                            :text="
+                                isExpanded(internalItem)
+                                    ? 'Ses services'
+                                    : 'Voir Services'
+                            "
+                            class="text-none"
+                            size="small"
+                            variant="text"
+                            width="150"
+                            border
+                            slim
+                            @click="toggleExpand(internalItem)"
+                        ></v-btn>
+                    </template>
 
-        size="small"
-        variant="text"
-        width="150"
-        border
-        slim
-        @click="toggleExpand(internalItem)"
-      ></v-btn>
-    </template>
+                    <template v-slot:expanded-row="{ columns, item }">
+                        <tr>
+                            <td :colspan="columns.length" class="py-2">
+                                <v-sheet rounded="lg" border>
+                                    <v-table density="compact">
+                                        <tbody>
+                                            <tr class="bg-secondary">
+                                                <th>Numéro</th>
+                                                <th>Service</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </tbody>
 
-    <template v-slot:expanded-row="{ columns, item }">
-      <tr>
-        <td :colspan="columns.length" class="py-2">
-          <v-sheet rounded="lg" border>
-            <v-table density="compact">
-              <tbody >
-                <tr class="bg-secondary">
-                <th>Numéro</th>
-                  <th>Service</th>
-                  <th>Description</th>
+                                        <tbody
+                                            v-for="(
+                                                service, i
+                                            ) in item.services"
+                                        >
+                                            <tr :key="i">
+                                                <td class="py-2">
+                                                    {{ i + 1 }}
+                                                </td>
+                                                <td class="py-2">
+                                                    {{ service.nom_service }}
+                                                </td>
 
-                </tr>
-              </tbody>
+                                                <td class="py-2">
+                                                    {{
+                                                        service.description_service
+                                                    }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </v-table>
+                                </v-sheet>
+                            </td>
+                        </tr>
+                    </template>
+                </v-data-table>
+                </v-sheet>
+            </div>
 
-              <tbody v-for="(service,i) in item.services">
-                <tr :key="i">
-                  <td class="py-2">{{ i+1 }} </td>
-                      <td class="py-2">{{ service.nom_service }}</td>
+              <v-dialog v-model="dialog" max-width="500">
+    <v-card
 
-                  <td class="py-2">{{ service.description_service }}</td>
+      :title="`${isEditing ? 'Modifier' : 'Ajouter'} un département`"
+    >
+      <template v-slot:text>
+        <v-row>
+          <v-col cols="12">
+            <v-text-field v-model="formModel.nom_departement" label="Département"></v-text-field>
+          </v-col>
 
-                </tr>
-              </tbody>
-            </v-table>
-          </v-sheet>
-        </td>
-      </tr>
-    </template>
-  </v-data-table>
-           </div>
+          <v-col cols="12">
+            <v-textarea v-model="formModel.description_departement" label="Description"></v-textarea>
+          </v-col>
+        </v-row>
+      </template>
+
+      <v-divider></v-divider>
+
+      <v-card-actions >
+        <v-btn text="Annuler" variant="plain" @click="dialog = false"></v-btn>
+
+        <v-spacer></v-spacer>
+
+        <v-btn text="Valider" @click="saveDept"></v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
         </div>
     </AuthenticatedLayout>
 </template>
 
 <style>
-
-
- .v-table tbody tr:hover{
+.v-table tbody tr:hover {
     color: var(--primary-color);
     cursor: pointer;
- }
+}
 .v-table tbody tr:nth-child(even) {
-      background-color: #a9a9a9;
-     /*  border: 2px solid #000; */
+    background-color: #a9a9a9;
+    /*  border: 2px solid #000; */
 }
 
 .v-table tbody tr:nth-child(odd) {
-      background-color: lightgray;
-     /*  border: 2px solid #000; */
+    background-color: lightgray;
+    /*  border: 2px solid #000; */
 }
 </style>

@@ -3,6 +3,7 @@
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
+import { fr } from 'vuetify/locale'
 import "vuetify/styles";
 const customeTheme = {
     dark: false,
@@ -36,6 +37,11 @@ const customeTheme = {
 const vuetify = createVuetify({
     components,
     directives,
+   locale: {
+    locale: 'fr',       // langue courante
+    fallback: 'en',     // langue de secours
+    messages: { fr },   // chargement du pack officiel
+  },
     icons: {
         iconfont: "mdi", // default - only for display purposes
     },
