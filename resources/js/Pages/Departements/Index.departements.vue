@@ -1,153 +1,160 @@
+
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { useForm, router, usePage } from '@inertiajs/vue3';
-import { onMounted,watch, ref, shallowRef, toRef } from 'vue'
-const props=defineProps(
-    {allDepartments:Array},
-    {errors:Object}
-)
-let newSet= new Set();
-let uniqueDepts
-const departements=[]
-  if(props.allDepartments || props.allDepartments.length!=0)
-{
-      props.allDepartments.forEach((element,index) => {
-/* console.log("element:", element) */
-departements.push({
-    index:index+1,
-    ...element})
-      })
-    uniqueDepts =props.allDepartments.filter(({ id_departement }) => !newSet.has(id_departement) && newSet.add(id_departement));
+
+  import { onMounted,watch, ref, shallowRef, toRef } from 'vue'
+  const props = defineProps({ allDepartments: Array }, { errors: Object });
+let newSet = new Set();
+let uniqueDepts;
+const departements = [];
+if (props.allDepartments || props.allDepartments.length != 0) {
+    props.allDepartments.forEach((element, index) => {
+        /* console.log("element:", element) */
+        departements.push({
+            index: index + 1,
+            ...element,
+        });
+    });
+
+
 }
 
-//const plainArray=uniqueDepts.map(obj =>({ obj }) )
-
-const plainArray = uniqueDepts.map((proxy,index) => {
-   /*  console.log('index:', index)
-    console.log('proxy:', proxy) */
-  return {
-    index:index+1,
-    id_dept: proxy.id_departement,
-    nom_dept: proxy.nom_departement
-  };
-});
-console.log('plainArray:', departements)
-const headersT = [
-    { title: "N° Service", key: "index" },
-    { title: "Service", sortable: false, key: "nom_service" },
-    { title: "Description", key: "description_service", align: "end" },
-
-
-];
-const groupByT = [{ key: "departements.nom_departement", order: "asc" }];
-
-const groupBy = [{ key: "type", order: "asc" }];
-
-const headers = [
-    { title: "Tool Name", sortable: false, key: "name" },
-    { title: "Weight(kg)", key: "weight", align: "end" },
-    { title: "Length(cm)", key: "length", align: "end" },
-    { title: "Price($)", key: "price", align: "end" },
-];
-const search = ref('');
-const tools = [
-    { name: "Hammer", weight: 0.5, length: 30, price: 10, type: "hand" },
-    { name: "Screwdriver", weight: 0.2, length: 20, price: 5, type: "hand" },
-    { name: "Drill", weight: 1.5, length: 25, price: 50, type: "power" },
-    { name: "Saw", weight: 0.7, length: 50, price: 15, type: "hand" },
-    {
-        name: "Tape Measure",
-        weight: 0.3,
-        length: 10,
-        price: 8,
-        type: "measuring",
-    },
-    { name: "Level", weight: 0.4, length: 60, price: 12, type: "measuring" },
-    { name: "Wrench", weight: 0.6, length: 25, price: 10, type: "hand" },
-    { name: "Pliers", weight: 0.3, length: 15, price: 7, type: "hand" },
-    { name: "Sander", weight: 2.0, length: 30, price: 60, type: "power" },
-    {
-        name: "Multimeter",
-        weight: 0.5,
-        length: 15,
-        price: 30,
-        type: "measuring",
-    },
-];
+ const headersT = [
+    { width: 50, title: 'N°', key: 'index', align: 'start', sortable: true },
+   { width: 180, title: 'Département', key: 'nom_departement', sortable: true },
+    { width: 200, title: 'Infos', key: 'description_departement' },
+    { width: 80, key: 'data-table-expand' }, // optional, to keep it as short as possible
+    { title: "Actions", key: "actions", align: "end", sortable: false },
+  ]
 
   onMounted(() => {
-     console.log("props.allDepartments:",props.allDepartments)
- /* console.log("departments:", departements) */
+    console.log("props.allDepartments:", props.allDepartments);
+     console.log("departments:", departements)
     //departements.map(el=> console.log(el))
+});
+function rowClass(item, index){
+    return index %2==0?'even-line':'odd-line'
 
-  })
+}
 </script>
 
 <template>
     <AuthenticatedLayout>
         <div class="container mb-2">
-            <div class="row gy-2 gy-xl-0 m-4">
-            <v-text-field v-model="search"  prepend-inner-icon="mdi-magnify"
-        label="Recherche"
-        single-line
-      variant="outlined"
-      color="secondary"
-        clearable
-        hide-details
-        class="py-4"
-        solo
-        style="max-width: 300px" />
-                <v-data-table
-                    :group-by="groupByT"
-                    :headers="headersT"
-                    :items="departements"
-                    :items-per-page="-1"
-                    item-value="nom_service"
-                    hide-default-footer
-                >
-                 <template v-slot:top>
+           <div class="row gy-2 gy-xl-0 mt-4">
+           <v-data-table
+    :headers="headersT"
+    :items="departements"
+    item-value="nom_departement"
+                        fixed-header
+       sort-asc-icon="mdi-sort-ascending"
+    sort-desc-icon="mdi-sort-descending"
+    sort-icon="mdi-swap-vertical"
+    show-expand
+  >
+    <template v-slot:top>
+                        <v-toolbar flat class="mt-4 bg-primary">
+                            <v-toolbar-title color="white">
+                                <v-icon
+                                    color="primary"
+                                    icon="mdi-book-multiple"
+                                    size="x-small"
+                                    start
+                                ></v-icon>
+                                <span style="color: white">Départements</span>
+                            </v-toolbar-title>
 
-        <v-toolbar flat>
-
-          <v-toolbar-title color="primary">
-            <v-icon color="primary" icon="mdi-book-multiple" size="x-small" start></v-icon>
-<span style="color:#1B449C">Départements</span>
-
-          </v-toolbar-title>
-
-          <v-btn
-            class="me-2"
-            prepend-icon="mdi-plus"
-            rounded="lg"
-            text="Ajouter"
-            border
-            color="primary"
-            @click="addDepartements"
-
-          ></v-btn>
-
-        </v-toolbar>
-
-      </template>
-                    <template v-slot:group-summary="{ item, columns }">
-                    {{ console.log('columns:',item) }}
-                        <tr class="font-weight-bold text-red">
-                            <td
-                                v-for="c in columns"
-                                :key="c.key"
-                                :class="[
-                                    'v-data-table__td',
-                                    c.align
-                                        ? `v-data-table-column--align-${c.align}`
-                                        : '',
-                                ]"
-                            >
-
-                            </td>
-                        </tr>
+                            <v-btn
+                                class="me-2 bg-white"
+                                prepend-icon="mdi-plus"
+                                rounded="lg"
+                                text="Ajouter"
+                                border
+                                color="primary"
+                                @click="addDepartements"
+                            ></v-btn>
+                        </v-toolbar>
                     </template>
-                </v-data-table>
-            </div>
+  <template v-slot:item.actions="{ item }">
+                        <div class="d-flex ga-2 justify-end">
+                            <v-icon
+                                color="orange"
+                                icon="mdi-pencil"
+                                :key="item"
+                                size="small"
+                            ></v-icon>
+
+                            <v-icon
+                                color="red"
+                                icon="mdi-delete"
+                                size="small"
+                            ></v-icon>
+                        </div>
+                    </template>
+    <template v-slot:item.data-table-expand="{ internalItem, isExpanded, toggleExpand }">
+      <v-btn
+        :append-icon="isExpanded(internalItem) ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+        :text="isExpanded(internalItem) ? 'Ses services' : 'Voir Services'"
+        class="text-none"
+
+        size="small"
+        variant="text"
+        width="150"
+        border
+        slim
+        @click="toggleExpand(internalItem)"
+      ></v-btn>
+    </template>
+
+    <template v-slot:expanded-row="{ columns, item }">
+      <tr>
+        <td :colspan="columns.length" class="py-2">
+          <v-sheet rounded="lg" border>
+            <v-table density="compact">
+              <tbody >
+                <tr class="bg-secondary">
+                <th>Numéro</th>
+                  <th>Service</th>
+                  <th>Description</th>
+
+                </tr>
+              </tbody>
+
+              <tbody v-for="(service,i) in item.services">
+                <tr :key="i">
+                  <td class="py-2">{{ i+1 }} </td>
+                      <td class="py-2">{{ service.nom_service }}</td>
+
+                  <td class="py-2">{{ service.description_service }}</td>
+
+                </tr>
+              </tbody>
+            </v-table>
+          </v-sheet>
+        </td>
+      </tr>
+    </template>
+  </v-data-table>
+           </div>
         </div>
     </AuthenticatedLayout>
 </template>
+
+<style>
+
+
+ .v-table tbody tr:hover{
+    color: var(--primary-color);
+    cursor: pointer;
+ }
+.v-table tbody tr:nth-child(even) {
+      background-color: #a9a9a9;
+     /*  border: 2px solid #000; */
+}
+
+.v-table tbody tr:nth-child(odd) {
+      background-color: lightgray;
+     /*  border: 2px solid #000; */
+}
+</style>

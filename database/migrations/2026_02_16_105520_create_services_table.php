@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nom_service');
             $table->string('description_service')->nullable();
             $table->string('icon_service')->nullable();
-            $table->foreignUuid('id_departement')->index()->references('id_departement')->on('departements');
+            $table->foreignUuid('departement_id')->index()->references('id_departement')->on('departements');
             $table->timestamps();
         });
     }

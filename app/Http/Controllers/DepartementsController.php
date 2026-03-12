@@ -17,8 +17,9 @@ class DepartementsController extends Controller
     public function index()
     {
         //
-        $data= Services::with('Departements')->get();
-        /* dd('test:', $data); */
+         $data=Departements::with('Services')->get();
+
+        //  dd('test:',  $data);
         return Inertia::render('Departements/Index.departements', [
             'allDepartments' => $data,
 

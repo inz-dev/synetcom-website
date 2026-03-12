@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Webpatser\Uuid\Uuid;
 
 class Services extends Model
@@ -29,10 +30,10 @@ class Services extends Model
     'nom_service',
     'description_service',
     'icon_service',
-    'id_departement'
+    'departement_id'
     ];
-  public function departements(){
-         return  $this->belongsTo(\App\Models\Departements::class,'id_departement');
+  public function departements():BelongsTo{
+         return  $this->belongsTo(\App\Models\Departements::class,'departement_id','id_departement');
         }
 
 }
