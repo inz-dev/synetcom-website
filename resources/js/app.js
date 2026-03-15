@@ -25,6 +25,7 @@ import AosVue from "aos-vue";
 import FooterComponent from "./Components/MyComponents/Footer.component.vue";
 import Header from "./Components/Welcome/Header.vue";
 import Footer from "./Components/Welcome/Footer.vue";
+import Vue3Toastify from "vue3-toastify";
 
 library.add(faUser, faClock);
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
@@ -47,6 +48,7 @@ createInertiaApp({
             .use(vuetify)
             .use(ZiggyVue)
             .use(AosVue)
+            .use(Vue3Toastify)
             .component("Header", Header)
             .component("Footer",Footer)
             .component("PrimaryButton", PrimaryButton)

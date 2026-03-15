@@ -29,10 +29,9 @@ const headers = [
     { title: "Actions", key: "actions", align: "end", sortable: false },
 ];
 function updateData() {
-
       router.get("/departements", {
         preserveState: true,
-        preverseScroll: true,
+        /* preverseScroll: true, */
         onSuccess: () => {
           console.log("herre")
         },
@@ -44,6 +43,8 @@ const formModel =useForm ({
       description_departement:""
     }
 )
+const search = ref('');
+let params;
   const dialog = shallowRef(false)
   const isEditing = toRef(() => !!formModel.id_departement)
 onMounted(() => {
@@ -51,6 +52,11 @@ onMounted(() => {
     console.log("departments:", departements);
     //departements.map(el=> console.log(el))
 });
+watch(search,(newSearchTerm, oldSearchTerm)  => {
+    console.log('search:', search,newSearchTerm, oldSearchTerm)
+    search:()=>{params.search=val}
+ /*  updateData() */
+})
 const addDepartements=(e)=>{
     e.preventDefault();
     dialog.value = true
@@ -62,7 +68,7 @@ const saveDept= (e)=>{
       formModel.post(route('departements.store'),{
         onSuccess:(e)=>{
             console.log('success:', e)
-            dialog.value=false
+
 
         },
         onError:(e)=>{
@@ -71,8 +77,7 @@ const saveDept= (e)=>{
         }
 
        })
-
-
+       dialog.value=false
     }
 </script>
 
@@ -81,8 +86,20 @@ const saveDept= (e)=>{
         <div class="container mb-2">
             <div class="row gy-2 gy-xl-0 mt-4">
             <v-sheet border rounded class="mb-4">
+            <v-text-field v-model="search"
+ prepend-inner-icon="mdi-magnify"
+        label="Recherche"
+        single-line
+      variant="outlined"
+      color="secondary"
+        clearable
+        hide-details
+        class="py-4"
+        solo
+        style="max-width: 300px" />
                 <v-data-table
                     :headers="headers"
+                    :search="search"
                     :items="departements"
                     item-value="nom_departement"
                     fixed-header
@@ -211,11 +228,11 @@ const saveDept= (e)=>{
       <template v-slot:text>
         <v-row>
           <v-col cols="12">
-            <v-text-field v-model="formModel.nom_departement" label="Département"></v-text-field>
+            <v-text-field v-model="formModel.nom_departement" variant="outlined" label="Département" required color="primary"></v-text-field>
           </v-col>
 
           <v-col cols="12">
-            <v-textarea v-model="formModel.description_departement" label="Description"></v-textarea>
+            <v-textarea v-model="formModel.description_departement" variant="outlined" label="Description" color="primary"></v-textarea>
           </v-col>
         </v-row>
       </template>

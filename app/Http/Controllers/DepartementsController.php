@@ -17,7 +17,7 @@ class DepartementsController extends Controller
     public function index()
     {
         //
-         $data=Departements::with('Services')->get();
+        $data = Departements::with('Services')->get();
 
         //  dd('test:',  $data);
         return Inertia::render('Departements/Index.departements', [
@@ -41,37 +41,41 @@ class DepartementsController extends Controller
     {
         try {
 
-        $request->validate([
+            $request->validate([
 
-            'nom_departement' => 'required|string|min:4',
-        ], [
-            'nom_departement.required' => 'Veuillez entrer le nom du département.',
-            'nom_departement.min' => 'Veuillez entrer un minimum de 4 caractères.',
+                'nom_departement' => 'required|string|min:4',
+            ], [
+                'nom_departement.required' => 'Veuillez entrer le nom du département.',
+                'nom_departement.min' => 'Veuillez entrer un minimum de 4 caractères.',
 
-        ]);
-        $dept = Departements::create(
-            ['nom_departement' => $request->nom_departement,
+            ]);
+           $dept=Departements::create(
+                [
+                    'nom_departement' => $request->nom_departement,
+                    'description_departement' => $request->description_departement,
 
-            ]
+                ]
 
-        );
-        $dept->save();
-        /* dd("save:", $dept); */
+            );
+            $dept->save();
+            /* dd("save:", $dept); */
 
-return redirect()->route('Departements.Index.departements')->with('message', [
-            'type' => 'success',
-            'text' => 'Le département est créé avec succès!',
-        ]);
+           return redirect()->route('departements')->with([
+    'message' => 'Opération réussie !',
+    'type' => 'success'
+]);
+
         } catch (\Throwable $th) {
             //throw $th;
             /* dump('th:',$th);
             dd('end throw'); */
-          return Inertia::render('Departements/Index.departements', [
-            'serverError' => $th->getMessage(), // ou un message custom
-        ]);
-
+            return redirect()->route('departements')->with([
+    'message' => $th->getMessage(),
+    'type' => 'error']);
+           /*  return Inertia::render('Departements/Index.departements', [
+                'serverError' => $th->getMessage(), // ou un message custom
+            ]); */
         }
-
     }
     /**
      * Display the specified resource.

@@ -15,7 +15,7 @@ class HandleInertiaRequests extends Middleware
      * @var string
      */
     protected $rootView = 'app';
-    protected $withAllErrors=true;
+    protected $withAllErrors = true;
 
     /**
      * Determine the current asset version.
@@ -32,16 +32,20 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-    /*     $tests =Telephones::select('id_telephone')->orderBy('created_at', 'asc')->skip(2)->take(1)->get()[0]['id_telephone'];
+        /*     $tests =Telephones::select('id_telephone')->orderBy('created_at', 'asc')->skip(2)->take(1)->get()[0]['id_telephone'];
  dd('$tests', $tests); */
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
             ],
-            'ziggy' => fn () => [
+            'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
+            ],
+            'flash' => [
+                'message' => fn() => $request->session()->get('message'),
+                'type' => fn() => $request->session()->get('type', 'success'),
             ],
 
         ];

@@ -35,7 +35,6 @@ function reset(){
     //departements=[...props.allDepartments]
 }
 function updateData() {
-
       router.get("/departements", {
         preserveState: true,
         preverseScroll: true,
@@ -108,7 +107,8 @@ const save=(e)=>{
   <div class="row gy-2 gy-xl-0 m-4">
  <v-sheet border rounded >
 
- <v-text-field v-model="search"  prepend-inner-icon="mdi-magnify"
+ <v-text-field v-model="search"
+ prepend-inner-icon="mdi-magnify"
         label="Recherche"
         single-line
       variant="outlined"

@@ -15,7 +15,7 @@ class Departements extends Model
         'id_departement',
         'nom_departement',
         'description_departement'
-    ];
+        ];
 public $incrementing=false;
      protected $keyType='string';
      protected $primaryKey = 'id_departement';
