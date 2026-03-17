@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { useForm, router, usePage } from "@inertiajs/vue3";
-import { formToJSON } from "axios";
+import { useForm, router, usePage,Head } from "@inertiajs/vue3";
+
 
 import { onMounted, watch, ref, shallowRef, toRef } from "vue";
 const props = defineProps({ allDepartments: Array }, { errors: Object });
@@ -69,7 +69,6 @@ const saveDept= (e)=>{
         onSuccess:(e)=>{
             console.log('success:', e)
 
-
         },
         onError:(e)=>{
             console.log('error:', e)
@@ -82,6 +81,8 @@ const saveDept= (e)=>{
 </script>
 
 <template>
+          <Head title="Départements"/>
+
     <AuthenticatedLayout>
         <div class="container mb-2">
             <div class="row gy-2 gy-xl-0 mt-4">

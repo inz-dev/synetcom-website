@@ -42,8 +42,7 @@ class DepartementsController extends Controller
         try {
 
             $request->validate([
-
-                'nom_departement' => 'required|string|min:4',
+                'nom_departement' => 'required|string|min:2',
             ], [
                 'nom_departement.required' => 'Veuillez entrer le nom du département.',
                 'nom_departement.min' => 'Veuillez entrer un minimum de 4 caractères.',
@@ -61,7 +60,7 @@ class DepartementsController extends Controller
             /* dd("save:", $dept); */
 
            return redirect()->route('departements')->with([
-    'message' => 'Opération réussie !',
+    'message' => 'Opération réussie, département créé avec succès !',
     'type' => 'success'
 ]);
 

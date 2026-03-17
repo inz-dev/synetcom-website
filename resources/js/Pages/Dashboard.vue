@@ -1,6 +1,7 @@
 <script setup>
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import { Head } from "@inertiajs/vue3";
 
 const listCards=[
     {id:1,
@@ -35,6 +36,8 @@ const listCards=[
 </script>
 
 <template>
+          <Head title="Tableau de bord"/>
+
   <AuthenticatedLayout>
         <div class="dashboard-content">
             <!-- Page Header -->

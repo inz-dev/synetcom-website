@@ -8,9 +8,13 @@ import Portfolio from "@/Components/Welcome/Sections/Portfolio.vue";
 import ServicesHome from "@/Components/Welcome/Sections/Services.home.vue";
 import TeamHome from "@/Components/Welcome/Sections/Team.home.vue";
 import WhyChooseUsHome from "@/Components/Welcome/Sections/WhyChooseUs.home.vue";
+import { Head } from "@inertiajs/vue3";
+
 </script>
 
 <template>
+      <Head title="Accueil"/>
+
   <Header>
    <BanierePage title="Synetcom"  :backgroundImage="'/images/background1.png'">
     <p class="text-center text-white fs-5 fw-medium font-family-Montserrat">

@@ -1,6 +1,6 @@
 <script setup>
 import GuestLayout from "@/Layouts/GuestLayout.vue";
-import { useForm, router } from "@inertiajs/vue3";
+import { useForm, router, Head } from "@inertiajs/vue3";
 import { onMounted, ref } from "vue";
 
 defineProps({
@@ -55,6 +55,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <Head title="Page de Connexion"/>
 
   <GuestLayout>
    <div class="container mb-3">
