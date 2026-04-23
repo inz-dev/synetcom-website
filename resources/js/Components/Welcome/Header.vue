@@ -7,24 +7,15 @@ const scrolled = ref(false);
 const menuOpen = ref(false);
 const activeSection = ref('');
 
-const isHome    = computed(() => page.url === '/' || page.url === '');
-const isContact = computed(() => page.url.startsWith('/nous-contacter'));
-const isAbout   = computed(() => page.url.startsWith('/about-us'));
+const isHome         = computed(() => page.url === '/' || page.url === '');
+const isContact      = computed(() => page.url.startsWith('/nous-contacter'));
+const isAbout        = computed(() => page.url.startsWith('/about-us'));
+const isServices     = computed(() => page.url.startsWith('/services'));
+const isRealisations = computed(() => page.url.startsWith('/realisations'));
+const isEquipe       = computed(() => page.url.startsWith('/equipe'));
+const isPartenaires  = computed(() => page.url.startsWith('/partenaires'));
 
-const SECTION_IDS = ['services', 'portfolio', 'why-us', 'team', 'newsletter', 'partners'];
-
-const onScroll = () => {
-    scrolled.value = window.scrollY > 60;
-    if (!isHome.value) return;
-    let found = '';
-    for (const id of SECTION_IDS) {
-        const el = document.getElementById(id);
-        if (el && el.getBoundingClientRect().top < window.innerHeight * 0.55) {
-            found = id;
-        }
-    }
-    activeSection.value = found;
-};
+const onScroll = () => { scrolled.value = window.scrollY > 60; };
 
 onMounted(() => {
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -36,19 +27,6 @@ onBeforeUnmount(() => {
 const nav = (routeName) => {
     menuOpen.value = false;
     router.visit(route(routeName));
-};
-
-const scrollTo = (id) => {
-    menuOpen.value = false;
-    if (!isHome.value) {
-        router.visit(route('home'), {
-            onSuccess: () => setTimeout(() => {
-                document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-            }, 150),
-        });
-        return;
-    }
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 };
 </script>
 
@@ -63,35 +41,22 @@ const scrollTo = (id) => {
 
             <!-- Desktop navigation -->
             <nav class="h-nav">
-                <a href="/"
-                   class="h-link"
-                   :class="{ 'h-link--active': isHome && activeSection === '' }"
-                >Accueil</a>
+                <a href="/" class="h-link" :class="{ 'h-link--active': isHome }">Accueil</a>
 
-                <button class="h-link"
-                   :class="{ 'h-link--active': isHome && activeSection === 'services' }"
-                   @click="scrollTo('services')"
-                >Services</button>
+                <button class="h-link" :class="{ 'h-link--active': isServices }"
+                        @click="nav('services')">Services</button>
 
-                <button class="h-link"
-                   :class="{ 'h-link--active': isHome && activeSection === 'portfolio' }"
-                   @click="scrollTo('portfolio')"
-                >Réalisations</button>
+                <button class="h-link" :class="{ 'h-link--active': isRealisations }"
+                        @click="nav('realisations')">Réalisations</button>
 
-                <button class="h-link"
-                   :class="{ 'h-link--active': isHome && activeSection === 'team' }"
-                   @click="scrollTo('team')"
-                >Équipe</button>
+                <button class="h-link" :class="{ 'h-link--active': isEquipe }"
+                        @click="nav('equipe')">Équipe</button>
 
-                <button class="h-link"
-                   :class="{ 'h-link--active': isHome && activeSection === 'partners' }"
-                   @click="scrollTo('partners')"
-                >Partenaires</button>
+                <button class="h-link" :class="{ 'h-link--active': isPartenaires }"
+                        @click="nav('partenaires')">Partenaires</button>
 
-                <button class="h-link"
-                   :class="{ 'h-link--active': isContact }"
-                   @click="nav('nous-contacter')"
-                >Contact</button>
+                <button class="h-link" :class="{ 'h-link--active': isContact }"
+                        @click="nav('nous-contacter')">Contact</button>
             </nav>
 
             <!-- CTA buttons -->
@@ -108,12 +73,12 @@ const scrollTo = (id) => {
 
         <!-- Mobile drawer -->
         <div class="h-mobile" :class="{ open: menuOpen }">
-            <a href="/"    class="m-link" :class="{ active: isHome && activeSection === '' }"   @click="menuOpen=false">Accueil</a>
-            <button class="m-link" :class="{ active: isHome && activeSection === 'services' }"  @click="scrollTo('services')">Services</button>
-            <button class="m-link" :class="{ active: isHome && activeSection === 'portfolio' }" @click="scrollTo('portfolio')">Réalisations</button>
-            <button class="m-link" :class="{ active: isHome && activeSection === 'team' }"      @click="scrollTo('team')">Équipe</button>
-            <button class="m-link" :class="{ active: isHome && activeSection === 'partners' }"  @click="scrollTo('partners')">Partenaires</button>
-            <button class="m-link" :class="{ active: isContact }"                               @click="nav('nous-contacter')">Contact</button>
+            <a href="/" class="m-link" :class="{ active: isHome }" @click="menuOpen=false">Accueil</a>
+            <button class="m-link" :class="{ active: isServices }"     @click="nav('services')">Services</button>
+            <button class="m-link" :class="{ active: isRealisations }" @click="nav('realisations')">Réalisations</button>
+            <button class="m-link" :class="{ active: isEquipe }"       @click="nav('equipe')">Équipe</button>
+            <button class="m-link" :class="{ active: isPartenaires }"  @click="nav('partenaires')">Partenaires</button>
+            <button class="m-link" :class="{ active: isContact }"      @click="nav('nous-contacter')">Contact</button>
             <div class="m-actions">
                 <button class="btn-login w-full" @click="nav('login')">Connexion</button>
                 <button class="btn-devis w-full">Obtenir un devis</button>

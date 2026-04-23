@@ -30,6 +30,8 @@ use Inertia\Inertia;
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
 Route::get('/services', [ServicesController::class, 'index'])->name('services');
 Route::get('/partenaires', [PartnersController::class, 'index'])->name('partenaires');
+Route::get('/realisations', fn() => Inertia::render('Realisations/Index'))->name('realisations');
+Route::get('/equipe', fn() => Inertia::render('Equipe/Index'))->name('equipe');
 #Route::get('/users', [UserController::class, 'index'])->name('users');
 
 

@@ -1,5 +1,7 @@
 <script>
+import { Link } from '@inertiajs/vue3';
 export default {
+  components: { Link },
   data: () => ({
     tab: null,
     list: [
@@ -143,6 +145,14 @@ export default {
         </v-window>
       </v-card>
     </div>
+      <div class="section-footer-cta">
+        <Link :href="route('realisations')" class="btn-voir-realisations">
+          Voir nos réalisations
+          <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+          </svg>
+        </Link>
+      </div>
   </section>
   <!-- End Portfolio Section -->
 </template>
@@ -186,6 +196,32 @@ header span.spacer:after {
   top: -1px;
   background-color: #1b449c;
 }
+.section-footer-cta {
+  text-align: center;
+  margin-top: 36px;
+}
+.btn-voir-realisations {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 32px;
+  border: 2px solid #1b449c;
+  border-radius: 50px;
+  color: #1b449c;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.25s;
+}
+.btn-voir-realisations:hover {
+  background: #1b449c;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(27,68,156,0.25);
+}
+.btn-voir-realisations svg { transition: transform 0.2s; }
+.btn-voir-realisations:hover svg { transform: translateX(3px); }
+
 #message {
   color: #f15a2d;
   text-align: center;

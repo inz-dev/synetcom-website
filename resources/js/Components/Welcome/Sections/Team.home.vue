@@ -1,5 +1,7 @@
 <script>
+import { Link } from '@inertiajs/vue3';
 export default {
+  components: { Link },
   data() {
     return {
       listMembers: [
@@ -168,6 +170,15 @@ export default {
         </div>
       </div>
     </div>
+
+      <div class="section-footer-cta">
+        <Link :href="route('equipe')" class="btn-voir-equipe">
+          Consulter notre équipe
+          <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+          </svg>
+        </Link>
+      </div>
   </section>
 </template>
 <style scoped>
@@ -232,6 +243,32 @@ h1 div:first-child {
   color: #1b449c;
   margin-right: 1rem;
 } */
+.section-footer-cta {
+  text-align: center;
+  margin-top: 40px;
+}
+.btn-voir-equipe {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 32px;
+  background: linear-gradient(135deg, #f15a2d, #e04518);
+  color: #fff;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.25s;
+  box-shadow: 0 4px 16px rgba(241,90,45,0.30);
+}
+.btn-voir-equipe:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(241,90,45,0.45);
+  color: #fff;
+}
+.btn-voir-equipe svg { transition: transform 0.2s; }
+.btn-voir-equipe:hover svg { transform: translateX(3px); }
+
 /* PROFIL */
 .blog .carousel-indicators {
   left: 0;
