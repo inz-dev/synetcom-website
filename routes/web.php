@@ -6,6 +6,7 @@ use App\Http\Controllers\NousContacterController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\PartnersController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\EmployesController;
@@ -27,6 +28,8 @@ use Inertia\Inertia;
 */
 
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
+Route::get('/services', [ServicesController::class, 'index'])->name('services');
+Route::get('/partenaires', [PartnersController::class, 'index'])->name('partenaires');
 #Route::get('/users', [UserController::class, 'index'])->name('users');
 
 

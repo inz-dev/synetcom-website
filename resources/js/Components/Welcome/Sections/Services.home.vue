@@ -22,23 +22,25 @@
                     </div>
                     <h3 class="card-title">{{ item.title }}</h3>
                     <p class="card-desc">{{ item.desc }}</p>
-                    <a href="#" class="card-link">
+                    <Link :href="route('services')" class="card-link">
                         Lire plus
                         <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14">
                             <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
                         </svg>
-                    </a>
+                    </Link>
                 </div>
             </div>
 
             <div class="section-footer">
-                <a href="#" class="btn-all-services">Voir tous nos services</a>
+                <Link :href="route('services')" class="btn-all-services">Voir tous nos services</Link>
             </div>
         </div>
     </section>
 </template>
 
 <script setup>
+import { Link } from '@inertiajs/vue3';
+
 const services = [
     {
         id: 1,

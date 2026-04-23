@@ -1,194 +1,215 @@
 <script setup>
-import BootstrapIcon from "@/Components/MyComponents/BootstrapIcon.vue";
-import 'vue3-carousel/carousel.css'
-import { Carousel, Slide, Navigation } from 'vue3-carousel'
-const      listPartners= [
-        {
-          id: 1,
-          title: "Nita",
-          link: "https://nitatransfert.com/",
-          imagefile: "/images/logo-nita.jpeg",
-        },
-        {
-          id: 2,
-          title: "Amana",
-          link: "https://amana-transfert.com/",
-          imagefile: "/images/amana-logo.jpeg",
-        },
-        {
-          id: 3,
-          title: "Enabel",
-          link: "https://www.enabel.be/fr/country/niger/",
-          imagefile: "/images/logo-enabel.jpeg",
-        },
+import { Link } from '@inertiajs/vue3';
+import 'vue3-carousel/carousel.css';
+import { Carousel, Navigation, Slide } from 'vue3-carousel';
 
-        {
-          id: 4,
-          title: "ORIBA",
-          link: "https://oribarice.business.site/",
-          imagefile: "/images/oriba-logo.jpeg",
-        },
-        {
-          id: 5,
-          title: "UNICEF",
-          link: "https://www.unicef.org/niger/",
-          imagefile: "/images/unicef-logo.jpeg",
-        },
-      ];
-      const config = {
-  height: 200,
-  itemsToShow: 5,
+const listPartners = [
+    { id: 1, title: "Nita Transfert",  link: "https://nitatransfert.com/",                  imagefile: "/images/logo-nita.jpeg"    },
+    { id: 2, title: "Amana Transfert", link: "https://amana-transfert.com/",                 imagefile: "/images/amana-logo.jpeg"   },
+    { id: 3, title: "Enabel Niger",    link: "https://www.enabel.be/fr/country/niger/",      imagefile: "/images/logo-enabel.jpeg"  },
+    { id: 4, title: "ORIBA",           link: "https://oribarice.business.site/",             imagefile: "/images/oriba-logo.jpeg"   },
+    { id: 5, title: "UNICEF Niger",    link: "https://www.unicef.org/niger/",                imagefile: "/images/unicef-logo.jpeg"  },
+];
 
-  gap:10,
-  autoplay: 2000,
-  wrapAround: true,
-  pauseAutoplayOnHover: true,
-}
-function  openlink(item) {
-      if (item) {
-        if (item.link) return window.open(item.link);
-        else {
-          // this.selectedItem = item;
-          // this.dialogModal = true;
-        }
-      }
-    }
+const carouselConfig = {
+    itemsToShow: 4,
+    gap: 32,
+    autoplay: 2500,
+    wrapAround: true,
+    pauseAutoplayOnHover: true,
+    breakpoints: {
+        0:    { itemsToShow: 1 },
+        480:  { itemsToShow: 2 },
+        768:  { itemsToShow: 3 },
+        1024: { itemsToShow: 4 },
+    },
+};
+
+const openLink = (url) => {
+    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+};
 </script>
+
 <template>
-  <section  id="partner-section" class="bg-light py-5 py-xl-8">
-    <div class="container" id="partners">
-      <header>
-        <div>
-          <span class="spacer"></span>
-          <h1>Nos partenaires</h1>
-          <span class="spacer"></span>
+    <section id="partners" class="partners-section">
+        <div class="p-container">
+
+            <!-- Header -->
+            <div class="section-head">
+                <span class="section-eyebrow">Nos partenaires</span>
+                <h2 class="section-title">Ils nous font confiance</h2>
+                <p class="section-sub">
+                    Des organisations et entreprises de renom qui s'appuient sur l'expertise de Synetcom.
+                </p>
+            </div>
+
+            <!-- Carousel -->
+            <div class="carousel-wrap">
+                <Carousel v-bind="carouselConfig">
+                    <Slide v-for="partner in listPartners" :key="partner.id">
+                        <div class="partner-slide" @click="openLink(partner.link)" :title="partner.title">
+                            <div class="partner-logo-box">
+                                <img :src="partner.imagefile" :alt="partner.title" class="partner-logo" />
+                            </div>
+                            <span class="partner-name">{{ partner.title }}</span>
+                        </div>
+                    </Slide>
+                    <template #addons>
+                        <Navigation />
+                    </template>
+                </Carousel>
+            </div>
+
+            <!-- CTA -->
+            <div class="section-footer">
+                <Link :href="route('partenaires')" class="btn-all-partners">
+                    Tous nos partenaires
+                    <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+                        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                </Link>
+            </div>
+
         </div>
-      </header>
-      <p id="message">Ils nous font confiance</p>
-
-    </div>
-
-    <div class="container overflow-hidden mt-5">
-    <div class="row gy-4 gy-xl-0">
-     <Carousel v-bind="config">
-    <Slide class="col-12 col-sm-3 col-xl-4 col-md-12" v-for="item in listPartners" :key="item.id">
-      <img :src="item.imagefile"
-              class="card-img-top"
-              :alt="item.title"
-              @click="openlink(item)"
-             />
-    </Slide>
-
-    <template #addons>
-      <Navigation />
-    </template>
-  </Carousel>
-</div>
-
-    </div>
-
-    <div class="card-footer text-center" style="margin: 15px">
-      <PrimaryButton label="Tous nos partenaires"></PrimaryButton>
-    </div>
-  </section>
+    </section>
 </template>
+
 <style scoped>
+.partners-section {
+    padding: 88px 0;
+    background: #f8fafc;
+}
+.p-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
 
-.card-img-top::before {
-  content: "";
-  background: #1b449c;
-  position: absolute;
-  left: 30px;
-  right: 30px;
-  top: 30px;
-  bottom: 30px;
-  transition: all ease-in-out 0.3s;
-  z-index: 2;
-  opacity: 0;
+/* Header */
+.section-head { text-align: center; margin-bottom: 52px; }
+.section-eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: #f15a2d;
+    margin-bottom: 12px;
 }
-.card-img-top{
-    cursor:pointer;
-    background-size: cover;
+.section-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 800;
+    color: #0d1b3e;
+    margin: 0 0 12px;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+}
+.section-sub {
+    font-size: 1.05rem;
+    color: #64748b;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
 
+/* Carousel */
+.carousel-wrap {
+    margin-bottom: 48px;
 }
-.img-card:hover {
-  background-image: #f15a2d;
+
+/* Override vue3-carousel nav buttons */
+:deep(.carousel__prev),
+:deep(.carousel__next) {
+    background: #fff;
+    border: 1.5px solid #e8edf5;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    color: #1b449c;
+    box-shadow: 0 2px 8px rgba(27,68,156,0.10);
+    transition: all 0.2s;
 }
-header {
-  display: table;
-  width: 100%;
-  max-width: 100%;
+:deep(.carousel__prev:hover),
+:deep(.carousel__next:hover) {
+    background: #1b449c;
+    color: #fff;
+    border-color: #1b449c;
 }
-header div {
-  display: table-row;
-  line-height: 1.5em;
-  font-size: 2em;
-  white-space: nowrap;
+
+/* Slide */
+.partner-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 0 12px;
+    width: 100%;
 }
-header h1 {
-  font-size: inherit; /* Change font-size in header */
-  overflow: hidden;
-  display: table-cell;
-  vertical-align: middle;
-  width: 1px;
-  table-layout: fixed;
+.partner-logo-box {
+    width: 100%;
+    max-width: 180px;
+    height: 100px;
+    background: #fff;
+    border: 1px solid #e8edf5;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 20px;
+    transition: all 0.25s;
+    box-shadow: 0 2px 8px rgba(27,68,156,0.04);
 }
-header span.spacer {
-  display: table-cell;
+.partner-slide:hover .partner-logo-box {
+    border-color: #1b449c;
+    box-shadow: 0 8px 24px rgba(27,68,156,0.12);
+    transform: translateY(-4px);
 }
-header h1 {
-  padding: 0 10px;
+.partner-logo {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    filter: grayscale(40%);
+    transition: filter 0.25s;
 }
-header span.spacer:after {
-  display: inline-block;
-  width: 100%;
-  content: ".";
-  font-size: 0;
-  color: transparent;
-  height: 2px;
-  background: #000;
-  vertical-align: middle;
-  position: relative;
-  top: -1px;
-  background-color: #1b449c;
+.partner-slide:hover .partner-logo { filter: grayscale(0%); }
+
+.partner-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #64748b;
+    text-align: center;
+    transition: color 0.2s;
 }
-#message {
-  color: #f15a2d;
-  text-align: center;
-  font-family: "Montserrat";
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 38px; /* 158.333% */
-  letter-spacing: 0.12px;
+.partner-slide:hover .partner-name { color: #1b449c; }
+
+/* CTA */
+.section-footer { text-align: center; }
+.btn-all-partners {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 32px;
+    background: linear-gradient(135deg, #1b449c, #1535804a);
+    background: #1b449c;
+    color: #fff;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.25s;
+    box-shadow: 0 4px 16px rgba(27,68,156,0.25);
 }
-h3 {
-  font-family: "Montserrat";
-  margin: 100px auto;
-  text-align: center;
-  color: black;
-  font-size: 40px;
-  max-width: 100%;
-  position: relative;
+.btn-all-partners:hover {
+    background: #0d1b3e;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(27,68,156,0.35);
 }
-h3:before {
-  content: "";
-  display: block;
-  width: 150px;
-  height: 5px;
-  background: #1b449c;
-  left: 85px;
-  top: 50%;
-  position: absolute;
-}
-h3:after {
-  content: "";
-  display: block;
-  width: 150px;
-  height: 5px;
-  background: #1b449c;
-  right: 85px;
-  top: 50%;
-  position: absolute;
+.btn-all-partners svg { transition: transform 0.2s; }
+.btn-all-partners:hover svg { transform: translateX(3px); }
+
+@media (max-width: 640px) {
+    .partners-section { padding: 64px 0; }
 }
 </style>

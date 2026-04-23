@@ -10,7 +10,7 @@ class ServicesController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Services/Index.services');
+        return Inertia::render('Services/Index');
     }
 
     public function create() {}

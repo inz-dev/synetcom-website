@@ -8,7 +8,7 @@ import Portfolio from "@/Components/Welcome/Sections/Portfolio.vue";
 import ServicesHome from "@/Components/Welcome/Sections/Services.home.vue";
 import TeamHome from "@/Components/Welcome/Sections/Team.home.vue";
 import WhyChooseUsHome from "@/Components/Welcome/Sections/WhyChooseUs.home.vue";
-import { Head } from "@inertiajs/vue3";
+import { Head, Link } from "@inertiajs/vue3";
 </script>
 
 <template>
@@ -22,10 +22,10 @@ import { Head } from "@inertiajs/vue3";
             </p>
 
             <div class="hero-cta-row">
-                <a href="#services" class="cta-primary" @click.prevent="document.getElementById('services')?.scrollIntoView({behavior:'smooth'})">
+                <Link :href="route('services')" class="cta-primary">
                     Découvrir nos services
                     <svg viewBox="0 0 20 20" fill="currentColor" class="cta-arrow"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-                </a>
+                </Link>
                 <a href="/nous-contacter" class="cta-ghost">Nous contacter</a>
             </div>
 

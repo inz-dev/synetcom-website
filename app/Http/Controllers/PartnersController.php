@@ -12,7 +12,7 @@ class PartnersController extends Controller
      */
     public function index()
     {
-        //
+        return \Inertia\Inertia::render('Partners/Index');
     }
 
     /**
