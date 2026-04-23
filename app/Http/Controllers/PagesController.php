@@ -37,10 +37,11 @@ class PagesController extends Controller
                 ])->values(),
             ])->values(),
         ])->values();
-
+  //dd('allPages:', $pages);
         return Inertia::render('Pages/Index.pages', [
             'allPages' => $pages,
         ]);
+
     }
 
     // ── Pages CRUD ───────────────────────────────────────────────

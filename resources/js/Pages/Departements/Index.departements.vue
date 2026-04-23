@@ -76,6 +76,8 @@ const formService = useForm({
     nom_service: "",
     description_service: "",
     icon_service: "mdi-cog-outline",
+    color: "#1b449c",
+    paths: "",
     departement_id: null,
 });
 
@@ -92,6 +94,8 @@ const openAddService = (dept) => {
     formService.reset();
     formService.clearErrors();
     formService.icon_service = "mdi-cog-outline";
+    formService.color = "#1b449c";
+    formService.paths = "";
     formService.departement_id = dept.id_departement;
     currentDeptName.value = dept.nom_departement;
     isServiceEditing.value = false;
@@ -103,6 +107,10 @@ const openEditService = (service, deptName) => {
     formService.nom_service = service.nom_service;
     formService.description_service = service.description_service ?? "";
     formService.icon_service = service.icon_service ?? "mdi-cog-outline";
+    formService.color = service.color ?? "#1b449c";
+    formService.paths = Array.isArray(service.paths)
+        ? service.paths.join("\n")
+        : (service.paths ?? "");
     formService.departement_id = service.departement_id;
     formService.clearErrors();
     currentDeptName.value = deptName;
@@ -111,12 +119,27 @@ const openEditService = (service, deptName) => {
 };
 
 const saveService = () => {
+    // convert textarea lines to array before sending
+    const pathsArray = formService.paths
+        .split("\n")
+        .map(p => p.trim())
+        .filter(p => p.length > 0);
+
+    const payload = {
+        nom_service:         formService.nom_service,
+        description_service: formService.description_service,
+        icon_service:        formService.icon_service,
+        color:               formService.color,
+        paths:               pathsArray,
+        departement_id:      formService.departement_id,
+    };
+
     if (isServiceEditing.value) {
-        formService.put(route("services.update", formService.id_service), {
+        formService.transform(() => payload).put(route("services.update", formService.id_service), {
             onSuccess: () => { dialogService.value = false; formService.reset(); },
         });
     } else {
-        formService.post(route("services.store"), {
+        formService.transform(() => payload).post(route("services.store"), {
             onSuccess: () => { dialogService.value = false; formService.reset(); },
         });
     }
@@ -466,6 +489,38 @@ const confirmDelete = () => {
                                 <v-icon :icon="ico" size="18" />
                             </button>
                         </div>
+                    </div>
+
+                    <div class="field-group mt-4">
+                        <label class="field-label">Couleur</label>
+                        <div class="color-row">
+                            <input
+                                v-model="formService.color"
+                                type="color"
+                                class="color-swatch"
+                                title="Choisir la couleur"
+                            />
+                            <input
+                                v-model="formService.color"
+                                type="text"
+                                class="field-input color-hex"
+                                placeholder="#1b449c"
+                                maxlength="20"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="field-group mt-4">
+                        <label class="field-label">
+                            Chemins SVG
+                            <span class="field-hint">(un chemin par ligne)</span>
+                        </label>
+                        <textarea
+                            v-model="formService.paths"
+                            class="field-input field-textarea"
+                            placeholder="M9 3H5a2 2 0 00-2 2v4…&#10;M12 14l9-5-9-5-9 5 9 5z"
+                            rows="4"
+                        ></textarea>
                     </div>
                 </div>
 
@@ -1034,6 +1089,36 @@ const confirmDelete = () => {
     font-size: 0.75rem;
     color: #e74c3c;
     margin-top: 4px;
+}
+
+/* ── Color picker ───────────────────────────────────────────────── */
+.color-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.color-swatch {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--border-color, #3a3d52);
+    border-radius: 8px;
+    padding: 2px;
+    background: var(--dark-bg, #1a1d29);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.color-hex {
+    flex: 1;
+    font-family: monospace;
+}
+
+.field-hint {
+    font-size: 0.72rem;
+    color: var(--text-secondary, #a0a4b8);
+    margin-left: 6px;
+    font-weight: 400;
 }
 
 /* ── Icon picker ────────────────────────────────────────────────── */

@@ -25,12 +25,18 @@ class Services extends Model
         });
     }
 
-      protected $fillable=[
-    'id_service',
-    'nom_service',
-    'description_service',
-    'icon_service',
-    'departement_id'
+    protected $casts = [
+        'paths' => 'array',
+    ];
+
+    protected $fillable = [
+        'id_service',
+        'nom_service',
+        'description_service',
+        'icon_service',
+        'color',
+        'paths',
+        'departement_id',
     ];
   public function departements():BelongsTo{
          return  $this->belongsTo(\App\Models\Departements::class,'departement_id','id_departement');

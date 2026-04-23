@@ -2,6 +2,11 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 
+const props = defineProps({
+    allPages: Array,
+    errors:   Object,
+});
+
 const page     = usePage();
 const scrolled = ref(false);
 const menuOpen = ref(false);

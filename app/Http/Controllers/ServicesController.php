@@ -10,7 +10,19 @@ class ServicesController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Services/Index');
+        $services = Services::with('departements')
+            ->orderBy('created_at', 'asc')
+            ->get()
+            ->map(fn($s) => [
+                'id'          => $s->id_service,
+                'title'       => $s->nom_service,
+                'desc'        => $s->description_service,
+                'color'       => $s->color ?? '#1b449c',
+                'paths'       => $s->paths ?? [],
+                'departement' => $s->departements?->nom_departement,
+            ]);
+
+        return Inertia::render('Services/Index', compact('services'));
     }
 
     public function create() {}
@@ -31,6 +43,8 @@ class ServicesController extends Controller
             'nom_service'         => $request->nom_service,
             'description_service' => $request->description_service,
             'icon_service'        => $request->icon_service,
+            'color'               => $request->color ?? '#1b449c',
+            'paths'               => $request->paths ?? [],
             'departement_id'      => $request->departement_id,
         ]);
 
@@ -59,6 +73,8 @@ class ServicesController extends Controller
             'nom_service'         => $request->nom_service,
             'description_service' => $request->description_service,
             'icon_service'        => $request->icon_service,
+            'color'               => $request->color ?? $service->color,
+            'paths'               => $request->paths ?? $service->paths,
         ]);
 
         return redirect()->route('departements')->with([
