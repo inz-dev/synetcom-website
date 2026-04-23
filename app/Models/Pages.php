@@ -5,18 +5,20 @@ namespace App\Models;
 use Webpatser\Uuid\Uuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pages extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    public $incrementing = false;   // pas d'auto-incrément
-    protected $keyType = 'string';  // type string au lieu d'int
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $primaryKey = 'id_page';
+
     protected static function boot()
     {
         parent::boot();
-
         static::creating(function ($model) {
             if (!$model->getKey()) {
                 $model->{$model->getKeyName()} = Uuid::generate()->string;
@@ -29,9 +31,17 @@ class Pages extends Model
         'titre_page',
         'description_page',
         'slogan_page',
-        'banniere_page'
+        'banniere_page',
     ];
-     public function menus(){
-        return $this->belongsToMany(\App\Models\Menus::class);
+
+    public function sections(): BelongsToMany
+    {
+        return $this->belongsToMany(Sections::class, 'pages_has_sections', 'id_page', 'id_section')
+                    ->withTimestamps();
+    }
+
+    public function menus(): BelongsToMany
+    {
+        return $this->belongsToMany(Menus::class);
     }
 }

@@ -25,17 +25,23 @@ class Organismes extends Model
         });
     }
 
-    protected $fillable=[
-    'id_organisme',
-    'nom_organisme',
-    'adresse_organisme',
-    'logo_organisme',
-    'slogan_organisme'];
+    protected $fillable = [
+        'id_organisme',
+        'nom_organisme',
+        'adresse_organisme',
+        'logo_organisme',
+        'slogan_organisme',
+        'lien_map_organisme',
+    ];
 
-    public function socialMeadias(){
-        return $this->belongsToMany(\App\Models\SocialMedias::class);
-}
-public function partenaires(){
-        return $this->belongsTo(\App\Models\Partenaires::class);
+    public function clients(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Client::class, 'id_organisme', 'id_organisme');
+    }
+
+    public function socialMedias(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(SocialMedias::class, 'organisme_has_social_medias', 'id_organisme', 'id_social_media')
+                    ->withTimestamps();
     }
 }

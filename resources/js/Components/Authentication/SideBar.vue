@@ -11,19 +11,26 @@ const {lastname, firstname}=user.value
 const initialName=firstname[0].toUpperCase()+lastname[0].toUpperCase()
 const name=lastname + " "+firstname
 
-const listItems=[
+const userRoles = computed(() => page.props.auth?.roles ?? [])
+const isSuperAdmin = computed(() => userRoles.value.includes('Super-administrateur'))
+
+const allItems=[
     {id:1, title:'Dashboard', link:'dashboard', icon:'bi bi-grid-fill', classActive:'', },
     {id:2, title:'Mon profil', link:'profile', icon:'bi bi-receipt', classActive:'', },
     {id:3, title:'Pages', link:'pages', icon:'bi bi-credit-card-fill', classActive:'', },
     {id:4, title:'Configurations', link:'setups', icon:'bi bi-people-fill', classActive:'',},
     {id:5, title:'Départements', link:'departements', icon:'bi bi-bicycle', classActive:'', },
     {id:6, title:'Projets', link:'projects', icon:'bi bi-bar-chart-fill', classActive:'', },
-    {id:7, title:'Employés', link:'employees', icon:'bi bi-chat-left-dots-fill', classActive:'', },
-     {id:8, title:'Rapports', link:'reports', icon:'bi bi-shop', classActive:'',},
-      {id:9, title:'Paramètres', link:'settings', icon:'bi bi-gear-fill', classActive:'', },
-       {id:10, title:'Deconnexion', link:'logout', icon:'bi bi-box-arrow-in-right', classActive:''}
-
+    {id:7, title:'Employés', link:'employes', icon:'bi bi-person-badge-fill', classActive:'', },
+    {id:8, title:'Rapports', link:'reports', icon:'bi bi-shop', classActive:'',},
+    {id:9, title:'Paramètres', link:'settings', icon:'bi bi-gear-fill', classActive:'', },
+    {id:10, title:'Utilisateurs', link:'users', icon:'bi bi-people-fill', classActive:'', superAdminOnly: true },
+    {id:11, title:'Déconnexion', link:'logout', icon:'bi bi-box-arrow-in-right', classActive:''}
 ]
+
+const listItems = computed(() =>
+    allItems.filter(item => !item.superAdminOnly || isSuperAdmin.value)
+)
 
 const activeClass=(vRoute) =>computed(() => {
    return   route().current(vRoute)
@@ -153,7 +160,9 @@ onMounted(() => {
                          <li><a class="dropdown-item" href="#"><i class="fa-regular fa-credit-card"></i>Payements</a></li>
                          <li>
                              <div class="sign-out">
-                             <a class="dropdown-item text-danger" href="#"><i class="fa-solid fa-right-from-bracket"></i>Déconnexion</a>
+                                 <button class="dropdown-item text-danger" @click="logout">
+                                     <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
+                                 </button>
                              </div>
                          </li>
                      </ul>

@@ -95,16 +95,40 @@ class DepartementsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Departements $departements)
+    public function update(Request $request, $id)
     {
-        //
+        $dept = Departements::findOrFail($id);
+
+        $request->validate([
+            'nom_departement' => 'required|string|min:4',
+        ], [
+            'nom_departement.required' => 'Veuillez entrer le nom du département.',
+            'nom_departement.min'      => 'Minimum 4 caractères.',
+        ]);
+
+        $dept->update([
+            'nom_departement'         => $request->nom_departement,
+            'description_departement' => $request->description_departement,
+        ]);
+
+        return redirect()->route('departements')->with([
+            'message' => 'Département modifié avec succès !',
+            'type'    => 'success',
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Departements $departements)
+    public function destroy($id)
     {
-        //
+        $dept = Departements::findOrFail($id);
+        $dept->services()->delete();
+        $dept->delete();
+
+        return redirect()->route('departements')->with([
+            'message' => 'Département supprimé avec succès !',
+            'type'    => 'success',
+        ]);
     }
 }

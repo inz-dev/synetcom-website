@@ -1,271 +1,1145 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { useForm, router, usePage,Head } from "@inertiajs/vue3";
+import { useForm, router, Head } from "@inertiajs/vue3";
+import { computed, ref, shallowRef } from "vue";
+import { useDisplay } from "vuetify";
 
+const props = defineProps({ allDepartments: Array, errors: Object });
+const { smAndDown } = useDisplay();
 
-import { onMounted, watch, ref, shallowRef, toRef } from "vue";
-const props = defineProps({ allDepartments: Array }, { errors: Object });
-const departements = [];
-if (props.allDepartments || props.allDepartments.length != 0) {
-    props.allDepartments.forEach((element, index) => {
-        /* console.log("element:", element) */
-        departements.push({
-            index: index + 1,
-            ...element,
-        });
-    });
-}
+const departements = computed(() =>
+    (props.allDepartments ?? []).map((d, i) => ({ ...d, index: i + 1 }))
+);
 
-const headers = [
-    { width: 50, title: "N°", key: "index", align: "start", sortable: true },
-    {
-        width: 180,
-        title: "Département",
-        key: "nom_departement",
-        sortable: true,
-    },
-    { width: 200, title: "Infos", key: "description_departement" },
-    { width: 80, key: "data-table-expand" }, // optional, to keep it as short as possible
-    { title: "Actions", key: "actions", align: "end", sortable: false },
-];
-function updateData() {
-      router.get("/departements", {
-        preserveState: true,
-        /* preverseScroll: true, */
-        onSuccess: () => {
-          console.log("herre")
-        },
-      });
-    }
-const formModel =useForm ({
-    id_departement:null,
-      nom_departement: '',
-      description_departement:""
-    }
-)
-const search = ref('');
-let params;
-  const dialog = shallowRef(false)
-  const isEditing = toRef(() => !!formModel.id_departement)
-onMounted(() => {
-    console.log("props.allDepartments:", props.allDepartments);
-    console.log("departments:", departements);
-    //departements.map(el=> console.log(el))
+const totalServices = computed(() =>
+    departements.value.reduce((n, d) => n + (d.services?.length ?? 0), 0)
+);
+
+const search = ref("");
+
+const headers = computed(() => [
+    { title: "N°", key: "index", width: 60, sortable: true },
+    { title: "Département", key: "nom_departement", sortable: true },
+    { title: "Services", key: "services_count", width: 110, align: "center", sortable: false },
+    ...(!smAndDown.value
+        ? [{ title: "Description", key: "description_departement", sortable: false }]
+        : []),
+    { title: "", key: "data-table-expand", width: 52 },
+    { title: "Actions", key: "actions", width: 96, align: "end", sortable: false },
+]);
+
+// ── Department dialog ────────────────────────────────────────────
+const dialogDept = shallowRef(false);
+const isDeptEditing = ref(false);
+
+const formDept = useForm({
+    id_departement: null,
+    nom_departement: "",
+    description_departement: "",
 });
-watch(search,(newSearchTerm, oldSearchTerm)  => {
-    console.log('search:', search,newSearchTerm, oldSearchTerm)
-    search:()=>{params.search=val}
- /*  updateData() */
-})
-const addDepartements=(e)=>{
-    e.preventDefault();
-    dialog.value = true
 
-}
-let TErrors=[]
-const saveDept= (e)=>{
-        console.log("ajout:", formModel)
-      formModel.post(route('departements.store'),{
-        onSuccess:(e)=>{
-            console.log('success:', e)
+const openAddDept = () => {
+    formDept.reset();
+    formDept.clearErrors();
+    isDeptEditing.value = false;
+    dialogDept.value = true;
+};
 
-        },
-        onError:(e)=>{
-            console.log('error:', e)
-            TErrors.push(e)
-        }
+const openEditDept = (dept) => {
+    formDept.id_departement = dept.id_departement;
+    formDept.nom_departement = dept.nom_departement;
+    formDept.description_departement = dept.description_departement ?? "";
+    formDept.clearErrors();
+    isDeptEditing.value = true;
+    dialogDept.value = true;
+};
 
-       })
-       dialog.value=false
+const saveDept = () => {
+    if (isDeptEditing.value) {
+        formDept.put(route("departements.update", formDept.id_departement), {
+            onSuccess: () => { dialogDept.value = false; formDept.reset(); },
+        });
+    } else {
+        formDept.post(route("departements.store"), {
+            onSuccess: () => { dialogDept.value = false; formDept.reset(); },
+        });
     }
+};
+
+// ── Service dialog ───────────────────────────────────────────────
+const dialogService = shallowRef(false);
+const isServiceEditing = ref(false);
+const currentDeptName = ref("");
+
+const formService = useForm({
+    id_service: null,
+    nom_service: "",
+    description_service: "",
+    icon_service: "mdi-cog-outline",
+    departement_id: null,
+});
+
+const serviceIcons = [
+    "mdi-briefcase-outline", "mdi-account-group-outline", "mdi-laptop",
+    "mdi-hammer-wrench", "mdi-chart-bar", "mdi-shield-check-outline",
+    "mdi-phone-outline", "mdi-school-outline", "mdi-currency-eur",
+    "mdi-heart-pulse", "mdi-truck-outline", "mdi-bullhorn-outline",
+    "mdi-palette-outline", "mdi-code-braces", "mdi-database-outline",
+    "mdi-cloud-outline", "mdi-cog-outline", "mdi-headset",
+];
+
+const openAddService = (dept) => {
+    formService.reset();
+    formService.clearErrors();
+    formService.icon_service = "mdi-cog-outline";
+    formService.departement_id = dept.id_departement;
+    currentDeptName.value = dept.nom_departement;
+    isServiceEditing.value = false;
+    dialogService.value = true;
+};
+
+const openEditService = (service, deptName) => {
+    formService.id_service = service.id_service;
+    formService.nom_service = service.nom_service;
+    formService.description_service = service.description_service ?? "";
+    formService.icon_service = service.icon_service ?? "mdi-cog-outline";
+    formService.departement_id = service.departement_id;
+    formService.clearErrors();
+    currentDeptName.value = deptName;
+    isServiceEditing.value = true;
+    dialogService.value = true;
+};
+
+const saveService = () => {
+    if (isServiceEditing.value) {
+        formService.put(route("services.update", formService.id_service), {
+            onSuccess: () => { dialogService.value = false; formService.reset(); },
+        });
+    } else {
+        formService.post(route("services.store"), {
+            onSuccess: () => { dialogService.value = false; formService.reset(); },
+        });
+    }
+};
+
+// ── Delete confirm ───────────────────────────────────────────────
+const dialogConfirm = shallowRef(false);
+const deleteTarget = ref(null);
+const deleteProcessing = ref(false);
+
+const openDeleteDept = (dept) => {
+    deleteTarget.value = { type: "dept", item: dept };
+    dialogConfirm.value = true;
+};
+
+const openDeleteService = (service) => {
+    deleteTarget.value = { type: "service", item: service };
+    dialogConfirm.value = true;
+};
+
+const confirmDelete = () => {
+    const { type, item } = deleteTarget.value;
+    deleteProcessing.value = true;
+    const url = type === "dept"
+        ? route("departements.destroy", item.id_departement)
+        : route("services.destroy", item.id_service);
+
+    router.delete(url, {
+        onFinish: () => {
+            deleteProcessing.value = false;
+            dialogConfirm.value = false;
+        },
+    });
+};
 </script>
 
 <template>
-          <Head title="Départements"/>
-
+    <Head title="Départements" />
     <AuthenticatedLayout>
-        <div class="container mb-2">
-            <div class="row gy-2 gy-xl-0 mt-4">
-            <v-sheet border rounded class="mb-4">
-            <v-text-field v-model="search"
- prepend-inner-icon="mdi-magnify"
-        label="Recherche"
-        single-line
-      variant="outlined"
-      color="secondary"
-        clearable
-        hide-details
-        class="py-4"
-        solo
-        style="max-width: 300px" />
+        <div class="dept-page">
+
+            <!-- Stats ─────────────────────────────────────────── -->
+            <div class="stats-row">
+                <div class="stat-chip">
+                    <v-icon icon="mdi-domain" size="22" class="stat-icon" />
+                    <div>
+                        <div class="stat-value">{{ departements.length }}</div>
+                        <div class="stat-label">Départements</div>
+                    </div>
+                </div>
+                <div class="stat-chip">
+                    <v-icon icon="mdi-cog-outline" size="22" class="stat-icon stat-icon--orange" />
+                    <div>
+                        <div class="stat-value">{{ totalServices }}</div>
+                        <div class="stat-label">Services</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table ──────────────────────────────────────────── -->
+            <div class="table-card">
                 <v-data-table
                     :headers="headers"
-                    :search="search"
                     :items="departements"
-                    item-value="nom_departement"
-                    fixed-header
-                    height="450"
-                   :hide-default-footer="departements.length < 11"
-                    sort-asc-icon="mdi-sort-ascending"
-                    sort-desc-icon="mdi-sort-descending"
-                    sort-icon="mdi-swap-vertical"
+                    :search="search"
+                    item-value="id_departement"
                     show-expand
+                    :expand-on-click="false"
+                    fixed-header
+                    height="520"
+                    :items-per-page="10"
+                    class="dept-table"
                 >
-                    <template v-slot:top>
-                        <v-toolbar flat class="mt-4 bg-primary">
-                            <v-toolbar-title color="white">
-                                <v-icon
-                                    color="primary"
-                                    icon="mdi-book-multiple"
-                                    size="x-small"
-                                    start
-                                ></v-icon>
-                                <span style="color: white">Départements</span>
-                            </v-toolbar-title>
-
-                            <v-btn
-                                class="me-2 bg-white"
-                                prepend-icon="mdi-plus"
-                                rounded="lg"
-                                text="Ajouter"
-                                border
-                                color="primary"
-                                @click="addDepartements"
-                            ></v-btn>
-                        </v-toolbar>
-                    </template>
-
-                    <template v-slot:item.actions="{ item }">
-                        <div class="d-flex ga-2 justify-end">
-                            <v-icon
-                                color="orange"
-                                icon="mdi-pencil"
-                                :key="item"
-                                size="small"
-                            ></v-icon>
-
-                            <v-icon
-                                color="red"
-                                icon="mdi-delete"
-                                size="small"
-                            ></v-icon>
+                    <!-- Toolbar -->
+                    <template #top>
+                        <div class="table-toolbar">
+                            <div class="toolbar-left">
+                                <v-icon icon="mdi-domain" size="20" class="mr-2" style="color:#f15a2d" />
+                                <span class="toolbar-title">Gestion des Départements</span>
+                            </div>
+                            <div class="toolbar-right">
+                                <div class="search-wrapper">
+                                    <v-icon icon="mdi-magnify" size="18" class="search-icon" />
+                                    <input
+                                        v-model="search"
+                                        type="text"
+                                        placeholder="Rechercher..."
+                                        class="search-input"
+                                    />
+                                    <button v-if="search" class="search-clear" @click="search = ''">
+                                        <v-icon icon="mdi-close" size="14" />
+                                    </button>
+                                </div>
+                                <button class="add-btn" @click="openAddDept">
+                                    <v-icon icon="mdi-plus" size="18" class="mr-1" />
+                                    <span class="d-none d-sm-inline">Ajouter</span>
+                                </button>
+                            </div>
                         </div>
                     </template>
-                    <template
-                        v-slot:item.data-table-expand="{
-                            internalItem,
-                            isExpanded,
-                            toggleExpand,
-                        }"
-                    >
-                        <v-btn
-                            :append-icon="
-                                isExpanded(internalItem)
-                                    ? 'mdi-chevron-up'
-                                    : 'mdi-chevron-down'
-                            "
-                            :text="
-                                isExpanded(internalItem)
-                                    ? 'Ses services'
-                                    : 'Voir Services'
-                            "
-                            class="text-none"
-                            size="small"
-                            variant="text"
-                            width="150"
-                            border
-                            slim
-                            @click="toggleExpand(internalItem)"
-                        ></v-btn>
+
+                    <!-- Badge services count -->
+                    <template #item.services_count="{ item }">
+                        <span class="services-badge">
+                            {{ item.services?.length ?? 0 }}
+                        </span>
                     </template>
 
-                    <template v-slot:expanded-row="{ columns, item }">
-                        <tr>
-                            <td :colspan="columns.length" class="py-2">
-                                <v-sheet rounded="lg" border>
-                                    <v-table density="compact">
-                                        <tbody>
-                                            <tr class="bg-secondary">
-                                                <th>Numéro</th>
+                    <!-- Description tronquée -->
+                    <template #item.description_departement="{ item }">
+                        <span class="desc-text">
+                            {{ item.description_departement || "—" }}
+                        </span>
+                    </template>
+
+                    <!-- Expand button -->
+                    <template #item.data-table-expand="{ internalItem, isExpanded, toggleExpand }">
+                        <button
+                            class="expand-btn"
+                            :class="{ 'expand-btn--open': isExpanded(internalItem) }"
+                            @click="toggleExpand(internalItem)"
+                            :title="isExpanded(internalItem) ? 'Masquer services' : 'Voir services'"
+                        >
+                            <v-icon
+                                :icon="isExpanded(internalItem) ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                                size="18"
+                            />
+                        </button>
+                    </template>
+
+                    <!-- Actions -->
+                    <template #item.actions="{ item }">
+                        <div class="action-btns">
+                            <button class="icon-btn icon-btn--edit" title="Modifier" @click="openEditDept(item)">
+                                <v-icon icon="mdi-pencil-outline" size="16" />
+                            </button>
+                            <button class="icon-btn icon-btn--delete" title="Supprimer" @click="openDeleteDept(item)">
+                                <v-icon icon="mdi-delete-outline" size="16" />
+                            </button>
+                        </div>
+                    </template>
+
+                    <!-- Expanded row : Services ──────────────────── -->
+                    <template #expanded-row="{ columns, item }">
+                        <tr class="expanded-row">
+                            <td :colspan="columns.length" class="pa-0">
+                                <div class="services-panel">
+                                    <div class="services-panel__header">
+                                        <div class="services-panel__title">
+                                            <v-icon icon="mdi-cog-outline" size="16" class="mr-1" style="color:#f15a2d" />
+                                            Services — {{ item.nom_departement }}
+                                            <span class="services-count-inline">{{ item.services?.length ?? 0 }}</span>
+                                        </div>
+                                        <button class="add-service-btn" @click="openAddService(item)">
+                                            <v-icon icon="mdi-plus" size="15" class="mr-1" />
+                                            Ajouter un service
+                                        </button>
+                                    </div>
+
+                                    <!-- Empty state -->
+                                    <div v-if="!item.services?.length" class="services-empty">
+                                        <v-icon icon="mdi-inbox-outline" size="32" class="mb-2" style="opacity:.35" />
+                                        <p>Aucun service pour ce département</p>
+                                    </div>
+
+                                    <!-- Services table -->
+                                    <table v-else class="services-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:48px">N°</th>
+                                                <th style="width:36px"></th>
                                                 <th>Service</th>
-                                                <th>Description</th>
+                                                <th class="d-none d-md-table-cell">Description</th>
+                                                <th style="width:80px; text-align:right">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(service, i) in item.services" :key="service.id_service">
+                                                <td class="cell-num">{{ i + 1 }}</td>
+                                                <td class="cell-icon">
+                                                    <v-icon
+                                                        :icon="service.icon_service || 'mdi-cog-outline'"
+                                                        size="16"
+                                                        style="color:#1b449c"
+                                                    />
+                                                </td>
+                                                <td class="cell-name">{{ service.nom_service }}</td>
+                                                <td class="cell-desc d-none d-md-table-cell">
+                                                    {{ service.description_service || "—" }}
+                                                </td>
+                                                <td class="cell-actions">
+                                                    <div class="action-btns">
+                                                        <button
+                                                            class="icon-btn icon-btn--edit"
+                                                            title="Modifier"
+                                                            @click="openEditService(service, item.nom_departement)"
+                                                        >
+                                                            <v-icon icon="mdi-pencil-outline" size="14" />
+                                                        </button>
+                                                        <button
+                                                            class="icon-btn icon-btn--delete"
+                                                            title="Supprimer"
+                                                            @click="openDeleteService(service)"
+                                                        >
+                                                            <v-icon icon="mdi-delete-outline" size="14" />
+                                                        </button>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         </tbody>
-
-                                        <tbody
-                                            v-for="(
-                                                service, i
-                                            ) in item.services"
-                                        >
-                                            <tr :key="i">
-                                                <td class="py-2">
-                                                    {{ i + 1 }}
-                                                </td>
-                                                <td class="py-2">
-                                                    {{ service.nom_service }}
-                                                </td>
-
-                                                <td class="py-2">
-                                                    {{
-                                                        service.description_service
-                                                    }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </v-table>
-                                </v-sheet>
+                                    </table>
+                                </div>
                             </td>
                         </tr>
                     </template>
+
+                    <!-- No data -->
+                    <template #no-data>
+                        <div class="no-data">
+                            <v-icon icon="mdi-domain-off" size="40" class="mb-2" style="opacity:.3" />
+                            <p>Aucun département trouvé</p>
+                            <button class="add-btn mt-3" @click="openAddDept">
+                                <v-icon icon="mdi-plus" size="16" class="mr-1" />
+                                Créer le premier département
+                            </button>
+                        </div>
+                    </template>
                 </v-data-table>
-                </v-sheet>
             </div>
-
-              <v-dialog v-model="dialog" max-width="500">
-    <v-card
-
-      :title="`${isEditing ? 'Modifier' : 'Ajouter'} un département`"
-    >
-      <template v-slot:text>
-        <v-row>
-          <v-col cols="12">
-            <v-text-field v-model="formModel.nom_departement" variant="outlined" label="Département" required color="primary"></v-text-field>
-          </v-col>
-
-          <v-col cols="12">
-            <v-textarea v-model="formModel.description_departement" variant="outlined" label="Description" color="primary"></v-textarea>
-          </v-col>
-        </v-row>
-      </template>
-
-      <v-divider></v-divider>
-
-      <v-card-actions >
-        <v-btn text="Annuler" variant="plain" @click="dialog = false"></v-btn>
-
-        <v-spacer></v-spacer>
-
-        <v-btn text="Valider" @click="saveDept"></v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-
         </div>
+
+        <!-- ── Dialog : Département ──────────────────────────────── -->
+        <v-dialog v-model="dialogDept" max-width="480" :persistent="formDept.processing">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <v-icon
+                        :icon="isDeptEditing ? 'mdi-pencil-outline' : 'mdi-domain'"
+                        size="20"
+                        class="mr-2"
+                        style="color:#f15a2d"
+                    />
+                    <h3>{{ isDeptEditing ? "Modifier le département" : "Nouveau département" }}</h3>
+                    <button class="modal-close" @click="dialogDept = false">
+                        <v-icon icon="mdi-close" size="18" />
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="field-group">
+                        <label class="field-label">Nom du département <span class="required">*</span></label>
+                        <input
+                            v-model="formDept.nom_departement"
+                            type="text"
+                            class="field-input"
+                            :class="{ 'field-input--error': formDept.errors.nom_departement }"
+                            placeholder="Ex : Ressources Humaines"
+                            @keyup.enter="saveDept"
+                        />
+                        <span v-if="formDept.errors.nom_departement" class="field-error">
+                            {{ formDept.errors.nom_departement }}
+                        </span>
+                    </div>
+
+                    <div class="field-group mt-4">
+                        <label class="field-label">Description</label>
+                        <textarea
+                            v-model="formDept.description_departement"
+                            class="field-input field-textarea"
+                            placeholder="Description du département…"
+                            rows="3"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn-cancel" @click="dialogDept = false">Annuler</button>
+                    <button
+                        class="btn-confirm"
+                        :class="{ 'btn-loading': formDept.processing }"
+                        :disabled="formDept.processing"
+                        @click="saveDept"
+                    >
+                        <v-progress-circular v-if="formDept.processing" size="14" width="2" indeterminate class="mr-1" />
+                        {{ isDeptEditing ? "Enregistrer" : "Créer" }}
+                    </button>
+                </div>
+            </div>
+        </v-dialog>
+
+        <!-- ── Dialog : Service ──────────────────────────────────── -->
+        <v-dialog v-model="dialogService" max-width="500" :persistent="formService.processing">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <v-icon
+                        :icon="isServiceEditing ? 'mdi-pencil-outline' : 'mdi-cog-outline'"
+                        size="20"
+                        class="mr-2"
+                        style="color:#f15a2d"
+                    />
+                    <div>
+                        <h3>{{ isServiceEditing ? "Modifier le service" : "Nouveau service" }}</h3>
+                        <p class="modal-subtitle">{{ currentDeptName }}</p>
+                    </div>
+                    <button class="modal-close" @click="dialogService = false">
+                        <v-icon icon="mdi-close" size="18" />
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="field-group">
+                        <label class="field-label">Nom du service <span class="required">*</span></label>
+                        <input
+                            v-model="formService.nom_service"
+                            type="text"
+                            class="field-input"
+                            :class="{ 'field-input--error': formService.errors.nom_service }"
+                            placeholder="Ex : Recrutement"
+                            @keyup.enter="saveService"
+                        />
+                        <span v-if="formService.errors.nom_service" class="field-error">
+                            {{ formService.errors.nom_service }}
+                        </span>
+                    </div>
+
+                    <div class="field-group mt-4">
+                        <label class="field-label">Description</label>
+                        <textarea
+                            v-model="formService.description_service"
+                            class="field-input field-textarea"
+                            placeholder="Description du service…"
+                            rows="3"
+                        ></textarea>
+                    </div>
+
+                    <div class="field-group mt-4">
+                        <label class="field-label">Icône</label>
+                        <div class="icon-picker">
+                            <button
+                                v-for="ico in serviceIcons"
+                                :key="ico"
+                                type="button"
+                                class="icon-option"
+                                :class="{ 'icon-option--selected': formService.icon_service === ico }"
+                                :title="ico"
+                                @click="formService.icon_service = ico"
+                            >
+                                <v-icon :icon="ico" size="18" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn-cancel" @click="dialogService = false">Annuler</button>
+                    <button
+                        class="btn-confirm"
+                        :class="{ 'btn-loading': formService.processing }"
+                        :disabled="formService.processing"
+                        @click="saveService"
+                    >
+                        <v-progress-circular v-if="formService.processing" size="14" width="2" indeterminate class="mr-1" />
+                        {{ isServiceEditing ? "Enregistrer" : "Créer" }}
+                    </button>
+                </div>
+            </div>
+        </v-dialog>
+
+        <!-- ── Dialog : Confirmation suppression ─────────────────── -->
+        <v-dialog v-model="dialogConfirm" max-width="400">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <v-icon icon="mdi-alert-outline" size="20" class="mr-2" style="color:#e74c3c" />
+                    <h3>Confirmer la suppression</h3>
+                </div>
+
+                <div class="modal-body">
+                    <p class="confirm-msg" v-if="deleteTarget?.type === 'dept'">
+                        Supprimer le département
+                        <strong>{{ deleteTarget.item.nom_departement }}</strong> ?
+                        <span class="confirm-warn" v-if="deleteTarget.item.services?.length">
+                            Les {{ deleteTarget.item.services.length }} services associés seront également supprimés.
+                        </span>
+                    </p>
+                    <p class="confirm-msg" v-else-if="deleteTarget?.type === 'service'">
+                        Supprimer le service
+                        <strong>{{ deleteTarget.item.nom_service }}</strong> ?
+                    </p>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn-cancel" @click="dialogConfirm = false">Annuler</button>
+                    <button
+                        class="btn-delete"
+                        :disabled="deleteProcessing"
+                        @click="confirmDelete"
+                    >
+                        <v-progress-circular v-if="deleteProcessing" size="14" width="2" indeterminate class="mr-1" />
+                        Supprimer
+                    </button>
+                </div>
+            </div>
+        </v-dialog>
+
     </AuthenticatedLayout>
 </template>
 
-<style>
-.v-table tbody tr:hover {
-    color: var(--primary-color);
-    cursor: pointer;
-}
-.v-table tbody tr:nth-child(even) {
-    background-color: #a9a9a9;
-    /*  border: 2px solid #000; */
+<style scoped>
+/* ── Page ──────────────────────────────────────────────────────── */
+.dept-page {
+    padding: 24px 20px;
+    min-height: 100%;
 }
 
-.v-table tbody tr:nth-child(odd) {
-    background-color: lightgray;
-    /*  border: 2px solid #000; */
+/* ── Stats ─────────────────────────────────────────────────────── */
+.stats-row {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.stat-chip {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--card-bg, #242837);
+    border: 1px solid var(--border-color, #3a3d52);
+    border-radius: 12px;
+    padding: 14px 20px;
+    min-width: 160px;
+}
+
+.stat-icon { color: #1b449c; }
+.stat-icon--orange { color: #f15a2d !important; }
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary, #a0a4b8);
+    margin-top: 2px;
+}
+
+/* ── Table card ─────────────────────────────────────────────────── */
+.table-card {
+    background: var(--card-bg, #242837);
+    border: 1px solid var(--border-color, #3a3d52);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+/* ── Vuetify table : dark override complet ──────────────────────── */
+
+/* Racine + toutes les couches wrapper internes */
+:deep(.dept-table),
+:deep(.dept-table .v-table),
+:deep(.dept-table .v-table__wrapper),
+:deep(.dept-table table) {
+    background: transparent !important;
+    color: var(--text-primary, #fff) !important;
+}
+
+/* Header : toutes les variantes de sélecteurs Vuetify 3 */
+:deep(.dept-table thead),
+:deep(.dept-table thead tr),
+:deep(.dept-table .v-data-table__thead),
+:deep(.dept-table .v-data-table__thead tr) {
+    background: #1a1d29 !important;
+}
+
+:deep(.dept-table thead th),
+:deep(.dept-table .v-data-table__thead th),
+:deep(.dept-table .v-data-table-headers__th) {
+    background: #1a1d29 !important;
+    color: var(--text-secondary, #a0a4b8) !important;
+    font-size: 0.72rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border-color, #3a3d52) !important;
+    white-space: nowrap;
+}
+
+/* Icônes de tri dans le header */
+:deep(.dept-table .v-data-table-headers__th .v-data-table-header__sort-icon) {
+    color: var(--text-secondary, #a0a4b8) !important;
+}
+
+/* Lignes du body */
+:deep(.dept-table tbody tr),
+:deep(.dept-table .v-data-table__tr) {
+    background: transparent !important;
+}
+
+:deep(.dept-table tbody td),
+:deep(.dept-table .v-data-table__tr td) {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(58, 61, 82, 0.45) !important;
+    color: var(--text-primary, #fff) !important;
+    font-size: 0.875rem;
+}
+
+:deep(.dept-table tbody tr:hover td),
+:deep(.dept-table .v-data-table__tr:hover td) {
+    background: var(--card-hover, #2d3142) !important;
+}
+
+/* Footer */
+:deep(.dept-table .v-data-table-footer),
+:deep(.dept-table .v-data-table__tfoot) {
+    background: #1a1d29 !important;
+    color: var(--text-secondary, #a0a4b8) !important;
+    border-top: 1px solid var(--border-color, #3a3d52) !important;
+}
+
+:deep(.dept-table .v-data-table-footer .v-select),
+:deep(.dept-table .v-data-table-footer .v-select__selection),
+:deep(.dept-table .v-data-table-footer span) {
+    color: var(--text-secondary, #a0a4b8) !important;
+}
+
+/* Scrollbar sombre */
+:deep(.dept-table .v-table__wrapper)::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+:deep(.dept-table .v-table__wrapper)::-webkit-scrollbar-track {
+    background: transparent;
+}
+:deep(.dept-table .v-table__wrapper)::-webkit-scrollbar-thumb {
+    background: var(--border-color, #3a3d52);
+    border-radius: 3px;
+}
+
+/* ── Toolbar ────────────────────────────────────────────────────── */
+.table-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color, #3a3d52);
+    flex-wrap: wrap;
+}
+
+.toolbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.toolbar-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    color: var(--text-secondary, #a0a4b8);
+    pointer-events: none;
+}
+
+.search-input {
+    height: 36px;
+    padding: 0 32px 0 34px;
+    background: var(--dark-bg, #1a1d29);
+    border: 1px solid var(--border-color, #3a3d52);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.875rem;
+    width: 200px;
+    transition: border-color 0.2s;
+    outline: none;
+}
+
+.search-input:focus { border-color: #1b449c; }
+.search-input::placeholder { color: var(--text-secondary, #a0a4b8); }
+
+.search-clear {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary, #a0a4b8);
+    display: flex;
+    align-items: center;
+    padding: 0;
+}
+
+.add-btn {
+    display: flex;
+    align-items: center;
+    height: 36px;
+    padding: 0 14px;
+    background: linear-gradient(135deg, #1b449c 0%, #f15a2d 100%);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    white-space: nowrap;
+}
+
+.add-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* ── Badges & cells ─────────────────────────────────────────────── */
+.services-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 22px;
+    padding: 0 7px;
+    background: rgba(27, 68, 156, 0.25);
+    border: 1px solid rgba(27, 68, 156, 0.5);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #93b4ff;
+}
+
+.desc-text {
+    color: var(--text-secondary, #a0a4b8);
+    font-size: 0.8rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ── Expand button ──────────────────────────────────────────────── */
+.expand-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background: var(--dark-bg, #1a1d29);
+    border: 1px solid var(--border-color, #3a3d52);
+    border-radius: 6px;
+    color: var(--text-secondary, #a0a4b8);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.expand-btn:hover,
+.expand-btn--open {
+    background: rgba(241, 90, 45, 0.12);
+    border-color: #f15a2d;
+    color: #f15a2d;
+}
+
+/* ── Action buttons ─────────────────────────────────────────────── */
+.action-btns {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+}
+
+.icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: none;
+}
+
+.icon-btn--edit { color: #f39c12; border-color: rgba(243,156,18,.25); background: rgba(243,156,18,.08); }
+.icon-btn--edit:hover { background: rgba(243,156,18,.2); }
+
+.icon-btn--delete { color: #e74c3c; border-color: rgba(231,76,60,.25); background: rgba(231,76,60,.08); }
+.icon-btn--delete:hover { background: rgba(231,76,60,.2); }
+
+/* ── Expanded row (services panel) ─────────────────────────────── */
+.expanded-row td { padding: 0 !important; }
+
+.services-panel {
+    background: #1a1d29;
+    border-top: 1px solid var(--border-color, #3a3d52);
+    border-bottom: 1px solid var(--border-color, #3a3d52);
+    padding: 0 0 12px;
+}
+
+.services-panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    border-bottom: 1px solid rgba(58, 61, 82, 0.5);
+    margin-bottom: 4px;
+}
+
+.services-panel__title {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary, #a0a4b8);
+}
+
+.services-count-inline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 18px;
+    padding: 0 5px;
+    background: rgba(241, 90, 45, 0.2);
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #f15a2d;
+    margin-left: 8px;
+}
+
+.add-service-btn {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 12px;
+    background: rgba(27, 68, 156, 0.15);
+    border: 1px solid rgba(27, 68, 156, 0.4);
+    border-radius: 6px;
+    color: #93b4ff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.add-service-btn:hover {
+    background: rgba(27, 68, 156, 0.3);
+    border-color: #1b449c;
+    color: #fff;
+}
+
+/* Services table */
+.services-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.835rem;
+}
+
+.services-table thead tr {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.services-table th {
+    padding: 8px 16px;
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-secondary, #a0a4b8);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    border-bottom: 1px solid rgba(58, 61, 82, 0.4);
+}
+
+.services-table td {
+    padding: 10px 16px;
+    color: var(--text-primary, #fff);
+    border-bottom: 1px solid rgba(58, 61, 82, 0.25);
+}
+
+.services-table tbody tr:last-child td { border-bottom: none; }
+.services-table tbody tr:hover td { background: rgba(255, 255, 255, 0.03); }
+
+.cell-num { color: var(--text-secondary, #a0a4b8); width: 48px; }
+.cell-icon { width: 36px; }
+.cell-name { font-weight: 500; }
+.cell-desc { color: var(--text-secondary, #a0a4b8); font-size: 0.8rem; }
+.cell-actions { text-align: right; }
+
+/* ── Empty & no-data ────────────────────────────────────────────── */
+.services-empty {
+    padding: 24px;
+    text-align: center;
+    color: var(--text-secondary, #a0a4b8);
+    font-size: 0.85rem;
+}
+
+.services-empty p { margin: 0; }
+
+.no-data {
+    padding: 40px;
+    text-align: center;
+    color: var(--text-secondary, #a0a4b8);
+    font-size: 0.9rem;
+}
+
+/* ── Modals ─────────────────────────────────────────────────────── */
+.modal-card {
+    background: var(--card-bg, #242837);
+    border: 1px solid var(--border-color, #3a3d52);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border-color, #3a3d52);
+    gap: 4px;
+}
+
+.modal-header h3 {
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+}
+
+.modal-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-secondary, #a0a4b8);
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary, #a0a4b8);
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    margin-left: auto;
+}
+
+.modal-close:hover { background: rgba(255,255,255,.08); color: #fff; }
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 20px;
+    border-top: 1px solid var(--border-color, #3a3d52);
+}
+
+/* ── Form fields ────────────────────────────────────────────────── */
+.field-group { display: flex; flex-direction: column; }
+
+.field-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary, #a0a4b8);
+    margin-bottom: 6px;
+}
+
+.required { color: #e74c3c; }
+
+.field-input {
+    background: var(--dark-bg, #1a1d29);
+    border: 1px solid var(--border-color, #3a3d52);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 0 12px;
+    height: 42px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+    font-family: inherit;
+}
+
+.field-input:focus { border-color: #1b449c; }
+.field-input::placeholder { color: rgba(255,255,255,.2); }
+.field-input--error { border-color: #e74c3c !important; }
+
+.field-textarea {
+    height: auto;
+    padding: 10px 12px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.field-error {
+    font-size: 0.75rem;
+    color: #e74c3c;
+    margin-top: 4px;
+}
+
+/* ── Icon picker ────────────────────────────────────────────────── */
+.icon-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.icon-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--dark-bg, #1a1d29);
+    border: 1px solid var(--border-color, #3a3d52);
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-secondary, #a0a4b8);
+    transition: all 0.15s;
+}
+
+.icon-option:hover { border-color: #1b449c; color: #fff; }
+
+.icon-option--selected {
+    background: rgba(27, 68, 156, 0.3);
+    border-color: #1b449c;
+    color: #fff;
+    box-shadow: 0 0 0 2px rgba(27, 68, 156, 0.3);
+}
+
+/* ── Buttons ────────────────────────────────────────────────────── */
+.btn-cancel {
+    height: 36px;
+    padding: 0 16px;
+    background: none;
+    border: 1px solid var(--border-color, #3a3d52);
+    border-radius: 8px;
+    color: var(--text-secondary, #a0a4b8);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-cancel:hover { border-color: #fff; color: #fff; }
+
+.btn-confirm {
+    height: 36px;
+    padding: 0 20px;
+    background: linear-gradient(135deg, #1b449c 0%, #f15a2d 100%);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: opacity 0.2s;
+}
+
+.btn-confirm:hover:not(:disabled) { opacity: 0.88; }
+.btn-confirm:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.btn-delete {
+    height: 36px;
+    padding: 0 20px;
+    background: rgba(231, 76, 60, 0.15);
+    border: 1px solid rgba(231, 76, 60, 0.4);
+    border-radius: 8px;
+    color: #e74c3c;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.btn-delete:hover:not(:disabled) { background: rgba(231, 76, 60, 0.3); }
+.btn-delete:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* ── Confirm dialog ─────────────────────────────────────────────── */
+.confirm-msg {
+    font-size: 0.9rem;
+    color: var(--text-primary, #fff);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.confirm-warn {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: #f39c12;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .dept-page { padding: 16px 12px; }
+    .table-toolbar { flex-direction: column; align-items: stretch; }
+    .toolbar-right { width: 100%; }
+    .search-input { width: 100%; }
+    .search-wrapper { flex: 1; }
+    .add-btn { justify-content: center; }
+    .stat-chip { flex: 1; min-width: 120px; }
 }
 </style>

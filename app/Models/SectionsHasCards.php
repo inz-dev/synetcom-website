@@ -5,24 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
-class Card extends Model
+class SectionsHasCards extends Model
 {
     use HasFactory, HasUuids, SoftDeletes;
 
-    protected $primaryKey = 'id_card';
+    protected $table = 'sections_has_cards';
+    protected $primaryKey = 'id_sections_has_cards';
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
+        'id_sections_has_cards',
+        'id_section',
         'id_card',
-        'titre_card',
-        'description_card',
-        'icon_card',
-        'titre_bouton_card',
     ];
 
     protected static function boot(): void
@@ -33,11 +31,5 @@ class Card extends Model
                 $model->{$model->getKeyName()} = Uuid::generate()->string;
             }
         });
-    }
-
-    public function sections(): BelongsToMany
-    {
-        return $this->belongsToMany(Sections::class, 'sections_has_cards', 'id_card', 'id_section')
-                    ->withTimestamps();
     }
 }

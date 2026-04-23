@@ -8,62 +8,73 @@ use Inertia\Inertia;
 
 class ServicesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
-        return Inertia::render('Services/Index.services', [
+        return Inertia::render('Services/Index.services');
+    }
 
+    public function create() {}
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nom_service'    => 'required|string|min:2',
+            'departement_id' => 'required|exists:departements,id_departement',
+        ], [
+            'nom_service.required'    => 'Veuillez entrer le nom du service.',
+            'nom_service.min'         => 'Minimum 2 caractères.',
+            'departement_id.required' => 'Le département est requis.',
+            'departement_id.exists'   => 'Département invalide.',
+        ]);
+
+        Services::create([
+            'nom_service'         => $request->nom_service,
+            'description_service' => $request->description_service,
+            'icon_service'        => $request->icon_service,
+            'departement_id'      => $request->departement_id,
+        ]);
+
+        return redirect()->route('departements')->with([
+            'message' => 'Service ajouté avec succès !',
+            'type'    => 'success',
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show(Services $services) {}
+
+    public function edit(Services $services) {}
+
+    public function update(Request $request, $id)
     {
-        //
+        $service = Services::findOrFail($id);
+
+        $request->validate([
+            'nom_service' => 'required|string|min:2',
+        ], [
+            'nom_service.required' => 'Veuillez entrer le nom du service.',
+            'nom_service.min'      => 'Minimum 2 caractères.',
+        ]);
+
+        $service->update([
+            'nom_service'         => $request->nom_service,
+            'description_service' => $request->description_service,
+            'icon_service'        => $request->icon_service,
+        ]);
+
+        return redirect()->route('departements')->with([
+            'message' => 'Service modifié avec succès !',
+            'type'    => 'success',
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function destroy($id)
     {
-        //
-    }
+        $service = Services::findOrFail($id);
+        $service->delete();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Services $services)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Services $services)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Services $services)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Services $services)
-    {
-        //
+        return redirect()->route('departements')->with([
+            'message' => 'Service supprimé avec succès !',
+            'type'    => 'success',
+        ]);
     }
 }

@@ -2,68 +2,255 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Card;
 use App\Models\Pages;
+use App\Models\Sections;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Webpatser\Uuid\Uuid;
 
 class PagesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
-             return Inertia::render('Pages/Index.pages', [
+        $pages = Pages::with(['sections' => function ($q) {
+            $q->with('cards');
+        }])->get()->map(fn($p) => [
+            'id_page'          => $p->id_page,
+            'titre_page'       => $p->titre_page,
+            'slogan_page'      => $p->slogan_page,
+            'banniere_page'    => $p->banniere_page,
+            'description_page' => $p->description_page,
+            'sections'         => $p->sections->map(fn($s) => [
+                'id_section'          => $s->id_section,
+                'nom_section'         => $s->nom_section,
+                'description_section' => $s->description_section,
+                'icon_section'        => $s->icon_section,
+                'is_link_section'     => (bool) $s->is_link_section,
+                'cards'               => $s->cards->map(fn($c) => [
+                    'id_card'           => $c->id_card,
+                    'titre_card'        => $c->titre_card,
+                    'description_card'  => $c->description_card,
+                    'icon_card'         => $c->icon_card,
+                    'titre_bouton_card' => $c->titre_bouton_card,
+                ])->values(),
+            ])->values(),
+        ])->values();
 
+        return Inertia::render('Pages/Index.pages', [
+            'allPages' => $pages,
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    // ── Pages CRUD ───────────────────────────────────────────────
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'titre_page'       => 'required|string|min:2',
+            'slogan_page'      => 'nullable|string|max:255',
+            'banniere_page'    => 'nullable|string|max:255',
+            'description_page' => 'nullable|string',
+        ], [
+            'titre_page.required' => 'Le titre de la page est obligatoire.',
+        ]);
+
+        Pages::create([
+            'titre_page'       => $request->titre_page,
+            'slogan_page'      => $request->slogan_page,
+            'banniere_page'    => $request->banniere_page,
+            'description_page' => $request->description_page,
+        ]);
+
+        return redirect()->route('pages')->with([
+            'message' => "Page « {$request->titre_page} » créée avec succès !",
+            'type'    => 'success',
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Pages $pages)
+    public function update(Request $request, $page)
     {
-        //
+        $record = Pages::findOrFail($page);
+
+        $request->validate([
+            'titre_page'       => 'required|string|min:2',
+            'slogan_page'      => 'nullable|string|max:255',
+            'banniere_page'    => 'nullable|string|max:255',
+            'description_page' => 'nullable|string',
+        ], [
+            'titre_page.required' => 'Le titre de la page est obligatoire.',
+        ]);
+
+        $record->update([
+            'titre_page'       => $request->titre_page,
+            'slogan_page'      => $request->slogan_page,
+            'banniere_page'    => $request->banniere_page,
+            'description_page' => $request->description_page,
+        ]);
+
+        return redirect()->route('pages')->with([
+            'message' => 'Page mise à jour avec succès !',
+            'type'    => 'success',
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Pages $pages)
+    public function destroy($page)
     {
-        //
+        $record = Pages::findOrFail($page);
+        $record->delete();
+
+        return redirect()->route('pages')->with([
+            'message' => 'Page supprimée avec succès !',
+            'type'    => 'success',
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Pages $pages)
+    // ── Sections CRUD ────────────────────────────────────────────
+
+    public function storeSection(Request $request)
     {
-        //
+        $request->validate([
+            'nom_section'         => 'required|string|min:2',
+            'description_section' => 'nullable|string',
+            'icon_section'        => 'nullable|string|max:100',
+            'is_link_section'     => 'boolean',
+            'id_page'             => 'required|string|exists:pages,id_page',
+        ], [
+            'nom_section.required' => 'Le nom de la section est obligatoire.',
+            'id_page.required'     => 'La page associée est obligatoire.',
+            'id_page.exists'       => 'La page sélectionnée est invalide.',
+        ]);
+
+        $section = Sections::create([
+            'nom_section'         => $request->nom_section,
+            'description_section' => $request->description_section,
+            'icon_section'        => $request->icon_section,
+            'is_link_section'     => $request->is_link_section ? 1 : 0,
+        ]);
+
+        DB::table('pages_has_sections')->insert([
+            'id_pages_has_sections' => Uuid::generate()->string,
+            'id_page'               => $request->id_page,
+            'id_section'            => $section->id_section,
+            'created_at'            => now(),
+            'updated_at'            => now(),
+        ]);
+
+        return redirect()->route('pages')->with([
+            'message' => "Section « {$request->nom_section} » créée avec succès !",
+            'type'    => 'success',
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Pages $pages)
+    public function updateSection(Request $request, $section)
     {
-        //
+        $record = Sections::findOrFail($section);
+
+        $request->validate([
+            'nom_section'         => 'required|string|min:2',
+            'description_section' => 'nullable|string',
+            'icon_section'        => 'nullable|string|max:100',
+            'is_link_section'     => 'boolean',
+        ], [
+            'nom_section.required' => 'Le nom de la section est obligatoire.',
+        ]);
+
+        $record->update([
+            'nom_section'         => $request->nom_section,
+            'description_section' => $request->description_section,
+            'icon_section'        => $request->icon_section,
+            'is_link_section'     => $request->is_link_section ? 1 : 0,
+        ]);
+
+        return redirect()->route('pages')->with([
+            'message' => 'Section mise à jour avec succès !',
+            'type'    => 'success',
+        ]);
+    }
+
+    public function destroySection($section)
+    {
+        $record = Sections::findOrFail($section);
+        $record->delete();
+
+        return redirect()->route('pages')->with([
+            'message' => 'Section supprimée avec succès !',
+            'type'    => 'success',
+        ]);
+    }
+
+    // ── Cards CRUD ───────────────────────────────────────────────
+
+    public function storeCard(Request $request)
+    {
+        $request->validate([
+            'titre_card'        => 'required|string|min:2',
+            'description_card'  => 'nullable|string',
+            'icon_card'         => 'nullable|string|max:100',
+            'titre_bouton_card' => 'nullable|string|max:100',
+            'id_section'        => 'required|string|exists:sections,id_section',
+        ], [
+            'titre_card.required'  => 'Le titre de la carte est obligatoire.',
+            'id_section.required'  => 'La section associée est obligatoire.',
+            'id_section.exists'    => 'La section sélectionnée est invalide.',
+        ]);
+
+        $card = Card::create([
+            'titre_card'        => $request->titre_card,
+            'description_card'  => $request->description_card,
+            'icon_card'         => $request->icon_card,
+            'titre_bouton_card' => $request->titre_bouton_card,
+        ]);
+
+        DB::table('sections_has_cards')->insert([
+            'id_sections_has_cards' => Uuid::generate()->string,
+            'id_section'            => $request->id_section,
+            'id_card'               => $card->id_card,
+            'created_at'            => now(),
+            'updated_at'            => now(),
+        ]);
+
+        return redirect()->route('pages')->with([
+            'message' => "Carte « {$request->titre_card} » créée avec succès !",
+            'type'    => 'success',
+        ]);
+    }
+
+    public function updateCard(Request $request, $card)
+    {
+        $record = Card::findOrFail($card);
+
+        $request->validate([
+            'titre_card'        => 'required|string|min:2',
+            'description_card'  => 'nullable|string',
+            'icon_card'         => 'nullable|string|max:100',
+            'titre_bouton_card' => 'nullable|string|max:100',
+        ], [
+            'titre_card.required' => 'Le titre de la carte est obligatoire.',
+        ]);
+
+        $record->update([
+            'titre_card'        => $request->titre_card,
+            'description_card'  => $request->description_card,
+            'icon_card'         => $request->icon_card,
+            'titre_bouton_card' => $request->titre_bouton_card,
+        ]);
+
+        return redirect()->route('pages')->with([
+            'message' => 'Carte mise à jour avec succès !',
+            'type'    => 'success',
+        ]);
+    }
+
+    public function destroyCard($card)
+    {
+        $record = Card::findOrFail($card);
+        $record->delete();
+
+        return redirect()->route('pages')->with([
+            'message' => 'Carte supprimée avec succès !',
+            'type'    => 'success',
+        ]);
     }
 }

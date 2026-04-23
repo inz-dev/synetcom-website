@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Middleware;
-
-use App\Models\Telephones;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
@@ -37,7 +35,8 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user(),
+                'user'  => $request->user(),
+                'roles' => $request->user() ? $request->user()->getRoleNames() : [],
             ],
             'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),

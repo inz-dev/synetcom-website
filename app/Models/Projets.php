@@ -2,20 +2,31 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
-class Client extends Model
+class Projets extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes;
 
+    protected $primaryKey = 'id_projet';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $primaryKey = 'id_client';
+
+    protected $fillable = [
+        'id_projet',
+        'nom_projet',
+        'description_projet',
+        'image_projet',
+        'fichier_projet',
+        'id_planning',
+    ];
 
     protected static function boot(): void
     {
@@ -27,25 +38,19 @@ class Client extends Model
         });
     }
 
-    protected $fillable = [
-        'id_client',
-        'nom_client',
-        'logo_client',
-        'lien_client',
-        'description_client',
-        'duree_client',
-        'est_partenaire_client',
-        'id_organisme',
-    ];
-
-    public function organisme(): BelongsTo
+    public function planning(): BelongsTo
     {
-        return $this->belongsTo(Organismes::class, 'id_organisme', 'id_organisme');
+        return $this->belongsTo(Planning::class, 'id_planning', 'id_planning');
     }
 
-    public function projets(): BelongsToMany
+    public function realisations(): HasMany
     {
-        return $this->belongsToMany(Projets::class, 'client_has_projets', 'id_client', 'id_projet')
+        return $this->hasMany(Realisations::class, 'id_projet', 'id_projet');
+    }
+
+    public function clients(): BelongsToMany
+    {
+        return $this->belongsToMany(Client::class, 'client_has_projets', 'id_projet', 'id_client')
                     ->withPivot(['id_organisme', 'id_planning', 'date_debut_pp', 'date_fin_pp'])
                     ->withTimestamps();
     }
