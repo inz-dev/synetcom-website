@@ -46,7 +46,6 @@ Route::get('/', function () {
 });
 Route::resource('nous-contacter', NousContacterController::class);
 Route::resource('about-us', AboutUsController::class);
-Route::resource('departements',DepartementsController::class);
 Route::get('nous-contacter', [NousContacterController::class, 'index'])->name('nous-contacter');
 Route::get('about-us', [AboutUsController::class, 'index'])->name('about-us');
 Route::get('/dashboard', function () {
@@ -70,6 +69,7 @@ Route::post('/cards', [PagesController::class, 'storeCard'])->name('cards.store'
 Route::put('/cards/{card}', [PagesController::class, 'updateCard'])->name('cards.update');
 Route::delete('/cards/{card}', [PagesController::class, 'destroyCard'])->name('cards.destroy');
 Route::get('/departements', [DepartementsController::class, 'index'])->name('departements');
+Route::post('/departements', [DepartementsController::class, 'store'])->name('departements.store');
 Route::put('/departements/{departement}', [DepartementsController::class, 'update'])->name('departements.update');
 Route::delete('/departements/{departement}', [DepartementsController::class, 'destroy'])->name('departements.destroy');
 Route::post('/services', [ServicesController::class, 'store'])->name('services.store');
