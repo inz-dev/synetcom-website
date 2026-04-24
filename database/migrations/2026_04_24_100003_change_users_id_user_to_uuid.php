@@ -5,6 +5,21 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
+    private function dropPk(string $table): void
+    {
+        DB::statement(<<<SQL
+            DO \$\$
+            DECLARE c text;
+            BEGIN
+                SELECT conname INTO c FROM pg_constraint
+                WHERE conrelid = '{$table}'::regclass AND contype = 'p';
+                IF c IS NOT NULL THEN
+                    EXECUTE format('ALTER TABLE {$table} DROP CONSTRAINT %I', c);
+                END IF;
+            END \$\$
+        SQL);
+    }
+
     public function up(): void
     {
         // Drop FK employes → users
@@ -17,12 +32,12 @@ return new class extends Migration
         DB::statement('ALTER TABLE "employes" ALTER COLUMN "user_id" TYPE varchar(36) USING "user_id"::varchar');
 
         // Spatie model_has_roles.model_id : bigint → varchar(36)
-        DB::statement('ALTER TABLE "model_has_roles" DROP CONSTRAINT IF EXISTS "model_has_roles_role_model_type_primary"');
+        $this->dropPk('model_has_roles');
         DB::statement('ALTER TABLE "model_has_roles" ALTER COLUMN "model_id" TYPE varchar(36) USING "model_id"::varchar');
         DB::statement('ALTER TABLE "model_has_roles" ADD PRIMARY KEY ("role_id", "model_id", "model_type")');
 
         // Spatie model_has_permissions.model_id : bigint → varchar(36)
-        DB::statement('ALTER TABLE "model_has_permissions" DROP CONSTRAINT IF EXISTS "model_has_permissions_permission_model_type_primary"');
+        $this->dropPk('model_has_permissions');
         DB::statement('ALTER TABLE "model_has_permissions" ALTER COLUMN "model_id" TYPE varchar(36) USING "model_id"::varchar');
         DB::statement('ALTER TABLE "model_has_permissions" ADD PRIMARY KEY ("permission_id", "model_id", "model_type")');
 
@@ -34,11 +49,11 @@ return new class extends Migration
     {
         DB::statement('ALTER TABLE "employes" DROP CONSTRAINT IF EXISTS "employes_user_id_foreign"');
 
-        DB::statement('ALTER TABLE "model_has_roles" DROP CONSTRAINT IF EXISTS "model_has_roles_pkey"');
+        $this->dropPk('model_has_roles');
         DB::statement('ALTER TABLE "model_has_roles" ALTER COLUMN "model_id" TYPE bigint USING "model_id"::bigint');
         DB::statement('ALTER TABLE "model_has_roles" ADD PRIMARY KEY ("role_id", "model_id", "model_type")');
 
-        DB::statement('ALTER TABLE "model_has_permissions" DROP CONSTRAINT IF EXISTS "model_has_permissions_pkey"');
+        $this->dropPk('model_has_permissions');
         DB::statement('ALTER TABLE "model_has_permissions" ALTER COLUMN "model_id" TYPE bigint USING "model_id"::bigint');
         DB::statement('ALTER TABLE "model_has_permissions" ADD PRIMARY KEY ("permission_id", "model_id", "model_type")');
 
