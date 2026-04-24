@@ -12,6 +12,7 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\EmployesController;
 use App\Http\Controllers\SocialMediasController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TeamController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -32,7 +33,7 @@ Route::get('/', [WelcomeController::class, 'index'])->name('home');
 Route::get('/services', [ServicesController::class, 'index'])->name('services');
 Route::get('/partenaires', [PartnersController::class, 'index'])->name('partenaires');
 Route::get('/realisations', fn() => Inertia::render('Realisations/Index'))->name('realisations');
-Route::get('/equipe', fn() => Inertia::render('Equipe/Index'))->name('equipe');
+Route::get('/equipe', [TeamController::class, 'index'])->name('equipe');
 #Route::get('/users', [UserController::class, 'index'])->name('users');
 
 
