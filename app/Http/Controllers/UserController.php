@@ -18,11 +18,10 @@ class UserController extends Controller
         abort_if(!auth()->user()->hasRole('Super-administrateur'), 403);
 
         $users = User::with('roles')->get()->map(fn($u) => [
-            'id'         => $u->id,
+            'id'         => $u->id_user,
             'lastname'   => $u->lastname,
             'firstname'  => $u->firstname,
             'sex'        => $u->sex,
-            'telephone'  => $u->telephone,
             'email'      => $u->email,
             'roles'      => $u->roles->map(fn($r) => ['id' => $r->id, 'name' => $r->name])->values(),
             'created_at' => $u->created_at?->format('d/m/Y'),
@@ -64,7 +63,6 @@ class UserController extends Controller
             'lastname'  => 'required|string|min:2',
             'firstname' => 'required|string|min:2',
             'sex'       => 'required|in:M,F',
-            'telephone' => 'nullable|string|max:20',
             'roles'     => 'nullable|array',
             'roles.*'   => 'string|exists:roles,name',
         ], [
@@ -79,7 +77,6 @@ class UserController extends Controller
             'lastname'  => $request->lastname,
             'firstname' => $request->firstname,
             'sex'       => $request->sex,
-            'telephone' => $request->telephone,
             'email'     => $email,
             'password'  => Hash::make('password'),
         ]);
@@ -104,7 +101,6 @@ class UserController extends Controller
             'lastname'  => 'required|string|min:2',
             'firstname' => 'required|string|min:2',
             'sex'       => 'required|in:M,F',
-            'telephone' => 'nullable|string|max:20',
             'password'  => 'nullable|string|min:8',
             'roles'     => 'nullable|array',
             'roles.*'   => 'string|exists:roles,name',
@@ -119,7 +115,6 @@ class UserController extends Controller
             'lastname'  => $request->lastname,
             'firstname' => $request->firstname,
             'sex'       => $request->sex,
-            'telephone' => $request->telephone,
         ]);
 
         if ($request->filled('password')) {
@@ -142,7 +137,7 @@ class UserController extends Controller
 
         $user = User::findOrFail($id);
 
-        if ($user->id === auth()->id()) {
+        if ($user->id_user === auth()->id()) {
             return redirect()->route('users')->with([
                 'message' => 'Impossible de supprimer votre propre compte.',
                 'type'    => 'error',

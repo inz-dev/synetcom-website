@@ -41,7 +41,7 @@ class Employes extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id_user');
     }
 
     public function postes(): HasMany
@@ -51,8 +51,11 @@ class Employes extends Model
 
     public function latestPoste(): HasOne
     {
+        // ofMany() génère max(uuid) qui n'est pas supporté par PostgreSQL.
+        // orderByDesc sur date est suffisant : hasOne prend la 1ère ligne per FK.
         return $this->hasOne(Postes::class, 'id_employe', 'id_employe')
-                    ->ofMany('date_debut_poste', 'max');
+                    ->orderByDesc('date_debut_poste')
+                    ->orderByDesc('created_at');
     }
 
     public function departements(): BelongsToMany

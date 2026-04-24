@@ -23,7 +23,6 @@ class UserSeeder extends Seeder
             'lastname' => 'Webmaster',
             'firstname' => 'Synetcom',
             'sex' => 'M',
-            'telephone' => 90909089,
             'email' => 'webmaster@synetcom-niger.com',
             'password' => Hash::make('password')
         ]);

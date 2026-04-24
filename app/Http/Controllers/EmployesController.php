@@ -43,7 +43,7 @@ class EmployesController extends Controller
                     'departement'      => optional($e->latestPoste->departements)->nom_departement,
                 ] : null,
                 'user'                  => $e->user ? [
-                    'id'    => $e->user->id,
+                    'id'    => $e->user->id_user,
                     'email' => $e->user->email,
                     'roles' => $e->user->getRoleNames()->values(),
                 ] : null,
@@ -121,7 +121,7 @@ class EmployesController extends Controller
 
         if ($request->boolean('creer_compte')) {
             $user = $this->createEmployeeAccount($employe, $request->role_employe ?? 'Employé');
-            $employe->update(['user_id' => $user->id]);
+            $employe->update(['user_id' => $user->id_user]);
         }
 
         foreach ($request->social_medias ?? [] as $smData) {
@@ -189,7 +189,7 @@ class EmployesController extends Controller
 
         if ($request->boolean('creer_compte') && !$employe->user_id) {
             $user = $this->createEmployeeAccount($employe, $request->role_employe ?? 'Employé');
-            $employe->update(['user_id' => $user->id]);
+            $employe->update(['user_id' => $user->id_user]);
         }
 
         // Changer le rôle si un compte existe déjà et qu'un rôle est précisé

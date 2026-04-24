@@ -35,7 +35,8 @@ const headers = computed(() => [
     ...(!smAndDown.value
         ? [
               { title: "Sexe", key: "sex", width: 80, align: "center", sortable: false },
-              { title: "Téléphone", key: "telephone", width: 140, sortable: false },
+/*               { title: "Téléphone", key: "telephone", width: 140, sortable: false },
+ */
               { title: "Créé le", key: "created_at", width: 110, sortable: false },
           ]
         : []),
@@ -54,7 +55,7 @@ const isEditing  = ref(false);
 
 const formUser = useForm({
     id: null, lastname: "", firstname: "", sex: "M",
-    telephone: "", roles: [], password: "",
+    roles: [], password: "",
 });
 
 const emailPreview = computed(() => {
@@ -70,11 +71,10 @@ const openAdd = () => {
 };
 
 const openEdit = (user) => {
-    formUser.id        = user.id;
+    formUser.id        = user.id_user;
     formUser.lastname  = user.lastname;
     formUser.firstname = user.firstname;
     formUser.sex       = user.sex ?? "M";
-    formUser.telephone = user.telephone ?? "";
     formUser.roles     = user.roles.map((r) => r.name);
     formUser.password  = "";
     formUser.clearErrors();
@@ -101,7 +101,7 @@ const deleteUserProc    = ref(false);
 const openDeleteUser = (u) => { deleteUserTarget.value = u; dialogDeleteUser.value = true; };
 const confirmDeleteUser = () => {
     deleteUserProc.value = true;
-    router.delete(route("users.destroy", deleteUserTarget.value.id), {
+    router.delete(route("users.destroy", deleteUserTarget.value.id_user), {
         onFinish: () => { deleteUserProc.value = false; dialogDeleteUser.value = false; },
     });
 };
@@ -318,10 +318,6 @@ const confirmDeleteRole = () => {
                             />
                         </template>
 
-                        <template #item.telephone="{ item }">
-                            <span class="phone-text">{{ item.telephone || "—" }}</span>
-                        </template>
-
                         <template #item.actions="{ item }">
                             <div class="action-btns">
                                 <button class="icon-btn icon-btn--edit" title="Modifier" @click="openEdit(item)">
@@ -496,10 +492,6 @@ const confirmDeleteRole = () => {
                                 </button>
                             </div>
                             <span v-if="formUser.errors.sex" class="field-error">{{ formUser.errors.sex }}</span>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">Téléphone</label>
-                            <input v-model="formUser.telephone" type="text" class="field-input" placeholder="Ex : +227 90 00 00 00" />
                         </div>
                     </div>
 
