@@ -17,6 +17,16 @@ class User extends Authenticatable
     public $incrementing = false;
     protected $keyType = 'string';
 
+    protected static function boot(): void
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            if (!$model->getKey()) {
+                $model->{$model->getKeyName()} = Uuid::generate()->string;
+            }
+        });
+    }
+
     protected $fillable = [
         'id_user',
         'lastname',
@@ -36,13 +46,5 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    protected static function boot(): void
-    {
-        parent::boot();
-        static::creating(function ($model) {
-            if (!$model->getKey()) {
-                $model->{$model->getKeyName()} = Uuid::generate()->string;
-            }
-        });
-    }
+
 }
