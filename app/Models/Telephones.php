@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Telephones extends Model
 {
     use HasFactory, HasUuids;
-    protected $fillable=['id_telephone', 'code telephone', 'telephone'];
+    protected $fillable=['id_telephone', 'code_telephone', 'telephone'];
 
     public $incrementing=false;
      protected $keyType='string';

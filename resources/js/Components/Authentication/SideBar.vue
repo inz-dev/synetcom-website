@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, computed } from "vue";
+import { onMounted, computed, ref } from "vue";
 import { router, usePage } from "@inertiajs/vue3";
 const page=usePage()
 let user;
@@ -14,6 +14,17 @@ const name=lastname + " "+firstname
 const userRoles = computed(() => page.props.auth?.roles ?? [])
 const isSuperAdmin = computed(() => userRoles.value.includes('Super-administrateur'))
 
+// Gestion des sous-menus ouverts
+const openSubmenus = ref({})
+const toggleSubmenu = (id) => {
+    openSubmenus.value[id] = !openSubmenus.value[id]
+}
+const isSubmenuOpen = (item) => {
+    if (openSubmenus.value[item.id] !== undefined) return openSubmenus.value[item.id]
+    // Auto-ouvrir si une route enfant est active
+    return item.children?.some(c => route().current(c.link)) ?? false
+}
+
 const allItems=[
     {id:1, title:'Dashboard', link:'dashboard', icon:'bi bi-grid-fill', classActive:'', },
     {id:2, title:'Mon profil', link:'profile', icon:'bi bi-receipt', classActive:'', },
@@ -21,7 +32,13 @@ const allItems=[
     {id:4, title:'Configurations', link:'setups', icon:'bi bi-people-fill', classActive:'',},
     {id:5, title:'Départements', link:'departements', icon:'bi bi-bicycle', classActive:'', },
     {id:6, title:'Projets', link:'projects', icon:'bi bi-bar-chart-fill', classActive:'', },
-    {id:7, title:'Employés', link:'employes', icon:'bi bi-person-badge-fill', classActive:'', },
+    {
+        id:7, title:'Employés', icon:'bi bi-person-badge-fill', classActive:'',
+        children: [
+            { id:71, title:'Liste des employés', link:'employes', icon:'bi bi-people-fill' },
+            { id:72, title:'Réseaux Sociaux', link:'social-medias.index', icon:'bi bi-share-fill' },
+        ]
+    },
     {id:8, title:'Rapports', link:'reports', icon:'bi bi-shop', classActive:'',},
     {id:9, title:'Paramètres', link:'settings', icon:'bi bi-gear-fill', classActive:'', },
     {id:10, title:'Utilisateurs', link:'users', icon:'bi bi-people-fill', classActive:'', superAdminOnly: true },
@@ -94,17 +111,42 @@ onMounted(() => {
             </div>
 
             <ul class="nav-menu">
-                <li class="nav-item" v-for="item in listItems" :key="item.id" >
-                  <a v-if="item.title=='Déconnexion'"  class="nav-link" @click="logout">
+                <li class="nav-item" v-for="item in listItems" :key="item.id">
+
+                    <!-- Item avec sous-menu -->
+                    <template v-if="item.children">
+                        <a class="nav-link nav-link--parent"
+                           :class="{ active: item.children.some(c => route().current(c.link)) }"
+                           @click="toggleSubmenu(item.id)"
+                           style="cursor:pointer">
+                            <i :class="item.icon"></i>
+                            <span>{{ item.title }}</span>
+                            <i class="bi bi-chevron-down submenu-arrow"
+                               :class="{ 'submenu-arrow--open': isSubmenuOpen(item) }"></i>
+                        </a>
+                        <ul v-show="isSubmenuOpen(item)" class="submenu">
+                            <li v-for="child in item.children" :key="child.id" class="submenu-item">
+                                <a :href="route(child.link)" class="submenu-link"
+                                   :class="{ active: route().current(child.link) }">
+                                    <i :class="child.icon"></i>
+                                    <span>{{ child.title }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </template>
+
+                    <!-- Déconnexion -->
+                    <a v-else-if="item.title=='Déconnexion'" class="nav-link" @click="logout">
                         <i :class="item.icon"></i>
                         <span>{{ item.title }}</span>
                     </a>
+
+                    <!-- Item simple -->
                     <a v-else :href="item.link" class="nav-link" :class="{active: route().current(item.link)}">
                         <i :class="item.icon"></i>
                         <span>{{ item.title }}</span>
                     </a>
                 </li>
-
             </ul>
         </aside>
 
@@ -345,6 +387,74 @@ ul{
 }
 
 .sidebar.collapsed .nav-link span {
+    display: none;
+}
+
+/* Sous-menu */
+.nav-link--parent {
+    position: relative;
+    justify-content: space-between;
+}
+
+.submenu-arrow {
+    font-size: 12px !important;
+    width: auto !important;
+    margin-left: auto;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.submenu-arrow--open {
+    transform: rotate(180deg);
+}
+
+.submenu {
+    list-style: none;
+    padding: 4px 0 4px 12px;
+    margin: 0;
+    border-left: 2px solid var(--border-color);
+    margin-left: 28px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.submenu-item {
+    margin-bottom: 2px;
+}
+
+.submenu-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.submenu-link i {
+    font-size: 16px;
+    width: 20px;
+}
+
+.submenu-link:hover {
+    background-color: var(--card-hover);
+    color: var(--text-primary);
+}
+
+.submenu-link.active {
+    background-color: rgba(241, 90, 45, 0.15);
+    color: var(--secondary-color);
+}
+
+.sidebar.collapsed .submenu {
+    display: none;
+}
+
+.sidebar.collapsed .submenu-arrow {
     display: none;
 }
 

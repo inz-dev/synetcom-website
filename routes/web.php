@@ -10,6 +10,7 @@ use App\Http\Controllers\PartnersController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\EmployesController;
+use App\Http\Controllers\SocialMediasController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Foundation\Application;
@@ -86,6 +87,14 @@ Route::get('/employes', [EmployesController::class, 'index'])->name('employes');
 Route::post('/employes', [EmployesController::class, 'store'])->name('employes.store');
 Route::put('/employes/{employe}', [EmployesController::class, 'update'])->name('employes.update');
 Route::delete('/employes/{employe}', [EmployesController::class, 'destroy'])->name('employes.destroy');
+
+// Réseaux sociaux — les routes fixes avant le wildcard {id}
+Route::get('/social-medias', [SocialMediasController::class, 'index'])->name('social-medias.index');
+Route::post('/social-medias/assign', [SocialMediasController::class, 'assignToEmployee'])->name('social-medias.assign');
+Route::post('/social-medias/remove', [SocialMediasController::class, 'removeFromEmployee'])->name('social-medias.remove');
+Route::post('/social-medias', [SocialMediasController::class, 'store'])->name('social-medias.store');
+Route::put('/social-medias/{id}', [SocialMediasController::class, 'update'])->name('social-medias.update');
+Route::delete('/social-medias/{id}', [SocialMediasController::class, 'destroy'])->name('social-medias.destroy');
 
 });
 

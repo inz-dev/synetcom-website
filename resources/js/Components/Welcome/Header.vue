@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 
+
 const props = defineProps({
     allPages: Array,
     errors:   Object,
@@ -24,6 +25,7 @@ const onScroll = () => { scrolled.value = window.scrollY > 60; };
 
 onMounted(() => {
     window.addEventListener('scroll', onScroll, { passive: true });
+    //console.log('allPages:',page.props.allPages)
 });
 onBeforeUnmount(() => {
     window.removeEventListener('scroll', onScroll);

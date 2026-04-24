@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Middleware;
+
+use App\Models\Pages;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
@@ -32,8 +34,33 @@ class HandleInertiaRequests extends Middleware
     {
         /*     $tests =Telephones::select('id_telephone')->orderBy('created_at', 'asc')->skip(2)->take(1)->get()[0]['id_telephone'];
  dd('$tests', $tests); */
+        $allPages = Pages::with(['sections' => function ($q) {
+            $q->with('cards');
+        }])->get()->map(fn($p) => [
+            'id_page' => $p->id_page,
+            'titre_page' => $p->titre_page,
+            'slogan_page' => $p->slogan_page,
+            'banniere_page' => $p->banniere_page,
+            'description_page' => $p->description_page,
+            'sections' => $p->sections->map(fn($s) => [
+                'id_section' => $s->id_section,
+                'nom_section' => $s->nom_section,
+                'description_section' => $s->description_section,
+                'icon_section' => $s->icon_section,
+                'is_link_section' => $s->is_link_section,
+                'cards' => $s->cards->map(fn($c) => [
+                    'id_card' => $c->id_card,
+                    'titre_card' => $c->titre_card,
+                    'description_card' => $c->description_card,
+                    'icon_card' => $c->icon_card,
+                    'titre_bouton_card' => $c->titre_bouton_card,
+                ])->values(),
+            ])->values(),
+        ])->values();
+        //dd(' $allPages: ',  $allPages);
         return [
             ...parent::share($request),
+            'allPages' => $allPages,
             'auth' => [
                 'user'  => $request->user(),
                 'roles' => $request->user() ? $request->user()->getRoleNames() : [],
