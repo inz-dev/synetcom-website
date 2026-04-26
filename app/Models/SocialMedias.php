@@ -43,10 +43,10 @@ public $incrementing=false;
     }
 
     public function telephones(){
-        return $this->belongsTo(\App\Models\telephones::class, 'id_telephone', 'id_telephone');
+        return $this->belongsTo(\App\Models\telephones::class);
     }
 
     public function emails(){
-        return $this->belongsTo(\App\Models\emails::class, 'id_email', 'id_email');
+        return $this->belongsTo(\App\Models\emails::class);
     }
 }
