@@ -4,7 +4,7 @@
     <footer class="footer">
         <small
             >&copy;{{ new Date().getFullYear() }}&nbsp; Copyright:
-            <a class="link-site" href="http://127.0.0.1:8000/"
+            <a class="link-site" href="/"
                 >Synetcom-niger</a
             >
             - Tous droits réservés</small
