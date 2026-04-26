@@ -41,10 +41,10 @@ RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available
 ENV PORT=10000
 EXPOSE 10000
 
-# Au démarrage : cache config, migrations, cache routes/vues, puis lance Apache
+# Au démarrage : config → migrate + seed → cache routes/vues → Apache
 CMD ["/bin/bash", "-c", \
     "php artisan config:cache && \
-     php artisan migrate --force && \
+     php artisan migrate --force --seed && \
      php artisan route:cache && \
      php artisan view:cache && \
      apache2-foreground"]

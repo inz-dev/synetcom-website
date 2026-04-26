@@ -2,10 +2,15 @@
 import Footer from "@/Components/Welcome/Footer.vue";
 import Header from "@/Components/Welcome/Header.vue";
 import { Head, Link } from "@inertiajs/vue3";
+import { onMounted } from "vue";
+
 
 const props = defineProps({
     members: { type: Array, default: () => [] },
 });
+onMounted(() => {
+    console.log('memebers:', props.members)
+})
 
 const SOCIAL_ICONS = {
     linkedin: {
