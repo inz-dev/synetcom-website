@@ -34,6 +34,33 @@ class Pages extends Model
         'banniere_page',
     ];
 
+    public static function forPage(string $titre): ?array
+    {
+        $page = static::where('titre_page', $titre)
+            ->with(['sections' => fn($q) => $q->with('cards')])
+            ->first();
+
+        if (!$page) return null;
+
+        return [
+            'titre_page'       => $page->titre_page,
+            'slogan_page'      => $page->slogan_page,
+            'description_page' => $page->description_page,
+            'banniere_page'    => $page->banniere_page,
+            'sections'         => $page->sections->map(fn($s) => [
+                'nom_section'         => $s->nom_section,
+                'description_section' => $s->description_section,
+                'icon_section'        => $s->icon_section,
+                'cards'               => $s->cards->map(fn($c) => [
+                    'titre_card'        => $c->titre_card,
+                    'description_card'  => $c->description_card,
+                    'icon_card'         => $c->icon_card,
+                    'titre_bouton_card' => $c->titre_bouton_card,
+                ])->values(),
+            ])->values(),
+        ];
+    }
+
     public function sections(): BelongsToMany
     {
         return $this->belongsToMany(Sections::class, 'pages_has_sections', 'id_page', 'id_section')

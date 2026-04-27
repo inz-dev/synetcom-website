@@ -4,10 +4,8 @@ import Header from "@/Components/Welcome/Header.vue";
 import { Head, Link } from "@inertiajs/vue3";
 
 const props = defineProps({
-    services: {
-        type: Array,
-        default: () => [],
-    },
+    services: { type: Array,   default: () => [] },
+    page:     { type: Object,  default: null },
 });
 </script>
 
@@ -27,7 +25,7 @@ const props = defineProps({
                 </nav>
                 <h1 class="hero-title">Nos Services<span class="accent">.</span></h1>
                 <p class="hero-sub">
-                    Des solutions numériques complètes pour accompagner votre croissance à chaque étape.
+                    {{ props.page?.slogan_page ?? 'Des solutions numériques complètes pour accompagner votre croissance à chaque étape.' }}
                 </p>
                 <Link href="/nous-contacter" class="hero-cta">
                     Obtenir un devis

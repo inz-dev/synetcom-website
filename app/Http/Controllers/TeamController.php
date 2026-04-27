@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pages;
 use App\Models\Team;
 use Inertia\Inertia;
 
@@ -32,6 +33,9 @@ class TeamController extends Controller
         ])
         ->values();
 
-        return Inertia::render('Equipe/Index', compact('members'));
+        return Inertia::render('Equipe/Index', [
+            'members' => $members,
+            'page'    => Pages::forPage('Équipe'),
+        ]);
     }
 }

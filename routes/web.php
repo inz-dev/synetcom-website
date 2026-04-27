@@ -32,19 +32,10 @@ use Inertia\Inertia;
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
 Route::get('/services', [ServicesController::class, 'index'])->name('services');
 Route::get('/partenaires', [PartnersController::class, 'index'])->name('partenaires');
-Route::get('/realisations', fn() => Inertia::render('Realisations/Index'))->name('realisations');
+Route::get('/realisations', fn() => Inertia::render('Realisations/Index', [
+    'page' => \App\Models\Pages::forPage('Réalisations'),
+]))->name('realisations');
 Route::get('/equipe', [TeamController::class, 'index'])->name('equipe');
-#Route::get('/users', [UserController::class, 'index'])->name('users');
-
-
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
 Route::resource('nous-contacter', NousContacterController::class);
 Route::resource('about-us', AboutUsController::class);
 Route::get('nous-contacter', [NousContacterController::class, 'index'])->name('nous-contacter');

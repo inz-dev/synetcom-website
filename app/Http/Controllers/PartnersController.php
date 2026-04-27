@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pages;
 use App\Models\Partners;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PartnersController extends Controller
 {
@@ -12,7 +14,9 @@ class PartnersController extends Controller
      */
     public function index()
     {
-        return \Inertia\Inertia::render('Partners/Index');
+        return Inertia::render('Partners/Index', [
+            'page' => Pages::forPage('Partenaires'),
+        ]);
     }
 
     /**

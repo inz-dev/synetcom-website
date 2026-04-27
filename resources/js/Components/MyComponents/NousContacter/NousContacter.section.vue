@@ -48,7 +48,12 @@ const directionsUrl = computed(() => {
 
 const toggleGPS = () => {
     if (gpsActive.value) {
-        if (watchId.value !== null) { navigator.geolocation.clearWatch(watchId.value); watchId.value = null; }
+        if (watchId.value !== null) {
+        // CleaWatch pour d"senregistrer les gestionnaires de surveillance
+        // watchID est le numéro d'identification renvoyé par la méthode Geolocation.watchPosition() lors de l'installation du gestionnaire qu'on veut supprimer.
+         navigator.geolocation.clearWatch(watchId.value);
+         watchId.value = null;
+          }
         gpsActive.value = false;
         gpsStatus.value = 'idle';
         position.value = null;

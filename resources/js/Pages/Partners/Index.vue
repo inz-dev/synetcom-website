@@ -3,6 +3,8 @@ import Footer from "@/Components/Welcome/Footer.vue";
 import Header from "@/Components/Welcome/Header.vue";
 import { Head, Link } from "@inertiajs/vue3";
 
+const props = defineProps({ page: { type: Object, default: null } });
+
 const partners = [
     {
         id: 1,
@@ -75,7 +77,7 @@ const stats = [
                 </nav>
                 <h1 class="hero-title">Nos Partenaires<span class="accent">.</span></h1>
                 <p class="hero-sub">
-                    Des organisations et entreprises qui nous font confiance pour accompagner leur transformation numérique.
+                    {{ props.page?.slogan_page ?? 'Des organisations et entreprises qui nous font confiance pour accompagner leur transformation numérique.' }}
                 </p>
             </div>
 

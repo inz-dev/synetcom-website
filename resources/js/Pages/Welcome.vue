@@ -1,9 +1,8 @@
 <script setup>
 import Index from "./HomePage/Index.vue";
+defineProps({ page: Object, canLogin: Boolean, canRegister: Boolean });
 </script>
 
 <template>
-  <Index />
+  <Index :page="page" />
 </template>
-
-<style></style>

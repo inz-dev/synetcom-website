@@ -4,6 +4,8 @@ import Header from "@/Components/Welcome/Header.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
 
+const props = defineProps({ page: { type: Object, default: null } });
+
 const categories = [
     { key: "all",      label: "Tous les projets" },
     { key: "apps",     label: "Applications" },
@@ -135,7 +137,7 @@ const categoryColors = {
                 </nav>
                 <h1 class="hero-title">Nos Réalisations<span class="accent">.</span></h1>
                 <p class="hero-sub">
-                    Découvrez une sélection de projets réalisés pour nos clients — applications, impressions et supports visuels.
+                    {{ props.page?.slogan_page ?? 'Découvrez une sélection de projets réalisés pour nos clients — applications, impressions et supports visuels.' }}
                 </p>
             </div>
             <div class="hero-stats">

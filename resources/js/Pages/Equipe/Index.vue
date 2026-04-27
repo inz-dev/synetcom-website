@@ -7,6 +7,7 @@ import { onMounted } from "vue";
 
 const props = defineProps({
     members: { type: Array, default: () => [] },
+    page:    { type: Object, default: null },
 });
 onMounted(() => {
     console.log('memebers:', props.members)
@@ -91,7 +92,7 @@ const values = [
                 </nav>
                 <h1 class="hero-title">Notre Équipe<span class="accent">.</span></h1>
                 <p class="hero-sub">
-                    Des professionnels passionnés qui unissent leurs expertises pour faire de votre transformation digitale une réussite.
+                    {{ props.page?.slogan_page ?? 'Des professionnels passionnés qui unissent leurs expertises pour faire de votre transformation digitale une réussite.' }}
                 </p>
             </div>
         </section>

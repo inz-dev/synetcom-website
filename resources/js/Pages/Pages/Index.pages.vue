@@ -44,6 +44,18 @@ const selectedSection = computed(() =>
     selectedPage.value?.sections?.find((s) => s.id_section === activeSectionId.value)
 );
 
+// ── Route publique par page ──────────────────────────────────────
+const pageRoutes = {
+    'Accueil':          '/',
+    'Qui sommes-nous?': '/about-us',
+    'Services':         '/services',
+    'Réalisations':     '/realisations',
+    'Équipe':           '/equipe',
+    'Partenaires':      '/partenaires',
+    'Contact':          '/nous-contacter',
+};
+const pagePublicUrl = (titre) => pageRoutes[titre] ?? null;
+
 // ── Page CRUD ────────────────────────────────────────────────────
 const dialogPage    = shallowRef(false);
 const isPageEditing = ref(false);
@@ -62,6 +74,7 @@ const openAddPage = () => {
 };
 
 const openEditPage = (page) => {
+    console.log('page from openEditPage:', page)
     formPage.id_page          = page.id_page;
     formPage.titre_page       = page.titre_page;
     formPage.slogan_page      = page.slogan_page      ?? "";
@@ -69,6 +82,8 @@ const openEditPage = (page) => {
     formPage.description_page = page.description_page ?? "";
     formPage.clearErrors();
     isPageEditing.value = true; dialogPage.value = true;
+
+    console.log('formPage from openEditPage:', formPage)
 };
 
 const savePage = () => {
@@ -76,6 +91,7 @@ const savePage = () => {
         formPage.put(route("pages.update", formPage.id_page), {
             onSuccess: () => { dialogPage.value = false; formPage.reset(); },
         });
+        console.log('formPage from savePage:', formPage)
     } else {
         formPage.post(route("pages.store"), {
             onSuccess: () => { dialogPage.value = false; formPage.reset(); },
@@ -301,6 +317,13 @@ const cardIcons = [
                             {{ totalCards }} carte{{ totalCards !== 1 ? 's' : '' }}
                         </span>
                         <div class="page-info-actions">
+                            <a v-if="pagePublicUrl(selectedPage.titre_page)"
+                               :href="pagePublicUrl(selectedPage.titre_page)"
+                               target="_blank"
+                               class="icon-btn icon-btn--view"
+                               title="Voir la page publique">
+                                <v-icon icon="mdi-open-in-new" size="14" />
+                            </a>
                             <button class="icon-btn icon-btn--edit" title="Modifier la page" @click="openEditPage(selectedPage)">
                                 <v-icon icon="mdi-pencil-outline" size="14" />
                             </button>
@@ -1199,6 +1222,8 @@ const cardIcons = [
     transition: all 0.13s;
     color: var(--text-secondary);
 }
+.icon-btn--view         { text-decoration: none; }
+.icon-btn--view:hover   { background: rgba(5,150,105,0.12); border-color: #059669; color: #059669; }
 .icon-btn--edit:hover   { background: rgba(27,68,156,0.12); border-color: #1b449c; color: #1b449c; }
 .icon-btn--delete:hover { background: rgba(231,76,60,0.12); border-color: #e74c3c; color: #e74c3c; }
 

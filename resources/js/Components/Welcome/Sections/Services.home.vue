@@ -5,9 +5,9 @@
             <!-- Header -->
             <div class="section-head">
                 <span class="section-eyebrow">Ce que nous faisons</span>
-                <h2 class="section-title">Nos Services</h2>
+                <h2 class="section-title">{{ section?.nom_section ?? 'Nos Services' }}</h2>
                 <p class="section-sub">
-                    Des solutions numériques complètes pour accompagner votre croissance à chaque étape.
+                    {{ section?.description_section ?? 'Des solutions numériques complètes pour accompagner votre croissance à chaque étape.' }}
                 </p>
             </div>
 
@@ -40,6 +40,8 @@
 
 <script setup>
 import { Link } from '@inertiajs/vue3';
+
+const props = defineProps({ section: { type: Object, default: null } });
 
 const services = [
     {

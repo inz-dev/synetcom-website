@@ -3,6 +3,9 @@ import Footer from "@/Components/Welcome/Footer.vue";
 import Header from "@/Components/Welcome/Header.vue";
 import NousContacterSection from "@/Components/MyComponents/NousContacter/NousContacter.section.vue";
 import { Head, Link } from "@inertiajs/vue3";
+
+const props = defineProps({ page: { type: Object, default: null } });
+
 </script>
 
 <template>
@@ -16,11 +19,11 @@ import { Head, Link } from "@inertiajs/vue3";
                 <nav class="breadcrumb">
                     <Link href="/" class="breadcrumb-link">Accueil</Link>
                     <span class="breadcrumb-sep">/</span>
-                    <span class="breadcrumb-current">Contact</span>
+                    <span class="breadcrumb-current">{{ page.titre_page??'Contact' }}</span>
                 </nav>
-                <h1 class="hero-title">Nous contacter<span class="accent">.</span></h1>
+                <h1 class="hero-title">{{ page?.description_page?? 'Nous contacter' }}<span class="accent">.</span></h1>
                 <p class="hero-sub">
-                    Une question, un projet, un devis ? Notre équipe vous répond dans les plus brefs délais.
+                    {{ page?.slogan_page ?? 'Une question, un projet, un devis ? Notre équipe vous répond dans les plus brefs délais.' }}
                 </p>
                 <div class="hero-badges">
                     <span class="badge">

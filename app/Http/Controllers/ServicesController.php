@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pages;
 use App\Models\Services;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -22,7 +23,10 @@ class ServicesController extends Controller
                 'departement' => $s->departements?->nom_departement,
             ]);
 
-        return Inertia::render('Services/Index', compact('services'));
+        return Inertia::render('Services/Index', [
+            'services' => $services,
+            'page'     => Pages::forPage('Services'),
+        ]);
     }
 
     public function create() {}

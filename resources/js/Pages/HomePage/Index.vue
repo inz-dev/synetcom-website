@@ -9,6 +9,14 @@ import ServicesHome from "@/Components/Welcome/Sections/Services.home.vue";
 import TeamHome from "@/Components/Welcome/Sections/Team.home.vue";
 import WhyChooseUsHome from "@/Components/Welcome/Sections/WhyChooseUs.home.vue";
 import { Head, Link } from "@inertiajs/vue3";
+
+const props = defineProps({ page: { type: Object, default: null } });
+
+const section = (name) =>
+    props.page?.sections?.find(s => s.nom_section === name) ?? null;
+
+const heroSlogan = props.page?.slogan_page
+    ?? 'Développez votre entreprise chaque jour avec la transformation numérique. Nous vous permettons de générer de la croissance grâce aux outils digitaux.';
 </script>
 
 <template>
@@ -16,10 +24,7 @@ import { Head, Link } from "@inertiajs/vue3";
 
     <Header>
         <BanierePage title="Synetcom" backgroundImage="/images/background1.png">
-            <p class="hero-sub">
-                Développez votre entreprise chaque jour avec la transformation numérique.<br />
-                Nous vous permettons de générer de la croissance grâce aux outils digitaux.
-            </p>
+            <p class="hero-sub">{{ heroSlogan }}</p>
 
             <div class="hero-cta-row">
                 <Link :href="route('services')" class="cta-primary">
@@ -54,12 +59,12 @@ import { Head, Link } from "@inertiajs/vue3";
         </BanierePage>
     </Header>
 
-    <ServicesHome />
-    <Portfolio />
-    <WhyChooseUsHome />
-    <TeamHome />
-    <NewsletterHome />
-    <PartenersHome />
+    <ServicesHome    :section="section('Nos Services')" />
+    <Portfolio       :section="section('Réalisations')" />
+    <WhyChooseUsHome :section="section('Pourquoi nous choisir')" />
+    <TeamHome        :section="section('Notre Équipe')" />
+    <NewsletterHome  :section="section('Newsletter')" />
+    <PartenersHome   :section="section('Nos Partenaires')" />
     <Footer />
 </template>
 

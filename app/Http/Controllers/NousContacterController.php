@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\NousContacter;
+use App\Models\Pages;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -15,8 +16,8 @@ class NousContacterController extends Controller
     {
         //
 
-           return Inertia::render('NousContacter/Index', [
-
+        return Inertia::render('NousContacter/Index', [
+            'page' => Pages::forPage('Contact'),
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AboutUs;
+use App\Models\Pages;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,8 +14,8 @@ class AboutUsController extends Controller
      */
     public function index()
     {
-         return Inertia::render('AboutUs/Index', [
-
+        return Inertia::render('AboutUs/Index', [
+            'page' => Pages::forPage('Qui sommes-nous?'),
         ]);
     }
 
