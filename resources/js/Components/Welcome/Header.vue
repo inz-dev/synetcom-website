@@ -20,6 +20,7 @@ const isServices     = computed(() => page.url.startsWith('/services'));
 const isRealisations = computed(() => page.url.startsWith('/realisations'));
 const isEquipe       = computed(() => page.url.startsWith('/equipe'));
 const isPartenaires  = computed(() => page.url.startsWith('/partenaires'));
+const isOpportunites= computed(() => page.url.startsWith('/opportunites'));
 
 const onScroll = () => { scrolled.value = window.scrollY > 60; };
 
@@ -56,11 +57,12 @@ const nav = (routeName) => {
                 <button class="h-link" :class="{ 'h-link--active': isRealisations }"
                         @click="nav('realisations')">Réalisations</button>
 
-                <button class="h-link" :class="{ 'h-link--active': isEquipe }"
-                        @click="nav('equipe')">Équipe</button>
 
                 <button class="h-link" :class="{ 'h-link--active': isPartenaires }"
                         @click="nav('partenaires')">Partenaires</button>
+
+                <button class="h-link" :class="{ 'h-link--active': isOpportunites }"
+                        @click="nav('opportunites')">Opportunités</button>
 
                 <button class="h-link" :class="{ 'h-link--active': isContact }"
                         @click="nav('nous-contacter')">Contact</button>
@@ -85,6 +87,7 @@ const nav = (routeName) => {
             <button class="m-link" :class="{ active: isRealisations }" @click="nav('realisations')">Réalisations</button>
             <button class="m-link" :class="{ active: isEquipe }"       @click="nav('equipe')">Équipe</button>
             <button class="m-link" :class="{ active: isPartenaires }"  @click="nav('partenaires')">Partenaires</button>
+            <button class="m-link" :class="{ active: isOpportunites }" @click="nav('opportunites')">Opportunités</button>
             <button class="m-link" :class="{ active: isContact }"      @click="nav('nous-contacter')">Contact</button>
             <div class="m-actions">
                 <button class="btn-login w-full" @click="nav('login')">Connexion</button>

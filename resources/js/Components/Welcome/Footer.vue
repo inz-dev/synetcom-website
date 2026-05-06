@@ -1,8 +1,15 @@
 <script setup>
-import { Link, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Link } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 
 const email = ref('');
+const organisme = computed(() => usePage().props.organisme);
+
+const formatPhone = (t) => `${t.code_telephone} ${String(t.telephone).match(/.{1,2}/g).join(' ')}`;
+const phonesDisplay = computed(() => organisme.value?.telephones?.map(formatPhone).join(' / ') ?? '');
+const firstPhone = computed(() => organisme.value?.telephones?.[0]);
+const firstPhoneHref = computed(() => firstPhone.value ? `tel:${firstPhone.value.code_telephone}${firstPhone.value.telephone}` : '#');
 
 const subscribe = () => {
     if (!email.value) return;
@@ -79,23 +86,25 @@ const subscribe = () => {
                                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
                                 </svg>
                             </span>
-                            <span>13743 Niamey-NIGER, Face Pharmacie Maisons économiques</span>
+                            <span>{{ organisme?.adresse_organisme }}</span>
                         </li>
-                        <li class="f-contact-item">
-                            <span class="contact-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
-                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
-                                </svg>
-                            </span>
-                            <a href="mailto:contact@synetcom.ne" class="f-contact-link">contact@synetcom.ne</a>
-                        </li>
-                        <li class="f-contact-item">
+                        <template v-for="em in organisme?.emails" :key="em.id_email">
+                            <li class="f-contact-item">
+                                <span class="contact-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                                    </svg>
+                                </span>
+                                <a :href="`mailto:${em.email}`" class="f-contact-link">{{ em.email }}</a>
+                            </li>
+                        </template>
+                        <li class="f-contact-item" v-if="phonesDisplay">
                             <span class="contact-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
                                     <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/>
                                 </svg>
                             </span>
-                            <a href="tel:+22790717476" class="f-contact-link">+227 90 71 74 76 / 88 88 88 11</a>
+                            <a :href="firstPhoneHref" class="f-contact-link">{{ phonesDisplay }}</a>
                         </li>
                     </ul>
 

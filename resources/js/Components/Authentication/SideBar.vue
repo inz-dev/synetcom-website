@@ -40,6 +40,8 @@ const allItems=[
         ]
     },
     {id:8, title:'Rapports', link:'reports', icon:'bi bi-shop', classActive:'',},
+    {id:12, title:'Opportunités', link:'opportunites-admin', icon:'bi bi-briefcase-fill', classActive:'',},
+    {id:13, title:'Organisme', link:'organisme', icon:'bi bi-building-fill', classActive:'',},
     {id:9, title:'Paramètres', link:'settings', icon:'bi bi-gear-fill', classActive:'', },
     {id:10, title:'Utilisateurs', link:'users', icon:'bi bi-people-fill', classActive:'', superAdminOnly: true },
     {id:11, title:'Déconnexion', link:'logout', icon:'bi bi-box-arrow-in-right', classActive:''}

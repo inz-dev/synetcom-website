@@ -1,5 +1,11 @@
 <script setup>
 import { computed, onUnmounted, ref } from 'vue';
+import { usePage } from '@inertiajs/vue3';
+
+const organisme = computed(() => usePage().props.organisme);
+const phonesDisplay = computed(() => organisme.value?.telephones?.map(t => `${t.code_telephone} ${String(t.telephone).match(/.{1,2}/g).join(' ')}`).join(' / ') ?? '');
+const firstPhone = computed(() => organisme.value?.telephones?.[0]);
+const firstEmail = computed(() => organisme.value?.emails?.[0]);
 
 /* ── Form state ─────────────────────────────────────────────── */
 const form = ref({ nom: '', email: '', telephone: '', sujet: '', message: '' });
@@ -121,10 +127,10 @@ onUnmounted(() => {
                                 </span>
                                 <div>
                                     <span class="info-label">Adresse</span>
-                                    <span class="info-value">Face Pharmacie Maisons économiques,<br>13743 Niamey, NIGER</span>
+                                    <span class="info-value">{{ organisme?.adresse_organisme }}</span>
                                 </div>
                             </li>
-                            <li class="info-item">
+                            <li class="info-item" v-if="phonesDisplay">
                                 <span class="info-icon">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
                                         <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/>
@@ -132,10 +138,10 @@ onUnmounted(() => {
                                 </span>
                                 <div>
                                     <span class="info-label">Téléphone</span>
-                                    <a href="tel:+22790717476" class="info-value info-link">+227 90 71 74 76 / 88 88 88 11</a>
+                                    <a :href="firstPhone ? `tel:${firstPhone.code_telephone}${firstPhone.telephone}` : '#'" class="info-value info-link">{{ phonesDisplay }}</a>
                                 </div>
                             </li>
-                            <li class="info-item">
+                            <li class="info-item" v-if="firstEmail">
                                 <span class="info-icon">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
                                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
@@ -143,7 +149,7 @@ onUnmounted(() => {
                                 </span>
                                 <div>
                                     <span class="info-label">Email</span>
-                                    <a href="mailto:chaibou.abdou@synetcom.dev" class="info-value info-link">chaibou.abdou@synetcom.dev</a>
+                                    <a :href="`mailto:${firstEmail.email}`" class="info-value info-link">{{ firstEmail.email }}</a>
                                 </div>
                             </li>
                             <li class="info-item">

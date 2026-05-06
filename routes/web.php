@@ -3,6 +3,8 @@
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\DepartementsController;
 use App\Http\Controllers\NousContacterController;
+use App\Http\Controllers\OpportunitesController;
+use App\Http\Controllers\OrganismesController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportsController;
@@ -36,6 +38,12 @@ Route::get('/realisations', fn() => Inertia::render('Realisations/Index', [
     'page' => \App\Models\Pages::forPage('Réalisations'),
 ]))->name('realisations');
 Route::get('/equipe', [TeamController::class, 'index'])->name('equipe');
+
+// Opportunités — public
+Route::get('/opportunites', [OpportunitesController::class, 'index'])->name('opportunites');
+Route::get('/opportunites/{id}', [OpportunitesController::class, 'show'])->name('opportunites.show');
+Route::post('/opportunites/{id}/postuler', [OpportunitesController::class, 'postuler'])->name('opportunites.postuler');
+
 Route::resource('nous-contacter', NousContacterController::class);
 Route::resource('about-us', AboutUsController::class);
 Route::get('nous-contacter', [NousContacterController::class, 'index'])->name('nous-contacter');
@@ -79,6 +87,23 @@ Route::get('/employes', [EmployesController::class, 'index'])->name('employes');
 Route::post('/employes', [EmployesController::class, 'store'])->name('employes.store');
 Route::put('/employes/{employe}', [EmployesController::class, 'update'])->name('employes.update');
 Route::delete('/employes/{employe}', [EmployesController::class, 'destroy'])->name('employes.destroy');
+
+// Opportunités — admin
+Route::get('/opportunites-admin', [OpportunitesController::class, 'adminIndex'])->name('opportunites-admin');
+Route::post('/opportunites-admin', [OpportunitesController::class, 'store'])->name('opportunites.store');
+Route::put('/opportunites-admin/{id}', [OpportunitesController::class, 'update'])->name('opportunites.update');
+Route::delete('/opportunites-admin/{id}', [OpportunitesController::class, 'destroy'])->name('opportunites.destroy');
+Route::put('/candidatures/{id}', [OpportunitesController::class, 'updateCandidature'])->name('candidatures.update');
+Route::get('/candidatures/{id}/cv', [OpportunitesController::class, 'viewCv'])->name('candidatures.cv');
+Route::get('/candidatures/{id}/cv/telecharger', [OpportunitesController::class, 'downloadCv'])->name('candidatures.cv.download');
+
+// Organisme
+Route::get('/organisme', [OrganismesController::class, 'index'])->name('organisme');
+Route::put('/organisme/{id}', [OrganismesController::class, 'update'])->name('organisme.update');
+Route::post('/organisme/telephones', [OrganismesController::class, 'storeTelephone'])->name('organisme.telephones.store');
+Route::delete('/organisme/telephones/{id}', [OrganismesController::class, 'destroyTelephone'])->name('organisme.telephones.destroy');
+Route::post('/organisme/emails', [OrganismesController::class, 'storeEmail'])->name('organisme.emails.store');
+Route::delete('/organisme/emails/{id}', [OrganismesController::class, 'destroyEmail'])->name('organisme.emails.destroy');
 
 // Réseaux sociaux — les routes fixes avant le wildcard {id}
 Route::get('/social-medias', [SocialMediasController::class, 'index'])->name('social-medias.index');
