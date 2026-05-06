@@ -67,15 +67,15 @@ const stats = [
     <Header>
         <!-- Hero -->
         <section class="page-hero">
-            <div class="hero-bg"></div>
+            <div class="hero-bg" :style="{ backgroundImage: `url(${page?.baniere_page ?? '/images/background1.png'})`}"></div>
             <div class="hero-overlay"></div>
             <div class="hero-content">
                 <nav class="breadcrumb">
                     <Link href="/" class="breadcrumb-link">Accueil</Link>
                     <span class="breadcrumb-sep">/</span>
-                    <span class="breadcrumb-current">Partenaires</span>
+                    <span class="breadcrumb-current">{{ page?.titre_page ?? 'Partenaires' }}</span>
                 </nav>
-                <h1 class="hero-title">Nos Partenaires<span class="accent">.</span></h1>
+                <h1 class="hero-title">{{page?.description_page?? 'Nos Partenaires' }}<span class="accent">.</span></h1>
                 <p class="hero-sub">
                     {{ props.page?.slogan_page ?? 'Des organisations et entreprises qui nous font confiance pour accompagner leur transformation numérique.' }}
                 </p>
@@ -192,7 +192,7 @@ const stats = [
 .hero-bg {
     position: absolute;
     inset: 0;
-    background-image: url('/images/background1.png');
+
     background-size: cover;
     background-position: center;
 }

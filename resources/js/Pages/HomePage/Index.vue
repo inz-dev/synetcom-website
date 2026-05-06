@@ -9,14 +9,20 @@ import ServicesHome from "@/Components/Welcome/Sections/Services.home.vue";
 import TeamHome from "@/Components/Welcome/Sections/Team.home.vue";
 import WhyChooseUsHome from "@/Components/Welcome/Sections/WhyChooseUs.home.vue";
 import { Head, Link } from "@inertiajs/vue3";
+import { onMounted } from "vue";
 
 const props = defineProps({ page: { type: Object, default: null } });
+
 
 const section = (name) =>
     props.page?.sections?.find(s => s.nom_section === name) ?? null;
 
 const heroSlogan = props.page?.slogan_page
     ?? 'Développez votre entreprise chaque jour avec la transformation numérique. Nous vous permettons de générer de la croissance grâce aux outils digitaux.';
+onMounted(() => {
+    console.log('from contact:', props.page)
+    console.log('from Home:', section('Nos Services'))
+})
 </script>
 
 <template>

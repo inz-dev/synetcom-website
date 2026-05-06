@@ -13,7 +13,7 @@ const props = defineProps({ page: { type: Object, default: null } });
 
     <Header>
         <section class="page-hero">
-            <div class="hero-bg"></div>
+            <div class="hero-bg" :style="{ backgroundImage: `url(${page?.banniere_page ?? '/images/background1.png'})`}"></div>
             <div class="hero-overlay"></div>
             <div class="hero-content">
                 <nav class="breadcrumb">
@@ -61,7 +61,7 @@ const props = defineProps({ page: { type: Object, default: null } });
 .hero-bg {
     position: absolute;
     inset: 0;
-    background-image: url('/images/background1.png');
+    /* url('/images/background1.png'); */
     background-size: cover;
     background-position: center;
 }

@@ -7,6 +7,7 @@ use App\Models\Pages;
 use App\Models\Sections;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Webpatser\Uuid\Uuid;
 
@@ -51,16 +52,23 @@ class PagesController extends Controller
         $request->validate([
             'titre_page'       => 'required|string|min:2',
             'slogan_page'      => 'nullable|string|max:255',
-            'banniere_page'    => 'nullable|string|max:255',
+            'banniere_page'    => 'nullable|image|max:5120',
             'description_page' => 'nullable|string',
         ], [
-            'titre_page.required' => 'Le titre de la page est obligatoire.',
+            'titre_page.required'  => 'Le titre de la page est obligatoire.',
+            'banniere_page.image'  => 'Le fichier doit être une image.',
+            'banniere_page.max'    => 'L\'image ne doit pas dépasser 5 Mo.',
         ]);
+
+        $bannierePath = null;
+        if ($request->hasFile('banniere_page')) {
+            $bannierePath = $this->storeBannerFile($request->file('banniere_page'));
+        }
 
         Pages::create([
             'titre_page'       => $request->titre_page,
             'slogan_page'      => $request->slogan_page,
-            'banniere_page'    => $request->banniere_page,
+            'banniere_page'    => $bannierePath,
             'description_page' => $request->description_page,
         ]);
 
@@ -77,16 +85,23 @@ class PagesController extends Controller
         $request->validate([
             'titre_page'       => 'required|string|min:2',
             'slogan_page'      => 'nullable|string|max:255',
-            'banniere_page'    => 'nullable|string|max:255',
+            'banniere_page'    => 'nullable|image|max:5120',
             'description_page' => 'nullable|string',
         ], [
-            'titre_page.required' => 'Le titre de la page est obligatoire.',
+            'titre_page.required'  => 'Le titre de la page est obligatoire.',
+            'banniere_page.image'  => 'Le fichier doit être une image.',
+            'banniere_page.max'    => 'L\'image ne doit pas dépasser 5 Mo.',
         ]);
+
+        $bannierePath = $record->banniere_page;
+        if ($request->hasFile('banniere_page')) {
+            $bannierePath = $this->storeBannerFile($request->file('banniere_page'));
+        }
 
         $record->update([
             'titre_page'       => $request->titre_page,
             'slogan_page'      => $request->slogan_page,
-            'banniere_page'    => $request->banniere_page,
+            'banniere_page'    => $bannierePath,
             'description_page' => $request->description_page,
         ]);
 
@@ -94,6 +109,17 @@ class PagesController extends Controller
             'message' => 'Page mise à jour avec succès !',
             'type'    => 'success',
         ]);
+    }
+
+    private function storeBannerFile($file): string
+    {
+        $dir = public_path('images/bannieres');
+        if (!is_dir($dir)) {
+            mkdir($dir, 0775, true);
+        }
+        $filename = 'page_' . time() . '_' . Str::random(6) . '.' . $file->getClientOriginalExtension();
+        $file->move($dir, $filename);
+        return '/images/bannieres/' . $filename;
     }
 
     public function destroy($page)

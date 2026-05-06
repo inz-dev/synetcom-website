@@ -62,5 +62,8 @@ class DatabaseSeeder extends Seeder
         if (DB::table('teams')->count() === 0) {
             $this->call(TeamSeeder::class);
         }
+        if (DB::table('partenaires')->count() === 0) {
+            $this->call(PartnersSeeder::class);
+        }
     }
 }

@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('partenaires', function (Blueprint $table) {
             $table->uuid('id_partenaire')->primary()->unique();
             $table->string('nom_partenaire');
+                        $table->string('secteur_color_partenaire')->nullable();
+                                    $table->string('secteur_partenaire')->nullable();
             $table->string('logo_partenaire')->nullable();
             $table->string('lien_partenaire')->nullable();
             $table->string('description_partenaire')->nullable();

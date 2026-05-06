@@ -25,6 +25,8 @@ class Partenaires extends Model
     protected $fillable = [
         'id_partenaire',
         'nom_partenaire',
+        'secteur_partenaire',
+        'secteur_color_partenaire',
         'logo_partenaire',
         'lien_partenaire',
         'description_partenaire',

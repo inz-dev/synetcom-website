@@ -39,9 +39,20 @@
 </template>
 
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
 
-const props = defineProps({ section: { type: Object, default: null } });
+const page = usePage();
+
+const section=page.props.section
+
+
+
+
+onMounted(() => {
+    console.log('from services:', page.props.allPages)
+})
+
 
 const services = [
     {

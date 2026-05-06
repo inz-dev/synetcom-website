@@ -60,43 +60,68 @@ const pagePublicUrl = (titre) => pageRoutes[titre] ?? null;
 const dialogPage    = shallowRef(false);
 const isPageEditing = ref(false);
 
+const bannerPreview = ref(null);
+const fileInputRef  = ref(null);
+
 const formPage = useForm({
+    _method:          'post',
     id_page:          null,
     titre_page:       "",
     slogan_page:      "",
-    banniere_page:    "",
+    banniere_page:    null,
     description_page: "",
 });
 
 const openAddPage = () => {
-    formPage.reset(); formPage.clearErrors();
-    isPageEditing.value = false; dialogPage.value = true;
+    formPage.reset();
+    formPage._method = 'post';
+    formPage.clearErrors();
+    bannerPreview.value = null;
+    isPageEditing.value = false;
+    dialogPage.value = true;
 };
 
 const openEditPage = (page) => {
-    console.log('page from openEditPage:', page)
     formPage.id_page          = page.id_page;
+    formPage._method          = 'put';
     formPage.titre_page       = page.titre_page;
     formPage.slogan_page      = page.slogan_page      ?? "";
-    formPage.banniere_page    = page.banniere_page    ?? "";
+    formPage.banniere_page    = null;
     formPage.description_page = page.description_page ?? "";
     formPage.clearErrors();
-    isPageEditing.value = true; dialogPage.value = true;
+    bannerPreview.value = page.banniere_page ?? null;
+    isPageEditing.value = true;
+    dialogPage.value = true;
+};
 
-    console.log('formPage from openEditPage:', formPage)
+const handleBannerFile = (e) => {
+    const file = e.target?.files?.[0] ?? e.dataTransfer?.files?.[0];
+    if (!file) return;
+    formPage.banniere_page = file;
+    bannerPreview.value = URL.createObjectURL(file);
+};
+
+const handleBannerDrop = (e) => {
+    handleBannerFile(e);
+};
+
+const clearBanner = () => {
+    formPage.banniere_page = null;
+    bannerPreview.value = null;
+    if (fileInputRef.value) fileInputRef.value.value = '';
 };
 
 const savePage = () => {
-    if (isPageEditing.value) {
-        formPage.put(route("pages.update", formPage.id_page), {
-            onSuccess: () => { dialogPage.value = false; formPage.reset(); },
-        });
-        console.log('formPage from savePage:', formPage)
-    } else {
-        formPage.post(route("pages.store"), {
-            onSuccess: () => { dialogPage.value = false; formPage.reset(); },
-        });
-    }
+    const url = isPageEditing.value
+        ? route("pages.update", formPage.id_page)
+        : route("pages.store");
+    formPage.post(url, {
+        onSuccess: () => {
+            dialogPage.value = false;
+            formPage.reset();
+            bannerPreview.value = null;
+        },
+    });
 };
 
 // ── Page delete ──────────────────────────────────────────────────
@@ -517,9 +542,40 @@ const cardIcons = [
                             placeholder="Ex : Développer votre entreprise avec le numérique" />
                     </div>
                     <div class="field-group mt-3">
-                        <label class="field-label">Bannière <span class="form-hint-inline">(chemin ou URL de l'image)</span></label>
-                        <input v-model="formPage.banniere_page" type="text" class="field-input"
-                            placeholder="Ex : /images/background1.png" />
+                        <label class="field-label">Bannière</label>
+                        <div
+                            class="banner-upload-zone"
+                            :class="{ 'banner-upload-zone--has-image': bannerPreview }"
+                            @click="fileInputRef.click()"
+                            @dragover.prevent
+                            @drop.prevent="handleBannerDrop"
+                        >
+                            <template v-if="bannerPreview">
+                                <img :src="bannerPreview" class="banner-preview-img" alt="Aperçu bannière" />
+                                <div class="banner-overlay">
+                                    <span class="banner-change-hint">
+                                        <v-icon icon="mdi-image-edit-outline" size="16" />
+                                        Changer l'image
+                                    </span>
+                                    <button type="button" class="banner-clear-btn" @click.stop="clearBanner">
+                                        <v-icon icon="mdi-close-circle" size="18" />
+                                    </button>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <v-icon icon="mdi-image-plus-outline" size="36" style="color:#94a3b8" />
+                                <p class="upload-hint">Cliquez ou glissez une image ici</p>
+                                <p class="upload-hint-sub">PNG, JPG, WebP · max 5 Mo</p>
+                            </template>
+                        </div>
+                        <input
+                            ref="fileInputRef"
+                            type="file"
+                            accept="image/*"
+                            style="display:none"
+                            @change="handleBannerFile"
+                        />
+                        <span v-if="formPage.errors.banniere_page" class="field-error">{{ formPage.errors.banniere_page }}</span>
                     </div>
                     <div class="field-group mt-3">
                         <label class="field-label">Description</label>
@@ -1351,6 +1407,76 @@ const cardIcons = [
 .field-input--error { border-color: #e74c3c !important; }
 .field-textarea { resize: vertical; }
 .field-error { font-size: 11px; color: #e74c3c; margin-top: 4px; }
+
+/* ── Banner upload zone ─────────────────────────────────────────── */
+.banner-upload-zone {
+    position: relative;
+    border: 2px dashed var(--border-color);
+    border-radius: 10px;
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    overflow: hidden;
+    background: var(--dark-bg);
+}
+.banner-upload-zone:hover {
+    border-color: #1b449c;
+    background: rgba(27,68,156,0.04);
+}
+.banner-upload-zone--has-image {
+    border-style: solid;
+    min-height: 130px;
+}
+.banner-preview-img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    display: block;
+}
+.banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.banner-upload-zone:hover .banner-overlay { opacity: 1; }
+.banner-change-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+}
+.banner-clear-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0,0,0,0.55);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.15s;
+}
+.banner-clear-btn:hover { background: rgba(231,76,60,0.85); }
+.upload-hint     { font-size: 13px; color: var(--text-secondary); margin: 0; }
+.upload-hint-sub { font-size: 11px; color: var(--text-muted, #94a3b8); margin: 0; }
 
 .btn-cancel {
     padding: 7px 16px;
