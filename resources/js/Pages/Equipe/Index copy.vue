@@ -149,7 +149,30 @@ const values = [
                         <p class="member-bio">{{ member.bio }}</p>
                     </div>
 
-
+                    <!-- Socials -->
+                    <div class="member-footer">
+                        <a
+                            v-for="social in member.socials"
+                            :key="social.nom"
+                            :href="getSocialHref(social)"
+                            :aria-label="social.nom"
+                            class="member-social"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            <svg viewBox="0 0 24 24" width="16" height="16"
+                                 :fill="getSocialIcon(social.nom).type === 'fill' ? 'currentColor' : 'none'"
+                                 :stroke="getSocialIcon(social.nom).type === 'stroke' ? 'currentColor' : 'none'"
+                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <template v-if="getSocialIcon(social.nom).type === 'fill'">
+                                    <path :d="getSocialIcon(social.nom).path" />
+                                </template>
+                                <template v-else>
+                                    <path v-for="(p, i) in getSocialIcon(social.nom).paths" :key="i" :d="p" />
+                                </template>
+                            </svg>
+                        </a>
+                    </div>
 
                 </article>
             </div>

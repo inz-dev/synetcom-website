@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 
 const props = defineProps({
     organisme:  { type: Object, default: null },
@@ -57,6 +57,10 @@ const formatTel = (t) => {
     const parts = s.match(/.{1,2}/g) ?? [s];
     return `${t.code_telephone} ${parts.join(' ')}`;
 };
+
+onMounted(() => {
+    console.log('telephones:', props.telephones)
+})
 </script>
 
 <template>
