@@ -1,10 +1,15 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
+import { ref, computed , onMounted} from 'vue';
 import { usePage } from '@inertiajs/vue3';
 
 const email = ref('');
 const organisme = computed(() => usePage().props.organisme);
+onMounted(() => {
+    console.log(('organisme: ', organisme))
+
+})
+
 
 const formatPhone = (t) => `${t.code_telephone} ${String(t.telephone).match(/.{1,2}/g).join(' ')}`;
 const phonesDisplay = computed(() => organisme.value?.telephones?.map(formatPhone).join(' / ') ?? '');

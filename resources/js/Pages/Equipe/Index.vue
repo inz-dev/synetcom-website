@@ -149,7 +149,26 @@ const values = [
                         <p class="member-bio">{{ member.bio }}</p>
                     </div>
 
-
+                    <!-- Socials -->
+                    <div v-if="member.socials?.length" class="member-footer">
+                        <a v-for="social in member.socials" :key="social.nom"
+                           :href="getSocialHref(social)"
+                           target="_blank" rel="noopener noreferrer"
+                           :aria-label="social.nom"
+                           class="member-social">
+                            <template v-if="getSocialIcon(social.nom)?.type === 'fill'">
+                                <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                                    <path :d="getSocialIcon(social.nom).path" />
+                                </svg>
+                            </template>
+                            <template v-else>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                     stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                                    <path v-for="(d, i) in getSocialIcon(social.nom).paths" :key="i" :d="d" />
+                                </svg>
+                            </template>
+                        </a>
+                    </div>
 
                 </article>
             </div>
@@ -175,8 +194,8 @@ const values = [
                     </p>
                 </div>
                 <div class="cta-actions">
-                    <Link href="/nous-contacter" class="btn-primary">Candidater</Link>
-                    <Link href="/nous-contacter" class="btn-ghost">Nous contacter</Link>
+                    <Link :href="route('opportunites')" class="btn-primary">Voir les offres</Link>
+                    <Link :href="route('nous-contacter')" class="btn-ghost">Nous contacter</Link>
                 </div>
             </div>
         </div>
