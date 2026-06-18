@@ -5,6 +5,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Webpatser\Uuid\Uuid;
 
 class Organismes extends Model
@@ -39,9 +40,12 @@ class Organismes extends Model
         return $this->hasMany(Client::class, 'id_organisme', 'id_organisme');
     }
 
-    public function socialMedias(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+
+
+    public function socialMedias(): BelongsToMany
     {
-        return $this->belongsToMany(SocialMedias::class, 'organisme_has_social_medias', 'id_organisme', 'id_social_media')
+        return $this->belongsToMany(SocialMedias::class,'organisme_has_social_medias', 'id_organisme', 'id_social_media')
+                    ->withPivot(['actif_organisme_has_social_media'])
                     ->withTimestamps();
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\DepartementsController;
 use App\Http\Controllers\NousContacterController;
 use App\Http\Controllers\OpportunitesController;
@@ -104,6 +105,12 @@ Route::post('/organisme/telephones', [OrganismesController::class, 'storeTelepho
 Route::delete('/organisme/telephones/{id}', [OrganismesController::class, 'destroyTelephone'])->name('organisme.telephones.destroy');
 Route::post('/organisme/emails', [OrganismesController::class, 'storeEmail'])->name('organisme.emails.store');
 Route::delete('/organisme/emails/{id}', [OrganismesController::class, 'destroyEmail'])->name('organisme.emails.destroy');
+Route::post('/organisme/{id}/logo', [OrganismesController::class, 'updateLogo'])->name('organisme.logo.update');
+
+// Médiathèque
+Route::get('/medias', [MediaController::class, 'index'])->name('medias');
+Route::post('/medias', [MediaController::class, 'store'])->name('medias.store');
+Route::delete('/medias/{filename}', [MediaController::class, 'destroy'])->name('medias.destroy');
 
 // Réseaux sociaux — les routes fixes avant le wildcard {id}
 Route::get('/social-medias', [SocialMediasController::class, 'index'])->name('social-medias.index');

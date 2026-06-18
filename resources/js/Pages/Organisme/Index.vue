@@ -1,24 +1,36 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
-import { ref,onMounted } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps({
-    organisme:  { type: Object, default: null },
-    telephones: { type: Array,  default: () => [] },
-    emails:     { type: Array,  default: () => [] },
+    organisme: { type: Array, default: () => [] },
 });
+
+const org = computed(() => props.organisme?.[0] ?? null);
+
+const telephones = computed(() =>
+    (org.value?.social_medias ?? [])
+        .filter(sm => sm.telephone)
+        .map(sm => sm.telephone)
+);
+
+const emails = computed(() =>
+    (org.value?.social_medias ?? [])
+        .filter(sm => sm.email)
+        .map(sm => sm.email)
+);
 
 // ── Infos générales ──────────────────────────────────────────────────────────
 const infoForm = useForm({
-    nom_organisme:      props.organisme?.nom_organisme      ?? '',
-    adresse_organisme:  props.organisme?.adresse_organisme  ?? '',
-    slogan_organisme:   props.organisme?.slogan_organisme   ?? '',
-    lien_map_organisme: props.organisme?.lien_map_organisme ?? '',
+    nom_organisme:      org.value?.nom_organisme      ?? '',
+    adresse_organisme:  org.value?.adresse_organisme  ?? '',
+    slogan_organisme:   org.value?.slogan_organisme   ?? '',
+    lien_map_organisme: org.value?.lien_map_organisme ?? '',
 });
 
 const saveInfo = () => {
-    infoForm.put(route('organisme.update', props.organisme.id_organisme));
+    infoForm.put(route('organisme.update', org.value.id_organisme));
 };
 
 // ── Téléphones ───────────────────────────────────────────────────────────────
@@ -51,16 +63,29 @@ const deleteEmail = (id) => {
     }
 };
 
+// ── Logo ─────────────────────────────────────────────────────────────────────
+const logoForm  = useForm({ logo: null });
+const logoPreview = ref(org.value?.logo_organisme ?? null);
+
+const onLogoChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    logoForm.logo = file;
+    logoPreview.value = URL.createObjectURL(file);
+};
+
+const saveLogo = () => {
+    logoForm.post(route('organisme.logo.update', org.value.id_organisme), {
+        onSuccess: () => logoForm.reset('logo'),
+    });
+};
+
 // ── Helpers ──────────────────────────────────────────────────────────────────
 const formatTel = (t) => {
     const s = String(t.telephone).replace(/\D/g, '');
     const parts = s.match(/.{1,2}/g) ?? [s];
     return `${t.code_telephone} ${parts.join(' ')}`;
 };
-
-onMounted(() => {
-    console.log('telephones:', props.telephones)
-})
 </script>
 
 <template>
@@ -73,6 +98,33 @@ onMounted(() => {
                     <h1><i class="bi bi-building-fill"></i> Organisme</h1>
                     <p>Configurez les informations de Synetcom affichées sur le site (pied de page, page contact).</p>
                 </div>
+            </div>
+
+            <!-- ── Logo ── -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="bi bi-image-fill"></i> Logo
+                </div>
+                <form @submit.prevent="saveLogo" class="card-body logo-body">
+                    <div class="logo-preview-wrap">
+                        <img v-if="logoPreview" :src="logoPreview" alt="Logo" class="logo-preview" />
+                        <div v-else class="logo-placeholder">
+                            <i class="bi bi-building"></i>
+                        </div>
+                    </div>
+                    <div class="logo-actions">
+                        <label class="btn-file">
+                            <i class="bi bi-upload"></i> Choisir un fichier
+                            <input type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" @change="onLogoChange" hidden />
+                        </label>
+                        <span class="form-hint">PNG, JPG, SVG ou WEBP · max 2 Mo</span>
+                        <span v-if="logoForm.errors.logo" class="field-error">{{ logoForm.errors.logo }}</span>
+                        <button type="submit" class="btn-save" :disabled="!logoForm.logo || logoForm.processing">
+                            <i class="bi bi-check-lg"></i>
+                            {{ logoForm.processing ? 'Enregistrement…' : 'Enregistrer le logo' }}
+                        </button>
+                    </div>
+                </form>
             </div>
 
             <!-- ── Infos générales ── -->
@@ -119,7 +171,6 @@ onMounted(() => {
                     <span class="count-badge">{{ telephones.length }}</span>
                 </div>
                 <div class="card-body">
-                    <!-- Liste -->
                     <div v-if="telephones.length" class="contacts-list">
                         <div v-for="t in telephones" :key="t.id_telephone" class="contact-row">
                             <div class="contact-icon-wrap"><i class="bi bi-telephone-fill"></i></div>
@@ -134,7 +185,6 @@ onMounted(() => {
                     </div>
                     <p v-else class="empty-hint">Aucun numéro enregistré.</p>
 
-                    <!-- Ajouter -->
                     <form @submit.prevent="addTel" class="add-form">
                         <select v-model="telForm.code_telephone" class="code-select">
                             <option>+227</option>
@@ -166,10 +216,9 @@ onMounted(() => {
                     <span class="count-badge">{{ emails.length }}</span>
                 </div>
                 <div class="card-body">
-                    <!-- Liste -->
                     <div v-if="emails.length" class="contacts-list">
                         <div v-for="e in emails" :key="e.id_email" class="contact-row">
-                            <div class="contact-icon-wrap"><i class="bi bi-envelope-fill"></i></div>
+                            <div class="contact-icon-wrap email-icon"><i class="bi bi-envelope-fill"></i></div>
                             <span class="contact-value">{{ e.email }}</span>
                             <a :href="`mailto:${e.email}`" class="contact-link" target="_blank">
                                 <i class="bi bi-box-arrow-up-right"></i>
@@ -181,7 +230,6 @@ onMounted(() => {
                     </div>
                     <p v-else class="empty-hint">Aucune adresse email enregistrée.</p>
 
-                    <!-- Ajouter -->
                     <form @submit.prevent="addEmail" class="add-form">
                         <input
                             v-model="emailForm.email"
@@ -198,7 +246,7 @@ onMounted(() => {
                 </div>
             </div>
 
-            <!-- Aperçu pied de page -->
+            <!-- ── Aperçu pied de page ── -->
             <div class="card preview-card">
                 <div class="card-header">
                     <i class="bi bi-eye-fill"></i> Aperçu pied de page
@@ -331,6 +379,10 @@ onMounted(() => {
     display: flex; align-items: center; justify-content: center;
     color: #3498db; font-size: 14px;
 }
+.contact-icon-wrap.email-icon {
+    background: rgba(241,90,45,.12);
+    color: #f15a2d;
+}
 .contact-value { flex: 1; font-size: 14px; color: var(--text-primary); font-weight: 500; }
 .contact-link {
     color: var(--text-secondary);
@@ -391,10 +443,35 @@ onMounted(() => {
 .btn-add:hover:not(:disabled) { background: #2d5cc8; }
 .btn-add:disabled { opacity: .65; cursor: not-allowed; }
 
+/* Logo */
+.logo-body { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+.logo-preview-wrap {
+    width: 120px; height: 120px; flex-shrink: 0;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: var(--dark-bg);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+}
+.logo-preview { width: 100%; height: 100%; object-fit: contain; padding: 8px; }
+.logo-placeholder { font-size: 40px; color: var(--text-secondary); opacity: .4; }
+.logo-actions { display: flex; flex-direction: column; gap: 10px; }
+.btn-file {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 9px 18px;
+    background: var(--dark-bg);
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: border-color .2s;
+    width: fit-content;
+}
+.btn-file:hover { border-color: #1b449c; color: #3498db; }
+
 /* Preview */
 .preview-card { border-color: rgba(241,90,45,.25); }
 .preview-body { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.preview-block {}
 .preview-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text-secondary); margin-bottom: 6px; }
 .preview-value { font-size: 14px; color: var(--text-primary); line-height: 1.5; }
 .text-muted { color: var(--text-secondary); }

@@ -29,6 +29,7 @@ const allItems=[
     {id:1, title:'Dashboard', link:'dashboard', icon:'bi bi-grid-fill', classActive:'', },
     {id:2, title:'Mon profil', link:'profile', icon:'bi bi-receipt', classActive:'', },
     {id:3, title:'Pages', link:'pages', icon:'bi bi-credit-card-fill', classActive:'', },
+    {id:14, title:'Médiathèque', link:'medias', icon:'bi bi-images', classActive:'', },
     {id:4, title:'Configurations', link:'setups', icon:'bi bi-people-fill', classActive:'',},
     {id:5, title:'Départements', link:'departements', icon:'bi bi-bicycle', classActive:'', },
     {id:6, title:'Projets', link:'projects', icon:'bi bi-bar-chart-fill', classActive:'', },

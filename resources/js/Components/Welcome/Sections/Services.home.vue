@@ -20,8 +20,8 @@
                             <component :is="'path'" v-for="(d,i) in item.paths" :key="i" :d="d" />
                         </svg>
                     </div>
-                    <h3 class="card-title">{{ item.title }}</h3>
-                    <p class="card-desc">{{ item.desc }}</p>
+                    <h3 class="card-title">{{ item.nom_service }}</h3>
+                    <p class="card-desc">{{ item.description_service }}</p>
                     <Link :href="route('services')" class="card-link">
                         Lire plus
                         <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14">
@@ -40,21 +40,22 @@
 
 <script setup>
 import { Link, usePage } from '@inertiajs/vue3';
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 
 const page = usePage();
-
 const section=page.props.section
+const deptServices=page.props.deptServices
 
-
-
-
+const allServices = computed(() =>
+    deptServices.flatMap(d => (d.services ?? []).map(s => ({ ...s, departement: d.nom_departement })))
+);
 onMounted(() => {
-    console.log('from services:', page.props.allPages)
+    //console.log('TEST:', allServices.value.slice(0,9))
+    //console.log('from services:', deptServices)
 })
 
-
-const services = [
+const services=allServices.value.slice(0,9)
+/* const services = [
     {
         id: 1,
         title: "Développement & Intégration Digitale",
@@ -118,7 +119,7 @@ const services = [
         color: "#1b449c",
         paths: ["M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"]
     },
-];
+]; */
 </script>
 
 <style scoped>

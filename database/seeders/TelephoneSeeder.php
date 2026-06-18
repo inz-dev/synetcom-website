@@ -15,11 +15,11 @@ class TelephoneSeeder extends Seeder
     {
         //
         Telephones::create(['telephone'=>'88888811']);
-        Telephones::create(['telephone'=>'88623669']);
-        Telephones::create(['telephone'=>'98241842']);
-        Telephones::create(['telephone'=>'87897887']);
-        Telephones::create(['telephone'=>'74276607 ']);
-        Telephones::create(['telephone'=>'96952213']);
+        Telephones::create(['telephone'=>'88623669']);//LAWALI
+        Telephones::create(['telephone'=>'98241842']);//ISMAEIL
+        Telephones::create(['telephone'=>'87897887']);//ABOU
+        Telephones::create(['telephone'=>'74276607 ']);// ABDUL
+        Telephones::create(['telephone'=>'96952213']); //ZAKARI
 
     }
 }

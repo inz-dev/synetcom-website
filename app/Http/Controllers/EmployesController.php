@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Carbon;
 
 class EmployesController extends Controller
 {
@@ -26,7 +27,7 @@ class EmployesController extends Controller
             $guestPerm = Permission::firstOrCreate(['name' => 'guest', 'guard_name' => 'web']);
             $employeRole->givePermissionTo($guestPerm);
         }
-
+$test=Employes::all();
         $employes = Employes::with(['latestPoste.departements', 'user.roles', 'socialMedias.telephones', 'socialMedias.emails'])
             ->get()
             ->map(fn($e) => [
@@ -34,7 +35,7 @@ class EmployesController extends Controller
                 'nom_employe'           => $e->nom_employe,
                 'profil_employe'        => $e->profil_employe,
                 'adresse_employe'       => $e->adresse_employe,
-                'date_embauche_employe' => optional($e->date_embauche_employe)->format('Y-m-d'),
+                'date_embauche_employe' =>Carbon::parse($e->date_embauche_employe)->format('d/m/Y'),
                 'type_contrat'          => $e->type_contrat,
                 'poste'                 => $e->latestPoste ? [
                     'id_poste'         => $e->latestPoste->id_poste,
@@ -48,6 +49,7 @@ class EmployesController extends Controller
                     'roles' => $e->user->getRoleNames()->values(),
                 ] : null,
                 'social_medias' => $e->socialMedias->map(fn($sm) => [
+
                     'id_social_media'   => $sm->id_social_media,
                     'nom_social_media'  => $sm->nom_social_media,
                     'lien_social_media' => $sm->lien_social_media,
@@ -166,6 +168,7 @@ class EmployesController extends Controller
             'date_embauche_employe' => $request->date_embauche_employe,
             'type_contrat'          => $request->type_contrat,
         ]);
+dump('emp from update:', $employe);
 
         if ($request->nom_poste && $request->id_departement) {
             $latest = $employe->fresh()->latestPoste;
@@ -186,7 +189,8 @@ class EmployesController extends Controller
                 ]);
             }
         }
-
+        dump('request:', $request);
+dd("fin");
         if ($request->boolean('creer_compte') && !$employe->user_id) {
             $user = $this->createEmployeeAccount($employe, $request->role_employe ?? 'Employé');
             $employe->update(['user_id' => $user->id_user]);

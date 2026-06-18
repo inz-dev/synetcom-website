@@ -56,6 +56,63 @@ const pageRoutes = {
 };
 const pagePublicUrl = (titre) => pageRoutes[titre] ?? null;
 
+// ── Sources dédiées (contenu géré par un dashboard séparé) ───────
+const dedicatedSources = {
+    'Services': {
+        'Introduction':   { label: 'Départements & Services', adminRoute: route('departements'), icon: 'mdi-briefcase-outline' },
+        'Nos Services':   { label: 'Départements & Services', adminRoute: route('departements'), icon: 'mdi-briefcase-outline' },
+    },
+    'Accueil': {
+        'Nos Services':    { label: 'Départements & Services', adminRoute: route('departements'), icon: 'mdi-briefcase-outline' },
+        'Réalisations':    { label: 'Réalisations',            adminRoute: route('realisations'), icon: 'mdi-image-outline' },
+        'Notre Équipe':    { label: 'Équipe',                  adminRoute: route('employes'),     icon: 'mdi-account-group-outline' },
+        'Nos Partenaires': { label: 'Partenaires',             adminRoute: route('partenaires'),  icon: 'mdi-handshake-outline' },
+    },
+    'Réalisations': {
+        'Nos Projets': { label: 'Réalisations', adminRoute: route('realisations'), icon: 'mdi-image-outline' },
+    },
+    'Équipe': {
+        'Notre Équipe': { label: 'Équipe', adminRoute: route('employes'), icon: 'mdi-account-group-outline' },
+    },
+    'Partenaires': {
+        'Nos Partenaires': { label: 'Partenaires', adminRoute: route('partenaires'), icon: 'mdi-handshake-outline' },
+    },
+};
+
+const sectionDedicatedSource = computed(() => {
+    if (!selectedPage.value || !selectedSection.value) return null;
+    return dedicatedSources[selectedPage.value.titre_page]?.[selectedSection.value.nom_section] ?? null;
+});
+
+// ── Hints contextuels pour sections spéciales ─────────────────────
+const sectionHints = {
+    'Accueil': {
+        'Chiffres clés': {
+            icon: 'mdi-counter',
+            color: '#1b449c',
+            lines: [
+                'Chaque carte représente un chiffre affiché dans la bande de statistiques du héro.',
+                '• Titre de la carte → valeur ("50+", "100+", "24/7")',
+                '• Description → libellé ("Clients satisfaits", "Projets livrés"…)',
+            ],
+        },
+        'Appels à l\'action': {
+            icon: 'mdi-cursor-default-click-outline',
+            color: '#f15a2d',
+            lines: [
+                'Chaque carte = un bouton CTA dans le héro. La 1ʳᵉ carte = bouton principal (orange), les suivantes = bouton secondaire.',
+                '• Titre de la carte → texte du bouton ("Découvrir nos services")',
+                '• Libellé bouton → URL de destination ("/services", "/nous-contacter")',
+            ],
+        },
+    },
+};
+
+const sectionHint = computed(() => {
+    if (!selectedPage.value || !selectedSection.value) return null;
+    return sectionHints[selectedPage.value.titre_page]?.[selectedSection.value.nom_section] ?? null;
+});
+
 // ── Page CRUD ────────────────────────────────────────────────────
 const dialogPage    = shallowRef(false);
 const isPageEditing = ref(false);
@@ -99,10 +156,6 @@ const handleBannerFile = (e) => {
     if (!file) return;
     formPage.banniere_page = file;
     bannerPreview.value = URL.createObjectURL(file);
-};
-
-const handleBannerDrop = (e) => {
-    handleBannerFile(e);
 };
 
 const clearBanner = () => {
@@ -269,6 +322,7 @@ const sectionIcons = [
     "mdi-handshake-outline",        "mdi-layers-outline",          "mdi-home-outline",
     "mdi-information-outline",      "mdi-star-outline",            "mdi-image-outline",
     "mdi-text-box-outline",         "mdi-link-variant",            "mdi-chart-bar",
+    "mdi-map-marker-outline",       "mdi-phone-outline",           "mdi-shield-lock-outline",
 ];
 
 const cardIcons = [
@@ -278,6 +332,7 @@ const cardIcons = [
     "mdi-wifi",                     "mdi-code-braces",              "mdi-cloud-outline",
     "mdi-card-text-outline",        "mdi-check-circle-outline",     "mdi-lightbulb-outline",
     "mdi-rocket-launch-outline",    "mdi-trophy-outline",           "mdi-email-outline",
+    "mdi-web",                      "mdi-printer-outline",          "mdi-chart-pie",
 ];
 </script>
 
@@ -322,13 +377,16 @@ const cardIcons = [
                 <!-- Page info bar -->
                 <div class="page-info-bar">
                     <div class="page-info-left">
-                        <div class="page-info-icon-bg">
+                        <div class="page-banner-thumb" v-if="selectedPage.banniere_page">
+                            <img :src="selectedPage.banniere_page" alt="bannière" />
+                        </div>
+                        <div v-else class="page-info-icon-bg">
                             <v-icon icon="mdi-web" size="20" style="color:#1b449c" />
                         </div>
                         <div class="page-info-text">
                             <span class="page-info-title">{{ selectedPage.titre_page }}</span>
                             <span v-if="selectedPage.slogan_page" class="page-info-slogan">
-                                · {{ selectedPage.slogan_page }}
+                                {{ selectedPage.slogan_page }}
                             </span>
                         </div>
                     </div>
@@ -365,7 +423,7 @@ const cardIcons = [
                     <!-- ── Left: sections sub-menu ──────────────── -->
                     <aside class="sections-sidebar">
                         <div class="sidebar-header">
-                            <span class="sidebar-label">SECTIONS</span>
+                            <span class="sidebar-label">SECTIONS <span class="sidebar-label-count">{{ selectedPage.sections?.length ?? 0 }}</span></span>
                             <button class="sidebar-add-btn" title="Ajouter une section" @click="openAddSection(selectedPage.id_page)">
                                 <v-icon icon="mdi-plus" size="15" />
                             </button>
@@ -395,8 +453,13 @@ const cardIcons = [
                                         size="15"
                                     />
                                 </div>
-                                <span class="section-nav-name">{{ section.nom_section }}</span>
-                                <span class="section-nav-count">{{ section.cards?.length ?? 0 }}</span>
+                                <div class="section-nav-text">
+                                    <span class="section-nav-name">{{ section.nom_section }}</span>
+                                    <span v-if="section.description_section" class="section-nav-desc">{{ section.description_section }}</span>
+                                </div>
+                                <span class="section-nav-count" :class="{ 'section-nav-count--empty': !section.cards?.length }">
+                                    {{ section.cards?.length ?? 0 }}
+                                </span>
                             </button>
                         </nav>
                     </aside>
@@ -435,7 +498,7 @@ const cardIcons = [
                                     </span>
                                     <button class="outline-btn" @click="openEditSection(selectedSection)">
                                         <v-icon icon="mdi-pencil-outline" size="14" class="mr-1" />
-                                        Modifier la section
+                                        Modifier
                                     </button>
                                     <button class="icon-btn icon-btn--delete" @click="openDeleteSection(selectedSection)">
                                         <v-icon icon="mdi-delete-outline" size="14" />
@@ -447,7 +510,7 @@ const cardIcons = [
                             <div class="cards-toolbar">
                                 <div class="cards-toolbar-left">
                                     <v-icon icon="mdi-card-multiple-outline" size="15" class="mr-1" style="color:#f15a2d" />
-                                    <span class="cards-toolbar-title">Cartes de la section</span>
+                                    <span class="cards-toolbar-title">Cartes</span>
                                     <span class="cards-count-badge">{{ selectedSection.cards?.length ?? 0 }}</span>
                                 </div>
                                 <button class="add-btn" @click="openAddCard(selectedSection.id_section)">
@@ -455,16 +518,44 @@ const cardIcons = [
                                 </button>
                             </div>
 
-                            <!-- Empty cards -->
-                            <div v-if="!selectedSection.cards?.length" class="editor-cards-empty">
-                                <v-icon icon="mdi-card-off-outline" size="40" style="opacity:.18" />
-                                <p>Aucune carte dans cette section</p>
+                            <!-- Hint contextuel pour sections spéciales -->
+                            <div v-if="sectionHint && !sectionDedicatedSource" class="section-hint">
+                                <div class="section-hint__icon" :style="{ color: sectionHint.color }">
+                                    <v-icon :icon="sectionHint.icon" size="18" />
+                                </div>
+                                <div class="section-hint__body">
+                                    <p v-for="(line, i) in sectionHint.lines" :key="i" class="section-hint__line">
+                                        {{ line }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Section gérée par un dashboard dédié -->
+                            <div v-if="sectionDedicatedSource" class="dedicated-notice">
+                                <div class="dedicated-notice__icon-wrap">
+                                    <v-icon :icon="sectionDedicatedSource.icon" size="32" style="color:#1b449c" />
+                                </div>
+                                <p class="dedicated-notice__title">Contenu géré séparément</p>
+                                <p class="dedicated-notice__desc">
+                                    Le contenu affiché dans la section
+                                    <strong>{{ selectedSection.nom_section }}</strong>
+                                    sur la page publique est géré via le tableau de bord
+                                    <strong>{{ sectionDedicatedSource.label }}</strong>.
+                                </p>
+                                <a :href="sectionDedicatedSource.adminRoute" class="dedicated-notice__btn">
+                                    <v-icon :icon="sectionDedicatedSource.icon" size="15" class="mr-1" />
+                                    Gérer {{ sectionDedicatedSource.label }}
+                                </a>
+                            </div>
+
+                            <!-- Empty cards (section générique sans contenu) -->
+                            <div v-else-if="!selectedSection.cards?.length" class="editor-cards-empty">
+                                <v-icon icon="mdi-card-plus-outline" size="44" style="opacity:.18;color:#1b449c" />
+                                <p class="editor-cards-empty-title">Cette section n'a pas encore de cartes</p>
                                 <p class="editor-cards-empty-hint">
-                                    Chaque carte représente un élément de contenu
-                                    <span v-if="selectedSection.nom_section">
-                                        ({{ selectedSection.nom_section.toLowerCase() }})
-                                    </span>
-                                    : titre, description, icône et bouton.
+                                    Les cartes représentent les éléments de contenu affichés dans
+                                    <strong>{{ selectedSection.nom_section }}</strong> sur la page publique :
+                                    titre, description, icône et bouton d'action.
                                 </p>
                                 <button class="add-btn mt-3" @click="openAddCard(selectedSection.id_section)">
                                     <v-icon icon="mdi-plus" size="15" class="mr-1" />Créer la première carte
@@ -482,7 +573,7 @@ const cardIcons = [
                                         <div class="card-item__icon-wrap">
                                             <v-icon
                                                 :icon="card.icon_card || 'mdi-card-text-outline'"
-                                                size="28"
+                                                size="26"
                                                 style="color:#1b449c"
                                             />
                                         </div>
@@ -548,7 +639,7 @@ const cardIcons = [
                             :class="{ 'banner-upload-zone--has-image': bannerPreview }"
                             @click="fileInputRef.click()"
                             @dragover.prevent
-                            @drop.prevent="handleBannerDrop"
+                            @drop.prevent="e => handleBannerFile(e)"
                         >
                             <template v-if="bannerPreview">
                                 <img :src="bannerPreview" class="banner-preview-img" alt="Aperçu bannière" />
@@ -673,7 +764,7 @@ const cardIcons = [
                                 <div class="toggle-knob" />
                             </div>
                         </label>
-                        <span class="form-hint">Cette section sert de lien de navigation.</span>
+                        <span class="form-hint">Cette section sert de lien de navigation vers une autre page ou ressource.</span>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -733,10 +824,10 @@ const cardIcons = [
                     <div class="field-group mt-3">
                         <label class="field-label">Description</label>
                         <textarea v-model="formCard.description_card" class="field-textarea" rows="3"
-                            placeholder="Description de l'élément..." />
+                            placeholder="Description de l'élément de contenu..." />
                     </div>
                     <div class="field-group mt-3">
-                        <label class="field-label">Icône <span class="form-hint-inline">(nom MDI ou chemin image)</span></label>
+                        <label class="field-label">Icône <span class="form-hint-inline">(nom MDI)</span></label>
                         <div class="icon-input-row">
                             <div class="icon-preview-box">
                                 <v-icon :icon="formCard.icon_card || 'mdi-card-text-outline'" size="22" style="color:#1b449c" />
@@ -756,9 +847,9 @@ const cardIcons = [
                         </div>
                     </div>
                     <div class="field-group mt-3">
-                        <label class="field-label">Libellé du bouton / Lien <span class="form-hint-inline">(optionnel)</span></label>
+                        <label class="field-label">Libellé du bouton <span class="form-hint-inline">(optionnel)</span></label>
                         <input v-model="formCard.titre_bouton_card" type="text" class="field-input"
-                            placeholder="Ex : Lire plus" />
+                            placeholder="Ex : Lire plus, En savoir plus..." />
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -905,6 +996,16 @@ const cardIcons = [
 .page-info-left  { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
 .page-info-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
+.page-banner-thumb {
+    width: 48px;
+    height: 34px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid var(--border-color);
+}
+.page-banner-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
 .page-info-icon-bg {
     width: 34px;
     height: 34px;
@@ -916,8 +1017,12 @@ const cardIcons = [
     flex-shrink: 0;
 }
 
+.page-info-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .page-info-title  { font-size: 14px; font-weight: 700; color: var(--text-primary); }
-.page-info-slogan { font-size: 12px; color: var(--text-secondary); font-style: italic; }
+.page-info-slogan {
+    font-size: 11px; color: var(--text-secondary); font-style: italic;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 400px;
+}
 .page-info-stat   {
     display: inline-flex;
     align-items: center;
@@ -941,7 +1046,7 @@ const cardIcons = [
 
 /* ── Sections sidebar ───────────────────────────────────────────── */
 .sections-sidebar {
-    width: 220px;
+    width: 240px;
     flex-shrink: 0;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
@@ -964,6 +1069,17 @@ const cardIcons = [
     letter-spacing: 0.08em;
     color: var(--text-secondary);
     text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.sidebar-label-count {
+    background: var(--border-color);
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 8px;
 }
 .sidebar-add-btn {
     width: 24px;
@@ -1003,13 +1119,13 @@ const cardIcons = [
 }
 .sidebar-create-btn:hover { border-color: #1b449c; color: #1b449c; }
 
-.sections-nav { display: flex; flex-direction: column; padding: 6px 6px; gap: 2px; }
+.sections-nav { display: flex; flex-direction: column; padding: 6px; gap: 2px; }
 
 .section-nav-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
-    padding: 8px 10px;
+    padding: 9px 10px;
     border-radius: 8px;
     border: none;
     background: none;
@@ -1029,8 +1145,20 @@ const cardIcons = [
 }
 .section-nav-item--active .section-nav-icon { color: #1b449c; }
 
-.section-nav-icon { flex-shrink: 0; display: flex; }
-.section-nav-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.section-nav-icon { flex-shrink: 0; display: flex; padding-top: 1px; }
+.section-nav-text  { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.section-nav-name  { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+.section-nav-desc  {
+    font-size: 11px;
+    color: var(--text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 400;
+    opacity: .8;
+}
+.section-nav-item--active .section-nav-desc { color: #1b449c; opacity: .7; }
+
 .section-nav-count {
     flex-shrink: 0;
     display: inline-flex;
@@ -1044,6 +1172,11 @@ const cardIcons = [
     font-weight: 700;
     background: var(--border-color);
     color: var(--text-secondary);
+    margin-top: 2px;
+}
+.section-nav-count--empty {
+    background: rgba(241,90,45,.1);
+    color: #f15a2d;
 }
 .section-nav-item--active .section-nav-count {
     background: rgba(27,68,156,0.2);
@@ -1097,7 +1230,7 @@ const cardIcons = [
     flex-shrink: 0;
 }
 .editor-section-title { font-size: 16px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
-.editor-section-desc  { font-size: 12px; color: var(--text-secondary); margin-top: 3px; line-height: 1.4; }
+.editor-section-desc  { font-size: 12px; color: var(--text-secondary); margin-top: 3px; line-height: 1.4; max-width: 460px; }
 
 .editor-header-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
@@ -1139,6 +1272,30 @@ const cardIcons = [
     flex-wrap: wrap;
     gap: 8px;
 }
+/* ── Section hint ───────────────────────────────────────────────── */
+.section-hint {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 12px 20px;
+    padding: 12px 14px;
+    background: rgba(27,68,156,0.07);
+    border: 1px solid rgba(27,68,156,0.2);
+    border-left: 3px solid #1b449c;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+.section-hint__icon { flex-shrink: 0; padding-top: 1px; }
+.section-hint__body { flex: 1; min-width: 0; }
+.section-hint__line {
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0 0 2px;
+}
+.section-hint__line:first-child { color: var(--text-primary); font-weight: 500; margin-bottom: 5px; }
+.section-hint__line:last-child  { margin-bottom: 0; }
+
 .cards-toolbar-left { display: flex; align-items: center; gap: 6px; }
 .cards-toolbar-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
 .cards-count-badge {
@@ -1155,19 +1312,67 @@ const cardIcons = [
     color: #1b449c;
 }
 
+/* Dedicated source notice */
+.dedicated-notice {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 40px;
+    gap: 12px;
+    text-align: center;
+    flex: 1;
+}
+.dedicated-notice__icon-wrap {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    background: rgba(27,68,156,0.1);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 4px;
+}
+.dedicated-notice__title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.dedicated-notice__desc {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+    max-width: 380px;
+    line-height: 1.6;
+}
+.dedicated-notice__desc strong { color: var(--text-primary); }
+.dedicated-notice__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    background: #1b449c;
+    color: white;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.15s, transform 0.13s;
+    margin-top: 4px;
+}
+.dedicated-notice__btn:hover { background: #163a86; transform: translateY(-1px); }
+
 /* Empty cards */
 .editor-cards-empty {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 48px 24px;
+    padding: 48px 40px;
     gap: 8px;
     color: var(--text-secondary);
     text-align: center;
     flex: 1;
 }
-.editor-cards-empty p { margin: 0; font-size: 13px; }
-.editor-cards-empty-hint { font-size: 12px; color: var(--text-secondary); opacity: .7; max-width: 340px; }
+.editor-cards-empty-title { margin: 0; font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.editor-cards-empty-hint { font-size: 12px; color: var(--text-secondary); max-width: 380px; line-height: 1.5; margin: 0; }
+.editor-cards-empty-hint strong { color: var(--text-primary); }
 
 /* Cards grid */
 .cards-grid {
@@ -1186,15 +1391,21 @@ const cardIcons = [
     display: flex;
     flex-direction: column;
     gap: 6px;
-    transition: border-color 0.15s;
+    transition: border-color 0.15s, box-shadow 0.15s;
 }
-.card-item:hover { border-color: #1b449c55; }
+.card-item:hover { border-color: rgba(27,68,156,.35); box-shadow: 0 2px 10px rgba(27,68,156,.08); }
 
 .card-item__top {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     margin-bottom: 4px;
+}
+.card-item__icon-wrap {
+    width: 38px; height: 38px;
+    border-radius: 8px;
+    background: rgba(27,68,156,0.08);
+    display: flex; align-items: center; justify-content: center;
 }
 .card-item__actions {
     display: flex;
@@ -1226,6 +1437,7 @@ const cardIcons = [
     color: #f15a2d;
     font-weight: 600;
     margin-top: auto;
+    padding-top: 4px;
 }
 
 .add-card-placeholder {

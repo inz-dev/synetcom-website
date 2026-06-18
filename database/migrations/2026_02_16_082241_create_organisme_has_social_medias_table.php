@@ -15,9 +15,12 @@ return new class extends Migration
          $table->foreignUuid('id_organisme')
          ->index()->references('id_organisme')->on('organismes');
         $table->foreignUuid('id_social_media')->index()->references('id_social_media')->on('social_medias');
-        $table->softDeletes();
-/*             $table->primary('id_organisme','id_social_media');
- */        $table->timestamps();
+
+        $table->uuid('id_organisme_has_social_media')->primary();
+            $table->bigInteger('actif_organisme_has_social_media')->default(1);
+            $table->softDeletes();
+            $table->timestamps();
+
         });
     }
 

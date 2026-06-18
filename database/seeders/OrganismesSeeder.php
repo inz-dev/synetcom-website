@@ -6,14 +6,16 @@ use App\Models\Emails;
 use App\Models\Organismes;
 use App\Models\Telephones;
 use Illuminate\Database\Seeder;
+use App\Models\OrganismeHasSocialMedias;
+use App\Models\SocialMedias;
 
 class OrganismesSeeder extends Seeder
 {
     public function run(): void
     {
         Organismes::firstOrCreate(
-            ['nom_organisme' => 'Synetcom'],
-            [
+            ['nom_organisme' => 'Synetcom',
+
                 'nom_organisme'      => 'Synetcom',
                 'adresse_organisme'  => '13743 Niamey-NIGER, Face Pharmacie Maisons économiques',
                 'logo_organisme'     => '/images/logo.png',
@@ -21,15 +23,19 @@ class OrganismesSeeder extends Seeder
                 'lien_map_organisme' => 'https://www.google.com/maps?q=13.5137,2.1098',
             ]
         );
+        OrganismeHasSocialMedias::create(
+            ['id_organisme'=>Organismes::first()->id_organisme,
+            'id_social_media' =>SocialMedias::first()->id_social_media,]
+        );
 
         // Numéros de contact principaux
-        Telephones::firstOrCreate(['telephone' => 90717476], ['code_telephone' => '+227', 'telephone' => 90717476]);
+      /*   Telephones::firstOrCreate(['telephone' => 90717476], ['code_telephone' => '+227', 'telephone' => 90717476]);
         Telephones::firstOrCreate(['telephone' => 88888811], ['code_telephone' => '+227', 'telephone' => 88888811]);
 
 
         // Adresses email de contact
         Emails::firstOrCreate(['email' => 'contact@synetcom.ne']);
         Emails::firstOrCreate(['email' => 'info@synetcom.ne']);
-        Emails::firstOrCreate(['email' => 'chaibou.abdou@synetcom.dev']);
+        Emails::firstOrCreate(['email' => 'chaibou.abdou@synetcom.dev']); */
     }
 }

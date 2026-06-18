@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm, router } from "@inertiajs/vue3";
-import { computed, ref, shallowRef, reactive } from "vue";
+import { computed, ref, shallowRef, reactive,onMounted } from "vue";
 import { useDisplay } from "vuetify";
 
 const props = defineProps({
@@ -10,6 +10,9 @@ const props = defineProps({
     allRoles: Array,
     errors: Object,
 });
+onMounted(() => {
+    //console.log('allEmployees!:', props.allEmployes)
+})
 const { smAndDown } = useDisplay();
 
 const employes = computed(() =>
@@ -371,6 +374,7 @@ const saveEmploye = () => {
         formEmploye.put(route("employes.update", formEmploye.id_employe), {
             onSuccess: () => { dialogEmploye.value = false; formEmploye.reset(); },
         });
+
     } else {
         formEmploye.post(route("employes.store"), {
             onSuccess: () => { dialogEmploye.value = false; formEmploye.reset(); },
@@ -383,8 +387,10 @@ const dialogView  = shallowRef(false);
 const viewEmploye = ref(null);
 
 const openView = (e) => {
+    console.log('employees from openView:', employes)
     viewEmploye.value = e;
     dialogView.value  = true;
+    console.log('viewEmploye:', viewEmploye)
 };
 
 // ── Delete ───────────────────────────────────────────────────────

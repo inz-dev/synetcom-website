@@ -8,8 +8,8 @@ import Portfolio from "@/Components/Welcome/Sections/Portfolio.vue";
 import ServicesHome from "@/Components/Welcome/Sections/Services.home.vue";
 import TeamHome from "@/Components/Welcome/Sections/Team.home.vue";
 import WhyChooseUsHome from "@/Components/Welcome/Sections/WhyChooseUs.home.vue";
-import { Head, Link } from "@inertiajs/vue3";
-import { onMounted } from "vue";
+import { Head } from "@inertiajs/vue3";
+import { computed, onMounted } from "vue";
 
 const props = defineProps({ page: { type: Object, default: null } });
 
@@ -17,50 +17,62 @@ const props = defineProps({ page: { type: Object, default: null } });
 const section = (name) =>
     props.page?.sections?.find(s => s.nom_section === name) ?? null;
 
-const heroSlogan = props.page?.slogan_page
-    ?? 'Développez votre entreprise chaque jour avec la transformation numérique. Nous vous permettons de générer de la croissance grâce aux outils digitaux.';
-onMounted(() => {
-    console.log('from contact:', props.page)
-    console.log('from Home:', section('Nos Services'))
-})
+const heroTitle   = computed(() => props.page?.titre_page   ?? 'Synetcom');
+const heroBanner  = computed(() => props.page?.banniere_page ?? '/images/background1.png');
+const heroSlogan  = computed(() =>
+    props.page?.slogan_page
+    ?? 'Développez votre entreprise chaque jour avec la transformation numérique. Nous vous permettons de générer de la croissance grâce aux outils digitaux.'
+);
+
+const defaultStats = [
+    { valeur: '50+',   label: 'Clients satisfaits' },
+    { valeur: '100+',  label: 'Projets livrés' },
+    { valeur: '9+',    label: 'Ans d\'expérience' },
+    { valeur: '24/7',  label: 'Support disponible' },
+];
+const heroStats = computed(() =>
+    props.page?.stats?.length ? props.page.stats : defaultStats
+);
+
+const defaultCtas = [
+    { texte: 'Découvrir nos services', url: '/services' },
+    { texte: 'Nous contacter',         url: '/nous-contacter' },
+];
+const heroCtas = computed(() =>
+    props.page?.ctas?.length ? props.page.ctas : defaultCtas
+);
 </script>
 
 <template>
     <Head title="Accueil" />
 
     <Header>
-        <BanierePage title="Synetcom" backgroundImage="/images/background1.png">
+        <BanierePage :title="heroTitle" :backgroundImage="heroBanner">
             <p class="hero-sub">{{ heroSlogan }}</p>
 
             <div class="hero-cta-row">
-                <Link :href="route('services')" class="cta-primary">
-                    Découvrir nos services
-                    <svg viewBox="0 0 20 20" fill="currentColor" class="cta-arrow"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-                </Link>
-                <a href="/nous-contacter" class="cta-ghost">Nous contacter</a>
+                <a
+                    v-for="(cta, i) in heroCtas"
+                    :key="i"
+                    :href="cta.url"
+                    :class="i === 0 ? 'cta-primary' : 'cta-ghost'"
+                >
+                    {{ cta.texte }}
+                    <svg v-if="i === 0" viewBox="0 0 20 20" fill="currentColor" class="cta-arrow">
+                        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                </a>
             </div>
 
             <!-- Stats strip -->
             <div class="hero-stats">
-                <div class="hero-stat">
-                    <span class="stat-num">50+</span>
-                    <span class="stat-lbl">Clients satisfaits</span>
-                </div>
-                <div class="stat-sep"></div>
-                <div class="hero-stat">
-                    <span class="stat-num">100+</span>
-                    <span class="stat-lbl">Projets livrés</span>
-                </div>
-                <div class="stat-sep"></div>
-                <div class="hero-stat">
-                    <span class="stat-num">9+</span>
-                    <span class="stat-lbl">Ans d'expérience</span>
-                </div>
-                <div class="stat-sep"></div>
-                <div class="hero-stat">
-                    <span class="stat-num">24/7</span>
-                    <span class="stat-lbl">Support disponible</span>
-                </div>
+                <template v-for="(stat, i) in heroStats" :key="i">
+                    <div v-if="i > 0" class="stat-sep"></div>
+                    <div class="hero-stat">
+                        <span class="stat-num">{{ stat.valeur }}</span>
+                        <span class="stat-lbl">{{ stat.label }}</span>
+                    </div>
+                </template>
             </div>
         </BanierePage>
     </Header>

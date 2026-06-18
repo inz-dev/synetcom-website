@@ -16,6 +16,11 @@ const totalServices = computed(() =>
 );
 
 const search = ref("");
+const showPreview = ref(false);
+
+const allServices = computed(() =>
+    departements.value.flatMap(d => (d.services ?? []).map(s => ({ ...s, departement: d.nom_departement })))
+);
 
 const headers = computed(() => [
     { title: "N°", key: "index", width: 60, sortable: true },
@@ -106,7 +111,7 @@ const openEditService = (service, deptName) => {
     formService.id_service = service.id_service;
     formService.nom_service = service.nom_service;
     formService.description_service = service.description_service ?? "";
-    formService.icon_service = service.icon_service ?? "mdi-cog-outline";
+    formService.icon_service = service.icon_service ?? "bi bi-credit-card-fill";
     formService.color = service.color ?? "#1b449c";
     formService.paths = Array.isArray(service.paths)
         ? service.paths.join("\n")
@@ -233,6 +238,10 @@ const confirmDelete = () => {
                                         <v-icon icon="mdi-close" size="14" />
                                     </button>
                                 </div>
+                                <button class="preview-btn" :class="{ 'preview-btn--active': showPreview }" @click="showPreview = !showPreview">
+                                    <v-icon :icon="showPreview ? 'mdi-eye-off-outline' : 'mdi-eye-outline'" size="18" class="mr-1" />
+                                    <span class="d-none d-sm-inline">{{ showPreview ? 'Masquer aperçu' : 'Aperçu public' }}</span>
+                                </button>
                                 <button class="add-btn" @click="openAddDept">
                                     <v-icon icon="mdi-plus" size="18" class="mr-1" />
                                     <span class="d-none d-sm-inline">Ajouter</span>
@@ -369,10 +378,64 @@ const confirmDelete = () => {
                     </template>
                 </v-data-table>
             </div>
+
+            <!-- ── Aperçu page Services publique ────────────────────── -->
+            <transition name="preview-fade">
+                <div v-if="showPreview" class="preview-panel">
+                    <div class="preview-header">
+                        <v-icon icon="mdi-eye-outline" size="18" style="color:#f15a2d" />
+                        <span class="preview-title">Aperçu — Page Services publique</span>
+                        <span class="preview-count">{{ allServices.length }} service(s)</span>
+                        <button class="preview-close" @click="showPreview = false">
+                            <v-icon icon="mdi-close" size="16" />
+                        </button>
+                    </div>
+
+                    <div v-if="!allServices.length" class="preview-empty">
+                        <v-icon icon="mdi-inbox-outline" size="40" style="opacity:.3" />
+                        <p>Aucun service à afficher</p>
+                    </div>
+
+                    <div v-else class="preview-grid">
+                        <div
+                            v-for="(service, index) in allServices"
+                            :key="service.id_service"
+                            class="preview-card"
+                        >
+                            <div class="preview-card-top">
+                                <div
+                                    class="preview-card-icon"
+                                    :style="{ background: (service.color || '#1b449c') + '22', color: service.color || '#1b449c' }"
+                                >
+                                    <svg
+                                        v-if="Array.isArray(service.paths) && service.paths.length"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                                        width="26" height="26"
+                                    >
+                                        <path v-for="(d, i) in service.paths" :key="i" :d="d" />
+                                    </svg>
+                                    <v-icon v-else :icon="service.icon_service || 'mdi-cog-outline'" size="26" />
+                                </div>
+                                <span class="preview-card-num" :style="{ color: (service.color || '#1b449c') + '50' }">
+                                    {{ String(index + 1).padStart(2, '0') }}
+                                </span>
+                            </div>
+                            <div class="preview-card-accent" :style="{ background: service.color || '#1b449c' }"></div>
+                            <h3 class="preview-card-title">{{ service.nom_service }}</h3>
+                            <p class="preview-card-desc">{{ service.description_service || '—' }}</p>
+                            <span class="preview-card-dept">
+                                <v-icon icon="mdi-domain" size="11" class="mr-1" />
+                                {{ service.departement }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </transition>
         </div>
 
         <!-- ── Dialog : Département ──────────────────────────────── -->
-        <v-dialog v-model="dialogDept" max-width="480" :persistent="formDept.processing">
+        <v-dialog v-model="dialogDept" max-width="600" :persistent="formDept.processing" scrollable>
             <div class="modal-card">
                 <div class="modal-header">
                     <v-icon
@@ -430,8 +493,8 @@ const confirmDelete = () => {
         </v-dialog>
 
         <!-- ── Dialog : Service ──────────────────────────────────── -->
-        <v-dialog v-model="dialogService" max-width="500" :persistent="formService.processing">
-            <div class="modal-card">
+        <v-dialog v-model="dialogService" max-width="600" :persistent="formService.processing" scrollable>
+            <div class="modal-card" style="height:900px;">
                 <div class="modal-header">
                     <v-icon
                         :icon="isServiceEditing ? 'mdi-pencil-outline' : 'mdi-cog-outline'"
@@ -994,6 +1057,7 @@ const confirmDelete = () => {
 .modal-card {
     background: var(--card-bg, #242837);
     border: 1px solid var(--border-color, #3a3d52);
+
     border-radius: 14px;
     overflow: hidden;
 }
@@ -1217,7 +1281,196 @@ const confirmDelete = () => {
     color: #f39c12;
 }
 
+/* ── Preview btn ────────────────────────────────────────────────── */
+.preview-btn {
+    display: flex;
+    align-items: center;
+    height: 36px;
+    padding: 0 14px;
+    background: rgba(241, 90, 45, 0.08);
+    border: 1px solid rgba(241, 90, 45, 0.35);
+    border-radius: 8px;
+    color: #f15a2d;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.preview-btn:hover { background: rgba(241, 90, 45, 0.18); border-color: #f15a2d; }
+.preview-btn--active {
+    background: rgba(241, 90, 45, 0.2);
+    border-color: #f15a2d;
+}
+
+/* ── Preview panel ──────────────────────────────────────────────── */
+.preview-panel {
+    margin-top: 24px;
+    background: var(--card-bg, #242837);
+    border: 1px solid var(--border-color, #3a3d52);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border-color, #3a3d52);
+    background: #1a1d29;
+}
+
+.preview-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #fff;
+    flex: 1;
+}
+
+.preview-count {
+    font-size: 0.75rem;
+    color: var(--text-secondary, #a0a4b8);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border-color, #3a3d52);
+    border-radius: 20px;
+    padding: 2px 10px;
+}
+
+.preview-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary, #a0a4b8);
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+.preview-close:hover { color: #fff; background: rgba(255,255,255,.08); }
+
+.preview-empty {
+    padding: 48px;
+    text-align: center;
+    color: var(--text-secondary, #a0a4b8);
+    font-size: 0.875rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+.preview-empty p { margin: 0; }
+
+/* ── Preview grid ───────────────────────────────────────────────── */
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 24px;
+}
+
+/* ── Preview card ───────────────────────────────────────────────── */
+.preview-card {
+    background: #1a1d29;
+    border: 1px solid var(--border-color, #3a3d52);
+    border-radius: 14px;
+    padding: 22px 20px 18px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s;
+}
+.preview-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px rgba(0,0,0,0.3);
+    border-color: rgba(241,90,45,0.3);
+}
+
+.preview-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.preview-card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.preview-card-num {
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.preview-card-accent {
+    height: 3px;
+    border-radius: 2px;
+    width: 36px;
+    margin-bottom: 14px;
+    transition: width 0.3s;
+}
+.preview-card:hover .preview-card-accent { width: 56px; }
+
+.preview-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.35;
+    margin: 0 0 8px;
+}
+
+.preview-card-desc {
+    font-size: 13px;
+    color: var(--text-secondary, #a0a4b8);
+    line-height: 1.6;
+    margin: 0 0 14px;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.preview-card-dept {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    color: var(--text-secondary, #a0a4b8);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 3px 10px;
+    margin-top: auto;
+    align-self: flex-start;
+}
+
+/* ── Transition ─────────────────────────────────────────────────── */
+.preview-fade-enter-active,
+.preview-fade-leave-active {
+    transition: opacity 0.25s, transform 0.25s;
+}
+.preview-fade-enter-from,
+.preview-fade-leave-to {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
 /* ── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+    .preview-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (max-width: 600px) {
     .dept-page { padding: 16px 12px; }
     .table-toolbar { flex-direction: column; align-items: stretch; }
@@ -1225,6 +1478,8 @@ const confirmDelete = () => {
     .search-input { width: 100%; }
     .search-wrapper { flex: 1; }
     .add-btn { justify-content: center; }
+    .preview-btn { justify-content: center; }
     .stat-chip { flex: 1; min-width: 120px; }
+    .preview-grid { grid-template-columns: 1fr; gap: 12px; padding: 16px; }
 }
 </style>
